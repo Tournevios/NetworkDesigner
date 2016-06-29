@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<Configuration>
+  <Network Temperature="1.008" Nb_Neurons="37" >
+    <Neuron Nb_Neighbors="1" x="202" y="106" Threshold="0" Index="0" State="1" >
+      <Synapse NeighborIndex="11" Weight="1" GE="0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="2" x="102" y="247" Threshold="0" Index="1" State="0" >
+      <Synapse NeighborIndex="5" Weight="1" GE="0.06" />
+      <Synapse NeighborIndex="6" Weight="1" GE="0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="2" x="219" y="199" Threshold="0" Index="2" State="0" >
+      <Synapse NeighborIndex="4" Weight="1" GE="0.06" />
+      <Synapse NeighborIndex="29" Weight="1" GE="0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="394" y="121" Threshold="0" Index="3" State="1" >
+      <Synapse NeighborIndex="0" Weight="1" GE="-0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="355" y="211" Threshold="0" Index="4" State="1" >
+      <Synapse NeighborIndex="3" Weight="1" GE="-0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="2" x="164" y="205" Threshold="0" Index="5" State="1" >
+      <Synapse NeighborIndex="6" Weight="1" GE="0.06" />
+      <Synapse NeighborIndex="23" Weight="1" GE="0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="2" x="219" y="308" Threshold="0" Index="6" State="1" >
+      <Synapse NeighborIndex="2" Weight="1" GE="-0.06" />
+      <Synapse NeighborIndex="27" Weight="1" GE="0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="4" x="137" y="146" Threshold="0" Index="7" State="1" >
+      <Synapse NeighborIndex="0" Weight="1" GE="-0.06" />
+      <Synapse NeighborIndex="5" Weight="1" GE="-0.06" />
+      <Synapse NeighborIndex="8" Weight="1" GE="0.06" />
+      <Synapse NeighborIndex="1" Weight="1" GE="-0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="192" y="174" Threshold="0" Index="8" State="1" >
+      <Synapse NeighborIndex="0" Weight="1" GE="-0.06" />
+      <Synapse NeighborIndex="4" Weight="1" GE="-0.06" />
+      <Synapse NeighborIndex="3" Weight="1" GE="-0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="2" x="285" y="42" Threshold="0" Index="9" State="0" >
+      <Synapse NeighborIndex="3" Weight="1" GE="-0.06" />
+      <Synapse NeighborIndex="0" Weight="1" GE="-0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="434" y="78" Threshold="0" Index="10" State="1" >
+      <Synapse NeighborIndex="3" Weight="1" GE="-0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="153" y="59" Threshold="0" Index="11" State="1" >
+      <Synapse NeighborIndex="12" Weight="1" GE="0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="90" y="116" Threshold="0" Index="12" State="1" >
+      <Synapse NeighborIndex="7" Weight="1" GE="-0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="267" y="392" Threshold="0" Index="13" State="1" >
+      <Synapse NeighborIndex="10" Weight="1" GE="-0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="297" y="346" Threshold="0" Index="14" State="1" >
+      <Synapse NeighborIndex="10" Weight="1" GE="-0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="339" y="329" Threshold="0" Index="15" State="0" >
+      <Synapse NeighborIndex="10" Weight="1" GE="-0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="375" y="313" Threshold="0" Index="16" State="1" >
+      <Synapse NeighborIndex="10" Weight="1" GE="-0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="417" y="285" Threshold="0" Index="17" State="1" >
+      <Synapse NeighborIndex="10" Weight="1" GE="-0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="2" x="435" y="225" Threshold="0" Index="18" State="1" >
+      <Synapse NeighborIndex="10" Weight="1" GE="-0.06" />
+      <Synapse NeighborIndex="17" Weight="1" GE="-0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="2" x="471" y="181" Threshold="0" Index="19" State="1" >
+      <Synapse NeighborIndex="10" Weight="1" GE="-0.06" />
+      <Synapse NeighborIndex="18" Weight="1" GE="-0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="2" x="494" y="133" Threshold="0" Index="20" State="1" >
+      <Synapse NeighborIndex="10" Weight="1" GE="-0.06" />
+      <Synapse NeighborIndex="19" Weight="1" GE="-0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="510" y="90" Threshold="0" Index="21" State="0" >
+      <Synapse NeighborIndex="10" Weight="1" GE="-0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="514" y="33" Threshold="0" Index="22" State="0" >
+      <Synapse NeighborIndex="10" Weight="1" GE="-0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="4" x="126" y="319" Threshold="0" Index="23" State="1" >
+      <Synapse NeighborIndex="1" Weight="1" GE="-0.06" />
+      <Synapse NeighborIndex="25" Weight="1" GE="0.06" />
+      <Synapse NeighborIndex="23" Weight="1" GE="-0.06" />
+      <Synapse NeighborIndex="24" Weight="1" GE="0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="97" y="354" Threshold="0" Index="24" State="1" >
+      <Synapse NeighborIndex="25" Weight="1" GE="0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="137" y="370" Threshold="0" Index="25" State="0" >
+      <Synapse NeighborIndex="26" Weight="1" GE="0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="189" y="377" Threshold="0" Index="26" State="1" >
+      <Synapse NeighborIndex="13" Weight="1" GE="-0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="225" y="359" Threshold="0" Index="27" State="1" >
+      <Synapse NeighborIndex="27" Weight="1" GE="-0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="0" x="245" y="331" Threshold="0" Index="28" State="1" />
+    <Neuron Nb_Neighbors="0" x="259" y="271" Threshold="0" Index="29" State="0" />
+    <Neuron Nb_Neighbors="1" x="273" y="237" Threshold="0" Index="30" State="1" >
+      <Synapse NeighborIndex="6" Weight="1" GE="-0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="300" y="234" Threshold="0" Index="31" State="1" >
+      <Synapse NeighborIndex="14" Weight="1" GE="-0.06" />
+      <Synapse NeighborIndex="15" Weight="1" GE="-0.06" />
+      <Synapse NeighborIndex="28" Weight="1" GE="-0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="5" x="439" y="381" Threshold="0" Index="32" State="1" >
+      <Synapse NeighborIndex="36" Weight="1" GE="0.06" />
+      <Synapse NeighborIndex="35" Weight="1" GE="0.06" />
+      <Synapse NeighborIndex="34" Weight="1" GE="0.06" />
+      <Synapse NeighborIndex="33" Weight="1" GE="0.06" />
+      <Synapse NeighborIndex="17" Weight="1" GE="-0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="459" y="325" Threshold="0" Index="33" State="1" >
+      <Synapse NeighborIndex="32" Weight="1" GE="-0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="383" y="365" Threshold="0" Index="34" State="0" >
+      <Synapse NeighborIndex="32" Weight="1" GE="-0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="396" y="415" Threshold="0" Index="35" State="0" >
+      <Synapse NeighborIndex="32" Weight="1" GE="-0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="2" x="476" y="420" Threshold="0" Index="36" State="1" >
+      <Synapse NeighborIndex="36" Weight="1" GE="-0.06" />
+      <Synapse NeighborIndex="32" Weight="1" GE="-0.06" />
+    </Neuron>
+  </Network>
+  <UpdateSchedulingPlan Nb_UpdateBlocks="0" />
+</Configuration>

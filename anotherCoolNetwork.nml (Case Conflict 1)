@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<Configuration>
+  <Network Temperature="0" UniformalTemperature="1" Nb_Neurons="8" >
+    <Neuron Nb_Neighbors="1" x="126" y="87" Temperature="0" Index="0" State="1" NbStates="2" >
+      <State Threshold="0.5" Index="1" />
+      <Synapse CX="196" CY="143" NeighborIndex="3" Weight="-1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="50" y="250" Temperature="0" Index="1" State="1" NbStates="2" >
+      <State Threshold="0.5" Index="1" />
+      <Synapse CX="73.44000095129013" CY="216.3600008487701" NeighborIndex="2" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="69" y="72" Temperature="0" Index="2" State="0" NbStates="2" >
+      <State Threshold="0.5" Index="1" />
+      <Synapse CX="132" CY="125" NeighborIndex="0" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="136" y="252" Temperature="0" Index="3" State="1" NbStates="2" >
+      <State Threshold="0.5" Index="1" />
+      <Synapse CX="117" CY="193" NeighborIndex="1" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="274" y="70" Temperature="0" Index="4" State="1" NbStates="2" >
+      <State Threshold="0.5" Index="1" />
+      <Synapse CX="344" CY="126" NeighborIndex="7" Weight="-1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="200" y="233" Temperature="0" Index="5" State="1" NbStates="2" >
+      <State Threshold="0.5" Index="1" />
+      <Synapse CX="223.4400009512901" CY="199.3600008487701" NeighborIndex="6" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="2" x="202" y="69" Temperature="0" Index="6" State="0" NbStates="2" >
+      <State Threshold="0.5" Index="1" />
+      <Synapse CX="265" CY="122" NeighborIndex="4" Weight="1" Delay="0" />
+      <Synapse CX="120.9199993610382" CY="31.79999953508377" NeighborIndex="2" Weight="-1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="289" y="243" Temperature="0" Index="7" State="1" NbStates="2" >
+      <State Threshold="0.5" Index="1" />
+      <Synapse CX="270" CY="184" NeighborIndex="5" Weight="1" Delay="0" />
+    </Neuron>
+  </Network>
+  <UpdateSchedulingPlan Nb_UpdateBlocks="0" />
+</Configuration>

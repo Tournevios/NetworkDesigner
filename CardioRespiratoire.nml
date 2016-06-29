@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<Configuration>
+  <Network Temperature="0" UniformalTemperature="1" Nb_Neurons="4" >
+    <Neuron Nb_Neighbors="2" x="152" y="109" Temperature="1" Index="0" State="1" NbStates="2" >
+      <State Threshold="-1.5" Index="1" />
+      <Synapse CX="233" CY="177" NeighborIndex="1" Weight="-1" Delay="0" />
+      <Synapse CX="120.9200006946921" CY="93.52000034600501" NeighborIndex="0" Weight="-1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="153" y="299" Temperature="1" Index="1" State="1" NbStates="2" >
+      <State Threshold="0.001" Index="1" />
+      <Synapse CX="122.480000693351" CY="186.0800005793571" NeighborIndex="0" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="2" x="316" y="99" Temperature="1" Index="2" State="1" NbStates="2" >
+      <State Threshold="-1.5" Index="1" />
+      <Synapse CX="397" CY="167" NeighborIndex="3" Weight="-1" Delay="0" />
+      <Synapse CX="284.9200006946921" CY="83.52000034600501" NeighborIndex="2" Weight="-1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="311" y="289" Temperature="1" Index="3" State="1" NbStates="2" >
+      <State Threshold="0.001" Index="1" />
+      <Synapse CX="280.480000693351" CY="176.0800005793571" NeighborIndex="2" Weight="1" Delay="0" />
+    </Neuron>
+  </Network>
+  <UpdateSchedulingPlan Nb_UpdateBlocks="9" >
+    <Block Size="4" Calculus="0" >
+      <NeuronIndex Index="3" />
+      <NeuronIndex Index="1" />
+      <NeuronIndex Index="0" />
+      <NeuronIndex Index="2" />
+    </Block>
+    <Block Size="4" Calculus="0" >
+      <NeuronIndex Index="0" />
+      <NeuronIndex Index="2" />
+      <NeuronIndex Index="3" />
+      <NeuronIndex Index="1" />
+    </Block>
+    <Block Size="4" Calculus="0" >
+      <NeuronIndex Index="0" />
+      <NeuronIndex Index="2" />
+      <NeuronIndex Index="3" />
+      <NeuronIndex Index="1" />
+    </Block>
+    <Block Size="2" Calculus="0" >
+      <NeuronIndex Index="2" />
+      <NeuronIndex Index="3" />
+    </Block>
+    <Block Size="2" Calculus="0" >
+      <NeuronIndex Index="2" />
+      <NeuronIndex Index="3" />
+    </Block>
+    <Block Size="2" Calculus="0" >
+      <NeuronIndex Index="2" />
+      <NeuronIndex Index="3" />
+    </Block>
+    <Block Size="2" Calculus="0" >
+      <NeuronIndex Index="2" />
+      <NeuronIndex Index="3" />
+    </Block>
+    <Block Size="2" Calculus="0" >
+      <NeuronIndex Index="2" />
+      <NeuronIndex Index="3" />
+    </Block>
+    <Block Size="2" Calculus="0" >
+      <NeuronIndex Index="2" />
+      <NeuronIndex Index="3" />
+    </Block>
+  </UpdateSchedulingPlan>
+</Configuration>
