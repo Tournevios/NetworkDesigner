@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<Configuration>
+  <Network Temperature="1" Nb_Neurons="13" >
+    <Neuron Nb_Neighbors="0" x="186" y="106" Threshold="0" Index="0" State="0" />
+    <Neuron Nb_Neighbors="1" x="102" y="247" Threshold="0" Index="1" State="0" >
+      <Synapse NeighborIndex="5" Weight="1" GE="0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="219" y="199" Threshold="0" Index="2" State="0" >
+      <Synapse NeighborIndex="4" Weight="1" GE="0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="394" y="121" Threshold="0" Index="3" State="0" >
+      <Synapse NeighborIndex="0" Weight="1" GE="-0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="355" y="211" Threshold="0" Index="4" State="0" >
+      <Synapse NeighborIndex="3" Weight="1" GE="-0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="164" y="205" Threshold="0" Index="5" State="0" >
+      <Synapse NeighborIndex="6" Weight="1" GE="0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="219" y="308" Threshold="0" Index="6" State="0" >
+      <Synapse NeighborIndex="2" Weight="1" GE="-0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="137" y="146" Threshold="0" Index="7" State="0" >
+      <Synapse NeighborIndex="0" Weight="1" GE="-0.06" />
+      <Synapse NeighborIndex="5" Weight="1" GE="-0.06" />
+      <Synapse NeighborIndex="8" Weight="1" GE="0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="192" y="174" Threshold="0" Index="8" State="0" >
+      <Synapse NeighborIndex="0" Weight="1" GE="-0.06" />
+      <Synapse NeighborIndex="4" Weight="1" GE="-0.06" />
+      <Synapse NeighborIndex="3" Weight="1" GE="-0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="285" y="42" Threshold="0" Index="9" State="0" >
+      <Synapse NeighborIndex="3" Weight="1" GE="-0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="434" y="78" Threshold="0" Index="10" State="0" >
+      <Synapse NeighborIndex="3" Weight="1" GE="-0.06" />
+    </Neuron>
+    <Neuron Nb_Neighbors="0" x="153" y="59" Threshold="0" Index="11" State="0" />
+    <Neuron Nb_Neighbors="0" x="90" y="116" Threshold="0" Index="12" State="0" />
+  </Network>
+  <UpdateSchedulingPlan Nb_UpdateBlocks="0" />
+</Configuration>

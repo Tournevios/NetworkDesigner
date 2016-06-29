@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<Configuration>
+  <Network Temperature="0" UniformalTemperature="1" Nb_Neurons="12" >
+    <Neuron Nb_Neighbors="1" x="115" y="75" Temperature="1" Index="0" State="1" NbStates="2" >
+      <State Threshold="0.001" Index="1" />
+      <Synapse CX="215.0399994850159" CY="82.31999980285764" NeighborIndex="3" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="92" y="342" Temperature="1" Index="1" State="1" NbStates="2" >
+      <State Threshold="0.001" Index="1" />
+      <Synapse CX="106.2000002413988" CY="265.8000003620982" NeighborIndex="0" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="2" x="158" y="139" Temperature="1" Index="2" State="1" NbStates="2" >
+      <State Threshold="0.001" Index="1" />
+      <Synapse CX="120.1200003661215" CY="94.16000028699636" NeighborIndex="0" Weight="1" Delay="0" />
+      <Synapse CX="264.3199993669987" CY="154.5599996298552" NeighborIndex="6" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="269" y="72" Temperature="1" Index="3" State="1" NbStates="2" >
+      <State Threshold="0.001" Index="1" />
+      <Synapse CX="381.9199990853667" CY="82.87999980151653" NeighborIndex="4" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="0" x="413" y="76" Temperature="1" Index="4" State="1" NbStates="2" >
+      <State Threshold="0.001" Index="1" />
+    </Neuron>
+    <Neuron Nb_Neighbors="2" x="415" y="267" Temperature="1" Index="5" State="1" NbStates="2" >
+      <State Threshold="0.001" Index="1" />
+      <Synapse CX="367.120001103729" CY="177.8000003956258" NeighborIndex="4" Weight="1" Delay="0" />
+      <Synapse CX="340" CY="428" NeighborIndex="1" Weight="-1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="2" x="314" y="137" Temperature="1" Index="6" State="1" NbStates="2" >
+      <State Threshold="0.001" Index="1" />
+      <Synapse CX="352.7999991551042" CY="204.3999995104969" NeighborIndex="7" Weight="1" Delay="0" />
+      <Synapse CX="308.5599992610514" CY="181.4399995654821" NeighborIndex="9" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="316" y="228" Temperature="1" Index="7" State="1" NbStates="2" >
+      <State Threshold="0.001" Index="1" />
+      <Synapse CX="267.679999358952" CY="253.6799993924797" NeighborIndex="8" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="2" x="162" y="225" Temperature="1" Index="8" State="1" NbStates="2" >
+      <State Threshold="0.001" Index="1" />
+      <Synapse CX="140.8000004291534" CY="160.160000488162" NeighborIndex="2" Weight="1" Delay="0" />
+      <Synapse CX="184.2399995587766" CY="283.91999932006" NeighborIndex="10" Weight="-1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="2" x="237" y="187" Temperature="1" Index="9" State="1" NbStates="2" >
+      <State Threshold="0.001" Index="1" />
+      <Synapse CX="173.8000005297363" CY="143.4400004372001" NeighborIndex="2" Weight="1" Delay="0" />
+      <Synapse CX="269.9199993535876" CY="328.1599992141128" NeighborIndex="11" Weight="-1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="1" x="167" y="282" Temperature="1" Index="10" State="1" NbStates="2" >
+      <State Threshold="0.001" Index="1" />
+      <Synapse CX="256.0800007805228" CY="241.5600007362664" NeighborIndex="5" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="0" x="245" y="399" Temperature="1" Index="11" State="1" NbStates="2" >
+      <State Threshold="0.001" Index="1" />
+    </Neuron>
+  </Network>
+  <UpdateSchedulingPlan Nb_UpdateBlocks="0" />
+</Configuration>

@@ -1,0 +1,354 @@
+<?xml version="1.0"?>
+<Configuration>
+  <Network Temperature="0" UniformalTemperature="1" Nb_Neurons="48" >
+    <Neuron Nb_Neighbors="3" x="310" y="196" Temperature="1" Index="0" State="1" NbStates="2" >
+      <State Threshold="1e-10" Index="1" />
+      <Synapse CX="292.9599993228912" CY="173.4399991035461" NeighborIndex="0" Weight="-1" Delay="0" />
+      <Synapse CX="371.8400008678436" CY="190.0000007748604" NeighborIndex="1" Weight="1" Delay="0" />
+      <Synapse CX="418.320001065731" CY="221.920000910759" NeighborIndex="2" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="385" y="31" Temperature="1" Index="1" State="0" NbStates="2" >
+      <State Threshold="-0.9999999999" Index="1" />
+      <Synapse CX="323.1599991321564" CY="36.99999922513962" NeighborIndex="0" Weight="-1" Delay="0" />
+      <Synapse CX="358.3599989414215" CY="14.55999934673309" NeighborIndex="1" Weight="1" Delay="0" />
+      <Synapse CX="468" CY="81" NeighborIndex="2" Weight="-1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="6" x="460" y="219" Temperature="1" Index="2" State="1" NbStates="2" >
+      <State Threshold="1.00001" Index="1" />
+      <Synapse CX="424.2399985790253" CY="196.9199991226196" NeighborIndex="2" Weight="1" Delay="0" />
+      <Synapse CX="390.7999987602234" CY="176.2399992346764" NeighborIndex="1" Weight="1" Delay="0" />
+      <Synapse CX="355.5999989509583" CY="198.6799991130829" NeighborIndex="0" Weight="1" Delay="0" />
+      <Synapse CX="379.680001616478" CY="245.8400010466576" NeighborIndex="5" Weight="1" Delay="0" />
+      <Synapse CX="653.8933425086516" CY="236.1333346106388" NeighborIndex="14" Weight="1" Delay="0" />
+      <Synapse CX="526.1511175894443" CY="376.2577823260684" NeighborIndex="47" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="70" y="223" Temperature="1" Index="3" State="1" NbStates="2" >
+      <State Threshold="1e-10" Index="1" />
+      <Synapse CX="52.95999932289124" CY="200.4399991035461" NeighborIndex="3" Weight="-1" Delay="0" />
+      <Synapse CX="131.8400008678436" CY="217.0000007748604" NeighborIndex="4" Weight="1" Delay="0" />
+      <Synapse CX="178.320001065731" CY="248.920000910759" NeighborIndex="5" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="131.1111134989762" y="24.44444488963964" Temperature="1" Index="4" State="0" NbStates="2" >
+      <State Threshold="-0.9999999999" Index="1" />
+      <Synapse CX="69.27111263113261" CY="30.44444411477927" NeighborIndex="3" Weight="-1" Delay="0" />
+      <Synapse CX="104.4711124403977" CY="8.004444236372731" NeighborIndex="4" Weight="1" Delay="0" />
+      <Synapse CX="214.1111134989762" CY="74.44444488963941" NeighborIndex="5" Weight="-1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="7" x="218" y="220" Temperature="1" Index="5" State="1" NbStates="2" >
+      <State Threshold="1.00001" Index="1" />
+      <Synapse CX="182.2399985790253" CY="197.9199991226196" NeighborIndex="5" Weight="1" Delay="0" />
+      <Synapse CX="148.7999987602234" CY="177.2399992346764" NeighborIndex="4" Weight="1" Delay="0" />
+      <Synapse CX="113.5999989509583" CY="199.6799991130829" NeighborIndex="3" Weight="1" Delay="0" />
+      <Synapse CX="298.319998383522" CY="193.1599989533424" NeighborIndex="2" Weight="1" Delay="0" />
+      <Synapse CX="252.0000012768638" CY="381.3600046833355" NeighborIndex="44" Weight="1" Delay="0" />
+      <Synapse CX="653.8933425086512" CY="236.1333346106388" NeighborIndex="11" Weight="1" Delay="0" />
+      <Synapse CX="258.471113186118" CY="657.8755681248361" NeighborIndex="26" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="566.6666769871007" y="971.111128797502" Temperature="1" Index="6" State="1" NbStates="2" >
+      <State Threshold="1e-10" Index="1" />
+      <Synapse CX="549.6266763099919" CY="948.5511279010482" NeighborIndex="6" Weight="-1" Delay="0" />
+      <Synapse CX="628.5066778549442" CY="965.1111295723624" NeighborIndex="7" Weight="1" Delay="0" />
+      <Synapse CX="674.9866780528316" CY="997.031129708261" NeighborIndex="8" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="650.6666769871006" y="804.111128797502" Temperature="1" Index="7" State="0" NbStates="2" >
+      <State Threshold="-0.9999999999" Index="1" />
+      <Synapse CX="588.8266761192569" CY="810.1111280226417" NeighborIndex="6" Weight="-1" Delay="0" />
+      <Synapse CX="624.0266759285221" CY="787.6711281442351" NeighborIndex="7" Weight="1" Delay="0" />
+      <Synapse CX="733.6666769871006" CY="854.111128797502" NeighborIndex="8" Weight="-1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="6" x="714.6666769871008" y="968.111128797502" Temperature="1" Index="8" State="1" NbStates="2" >
+      <State Threshold="1.00001" Index="1" />
+      <Synapse CX="678.9066755661261" CY="946.0311279201217" NeighborIndex="8" Weight="1" Delay="0" />
+      <Synapse CX="645.4666757473242" CY="925.3511280321784" NeighborIndex="7" Weight="1" Delay="0" />
+      <Synapse CX="610.2666759380591" CY="947.7911279105849" NeighborIndex="6" Weight="1" Delay="0" />
+      <Synapse CX="675.2355692186477" CY="1072.27557968019" NeighborIndex="35" Weight="1" Delay="0" />
+      <Synapse CX="939.0577973689567" CY="1079.742246514633" NeighborIndex="17" Weight="1" Delay="0" />
+      <Synapse CX="806.4622380078576" CY="946.8355750665255" NeighborIndex="32" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="800.0000145700245" y="208.8888926932842" Temperature="1" Index="9" State="1" NbStates="2" >
+      <State Threshold="1e-10" Index="1" />
+      <Synapse CX="782.9600138929158" CY="186.3288917968303" NeighborIndex="9" Weight="-1" Delay="0" />
+      <Synapse CX="861.8400154378677" CY="202.8888934681446" NeighborIndex="10" Weight="1" Delay="0" />
+      <Synapse CX="908.3200156357551" CY="234.8088936040432" NeighborIndex="11" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="874.6666780798516" y="13.66666715233415" Temperature="1" Index="10" State="0" NbStates="2" >
+      <State Threshold="-0.9999999999" Index="1" />
+      <Synapse CX="812.826677212008" CY="19.66666637747377" NeighborIndex="9" Weight="-1" Delay="0" />
+      <Synapse CX="848.0266770212731" CY="-2.773333500932754" NeighborIndex="10" Weight="1" Delay="0" />
+      <Synapse CX="957.6666780798513" CY="63.6666671523341" NeighborIndex="11" Weight="-1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="7" x="949.6666780798516" y="201.6666671523341" Temperature="1" Index="11" State="1" NbStates="2" >
+      <State Threshold="1.00001" Index="1" />
+      <Synapse CX="913.9066766588769" CY="179.5866662749537" NeighborIndex="11" Weight="1" Delay="0" />
+      <Synapse CX="880.466676840075" CY="158.9066663870105" NeighborIndex="10" Weight="1" Delay="0" />
+      <Synapse CX="845.2666770308099" CY="181.346666265417" NeighborIndex="9" Weight="1" Delay="0" />
+      <Synapse CX="928.1066834008249" CY="226.4266681746199" NeighborIndex="14" Weight="1" Delay="0" />
+      <Synapse CX="1064.186686631927" CY="374.0177827244921" NeighborIndex="41" Weight="1" Delay="0" />
+      <Synapse CX="513.7733355712004" CY="185.5333325416953" NeighborIndex="5" Weight="1" Delay="0" />
+      <Synapse CX="1070.657798541181" CY="650.5333461659928" NeighborIndex="17" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="559.6666780798525" y="205.6666671523341" Temperature="1" Index="12" State="1" NbStates="2" >
+      <State Threshold="1e-10" Index="1" />
+      <Synapse CX="542.6266774027438" CY="183.1066662558802" NeighborIndex="12" Weight="-1" Delay="0" />
+      <Synapse CX="621.5066789476961" CY="199.6666679271945" NeighborIndex="13" Weight="1" Delay="0" />
+      <Synapse CX="667.9866791455836" CY="231.586668063093" NeighborIndex="14" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="626.6666780798525" y="26.66666715233415" Temperature="1" Index="13" State="0" NbStates="2" >
+      <State Threshold="-0.9999999999" Index="1" />
+      <Synapse CX="564.8266772120089" CY="32.66666637747376" NeighborIndex="12" Weight="-1" Delay="0" />
+      <Synapse CX="600.0266770212741" CY="10.22666649906725" NeighborIndex="13" Weight="1" Delay="0" />
+      <Synapse CX="709.6666780798523" CY="76.6666671523341" NeighborIndex="14" Weight="-1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="6" x="707.6666780798523" y="202.6666671523341" Temperature="1" Index="14" State="1" NbStates="2" >
+      <State Threshold="1.00001" Index="1" />
+      <Synapse CX="671.9066766588776" CY="180.5866662749536" NeighborIndex="14" Weight="1" Delay="0" />
+      <Synapse CX="638.4666768400757" CY="159.9066663870105" NeighborIndex="13" Weight="1" Delay="0" />
+      <Synapse CX="603.2666770308107" CY="182.346666265417" NeighborIndex="12" Weight="1" Delay="0" />
+      <Synapse CX="513.7733355712007" CY="185.5333325416953" NeighborIndex="2" Weight="1" Delay="0" />
+      <Synapse CX="729.2266727588791" CY="177.9066661300482" NeighborIndex="11" Weight="1" Delay="0" />
+      <Synapse CX="790.0355703193466" CY="379.1200050817594" NeighborIndex="38" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="814.2222397467251" y="963.0000174840295" Temperature="1" Index="15" State="1" NbStates="2" >
+      <State Threshold="1e-10" Index="1" />
+      <Synapse CX="797.1822390696163" CY="940.4400165875757" NeighborIndex="15" Weight="-1" Delay="0" />
+      <Synapse CX="876.0622406145679" CY="957.0000182588899" NeighborIndex="16" Weight="1" Delay="0" />
+      <Synapse CX="922.5422408124554" CY="988.9200183947883" NeighborIndex="17" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="898.2222397467244" y="796.00001748403" Temperature="1" Index="16" State="0" NbStates="2" >
+      <State Threshold="-0.9999999999" Index="1" />
+      <Synapse CX="836.3822388788809" CY="802.0000167091696" NeighborIndex="15" Weight="-1" Delay="0" />
+      <Synapse CX="871.5822386881459" CY="779.5600168307631" NeighborIndex="16" Weight="1" Delay="0" />
+      <Synapse CX="981.2222397467245" CY="846.00001748403" NeighborIndex="17" Weight="-1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="7" x="962.2222397467242" y="960.0000174840295" Temperature="1" Index="17" State="1" NbStates="2" >
+      <State Threshold="1.00001" Index="1" />
+      <Synapse CX="926.4622383257495" CY="937.9200166066491" NeighborIndex="17" Weight="1" Delay="0" />
+      <Synapse CX="893.0222385069476" CY="917.2400167187059" NeighborIndex="16" Weight="1" Delay="0" />
+      <Synapse CX="857.8222386976825" CY="939.6800165971124" NeighborIndex="15" Weight="1" Delay="0" />
+      <Synapse CX="737.8311193648683" CY="848.3688997668987" NeighborIndex="8" Weight="1" Delay="0" />
+      <Synapse CX="1080.613354320438" CY="941.7333527092583" NeighborIndex="29" Weight="1" Delay="0" />
+      <Synapse CX="675.2355692186477" CY="1072.27557968019" NeighborIndex="26" Weight="1" Delay="0" />
+      <Synapse CX="841.2311192853949" CY="511.1333384703708" NeighborIndex="11" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="328.8888948787879" y="746.6666802653563" Temperature="1" Index="18" State="0" NbStates="2" >
+      <State Threshold="1e-10" Index="1" />
+      <Synapse CX="311.8488942016791" CY="724.1066793689024" NeighborIndex="18" Weight="-1" Delay="0" />
+      <Synapse CX="390.7288957466315" CY="740.6666810402166" NeighborIndex="19" Weight="1" Delay="0" />
+      <Synapse CX="437.2088959445189" CY="772.5866811761152" NeighborIndex="20" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="402.7777781015561" y="551.0000094705159" Temperature="1" Index="19" State="0" NbStates="2" >
+      <State Threshold="-0.9999999999" Index="1" />
+      <Synapse CX="340.9377772337125" CY="557.0000086956555" NeighborIndex="18" Weight="-1" Delay="0" />
+      <Synapse CX="376.1377770429776" CY="534.560008817249" NeighborIndex="19" Weight="1" Delay="0" />
+      <Synapse CX="485.7777781015561" CY="601.0000094705158" NeighborIndex="20" Weight="-1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="7" x="477.7777781015561" y="739.0000094705158" Temperature="1" Index="20" State="1" NbStates="2" >
+      <State Threshold="1.00001" Index="1" />
+      <Synapse CX="442.0177766805814" CY="716.9200085931354" NeighborIndex="20" Weight="1" Delay="0" />
+      <Synapse CX="408.5777768617795" CY="696.2400087051922" NeighborIndex="19" Weight="1" Delay="0" />
+      <Synapse CX="373.3777770525144" CY="718.6800085835988" NeighborIndex="18" Weight="1" Delay="0" />
+      <Synapse CX="673.8044540671655" CY="818.5333476971698" NeighborIndex="32" Weight="1" Delay="0" />
+      <Synapse CX="399.5911131749919" CY="828.2400141331885" NeighborIndex="23" Weight="1" Delay="0" />
+      <Synapse CX="536.1066733687012" CY="667.4577888693339" NeighborIndex="47" Weight="1" Delay="0" />
+      <Synapse CX="542.5777852779554" CY="943.9733523108345" NeighborIndex="35" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="87.77777810155609" y="743.0000094705158" Temperature="1" Index="21" State="0" NbStates="2" >
+      <State Threshold="1e-10" Index="1" />
+      <Synapse CX="70.73777742444733" CY="720.4400085740618" NeighborIndex="21" Weight="-1" Delay="0" />
+      <Synapse CX="149.6177789693997" CY="737.0000102453762" NeighborIndex="22" Weight="1" Delay="0" />
+      <Synapse CX="196.0977791672871" CY="768.9200103812749" NeighborIndex="23" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="148.8888916005323" y="537.777787572072" Temperature="1" Index="22" State="0" NbStates="2" >
+      <State Threshold="-0.9999999999" Index="1" />
+      <Synapse CX="87.0488907326887" CY="543.7777867972117" NeighborIndex="21" Weight="-1" Delay="0" />
+      <Synapse CX="122.2488905419538" CY="521.3377869188051" NeighborIndex="22" Weight="1" Delay="0" />
+      <Synapse CX="231.8888916005323" CY="587.7777875720719" NeighborIndex="23" Weight="-1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="7" x="235.7777781015561" y="740.0000094705158" Temperature="1" Index="23" State="1" NbStates="2" >
+      <State Threshold="1.00001" Index="1" />
+      <Synapse CX="200.0177766805814" CY="717.9200085931354" NeighborIndex="23" Weight="1" Delay="0" />
+      <Synapse CX="166.5777768617795" CY="697.2400087051922" NeighborIndex="22" Weight="1" Delay="0" />
+      <Synapse CX="131.3777770525144" CY="719.6800085835988" NeighborIndex="21" Weight="1" Delay="0" />
+      <Synapse CX="313.9644430281203" CY="650.7600048078431" NeighborIndex="20" Weight="1" Delay="0" />
+      <Synapse CX="261.9555570561208" CY="672.5600112266009" NeighborIndex="44" Weight="1" Delay="0" />
+      <Synapse CX="268.426668965375" CY="949.0755746681017" NeighborIndex="26" Weight="1" Delay="0" />
+      <Synapse CX="673.804454067165" CY="818.5333476971697" NeighborIndex="29" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="95.55555729586403" y="957.7777952213351" Temperature="1" Index="24" State="1" NbStates="2" >
+      <State Threshold="1e-10" Index="1" />
+      <Synapse CX="78.51555661875527" CY="935.2177943248812" NeighborIndex="24" Weight="-1" Delay="0" />
+      <Synapse CX="157.3955581637076" CY="951.7777959961954" NeighborIndex="25" Weight="1" Delay="0" />
+      <Synapse CX="203.875558361595" CY="983.697796132094" NeighborIndex="26" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="179.555557295864" y="790.7777952213348" Temperature="1" Index="25" State="0" NbStates="2" >
+      <State Threshold="-0.9999999999" Index="1" />
+      <Synapse CX="117.7155564280204" CY="796.7777944464746" NeighborIndex="24" Weight="-1" Delay="0" />
+      <Synapse CX="152.9155562372855" CY="774.3377945680679" NeighborIndex="25" Weight="1" Delay="0" />
+      <Synapse CX="262.555557295864" CY="840.7777952213349" NeighborIndex="26" Weight="-1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="7" x="243.555557295864" y="954.7777952213351" Temperature="1" Index="26" State="1" NbStates="2" >
+      <State Threshold="1.00001" Index="1" />
+      <Synapse CX="207.7955558748893" CY="932.6977943439547" NeighborIndex="26" Weight="1" Delay="0" />
+      <Synapse CX="174.3555560560874" CY="912.0177944560114" NeighborIndex="25" Weight="1" Delay="0" />
+      <Synapse CX="139.1555562468223" CY="934.4577943344179" NeighborIndex="24" Weight="1" Delay="0" />
+      <Synapse CX="411.4133410683386" CY="1064.808912845747" NeighborIndex="35" Weight="1" Delay="0" />
+      <Synapse CX="210.9066664320451" CY="745.7022300237492" NeighborIndex="23" Weight="1" Delay="0" />
+      <Synapse CX="530.5422278239405" CY="842.5022330251744" NeighborIndex="17" Weight="1" Delay="0" />
+      <Synapse CX="203.084444109746" CY="516.9022270964989" NeighborIndex="5" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="817.4444561814079" y="698.6666766228498" Temperature="1" Index="27" State="1" NbStates="2" >
+      <State Threshold="1e-10" Index="1" />
+      <Synapse CX="800.4044555042991" CY="676.1066757263959" NeighborIndex="27" Weight="-1" Delay="0" />
+      <Synapse CX="879.284457049251" CY="692.6666773977101" NeighborIndex="28" Weight="1" Delay="0" />
+      <Synapse CX="925.7644572471385" CY="724.5866775336087" NeighborIndex="29" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="892.4444561814076" y="533.6666766228501" Temperature="1" Index="28" State="0" NbStates="2" >
+      <State Threshold="-0.9999999999" Index="1" />
+      <Synapse CX="830.604455313564" CY="539.6666758479897" NeighborIndex="27" Weight="-1" Delay="0" />
+      <Synapse CX="865.8044551228292" CY="517.2266759695832" NeighborIndex="28" Weight="1" Delay="0" />
+      <Synapse CX="975.4444561814073" CY="583.66667662285" NeighborIndex="29" Weight="-1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="7" x="967.4444561814076" y="721.6666766228498" Temperature="1" Index="29" State="1" NbStates="2" >
+      <State Threshold="1.00001" Index="1" />
+      <Synapse CX="931.6844547604329" CY="699.5866757454694" NeighborIndex="29" Weight="1" Delay="0" />
+      <Synapse CX="898.244454941631" CY="678.9066758575261" NeighborIndex="28" Weight="1" Delay="0" />
+      <Synapse CX="863.0444551323659" CY="701.3466757359326" NeighborIndex="27" Weight="1" Delay="0" />
+      <Synapse CX="948.0177949593386" CY="808.826681261151" NeighborIndex="32" Weight="1" Delay="0" />
+      <Synapse CX="1074.142242411184" CY="665.2177892677577" NeighborIndex="41" Weight="1" Delay="0" />
+      <Synapse CX="849.0533416076942" CY="739.933341397621" NeighborIndex="17" Weight="1" Delay="0" />
+      <Synapse CX="529.4177802157986" CY="643.1333383961959" NeighborIndex="23" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="577.4444561814086" y="725.66667662285" Temperature="1" Index="30" State="1" NbStates="2" >
+      <State Threshold="1e-10" Index="1" />
+      <Synapse CX="560.4044555042998" CY="703.1066757263961" NeighborIndex="30" Weight="-1" Delay="0" />
+      <Synapse CX="639.2844570492521" CY="719.6666773977104" NeighborIndex="31" Weight="1" Delay="0" />
+      <Synapse CX="685.7644572471396" CY="751.586677533609" NeighborIndex="32" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="644.4444561814086" y="546.6666766228501" Temperature="1" Index="31" State="0" NbStates="2" >
+      <State Threshold="-0.9999999999" Index="1" />
+      <Synapse CX="582.6044553135649" CY="552.6666758479897" NeighborIndex="30" Weight="-1" Delay="0" />
+      <Synapse CX="617.8044551228301" CY="530.2266759695832" NeighborIndex="31" Weight="1" Delay="0" />
+      <Synapse CX="727.4444561814083" CY="596.66667662285" NeighborIndex="32" Weight="-1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="7" x="725.4444561814083" y="722.66667662285" Temperature="1" Index="32" State="1" NbStates="2" >
+      <State Threshold="1.00001" Index="1" />
+      <Synapse CX="689.6844547604336" CY="700.5866757454696" NeighborIndex="32" Weight="1" Delay="0" />
+      <Synapse CX="656.2444549416317" CY="679.9066758575264" NeighborIndex="31" Weight="1" Delay="0" />
+      <Synapse CX="621.0444551323667" CY="702.3466757359329" NeighborIndex="30" Weight="1" Delay="0" />
+      <Synapse CX="744.8711174034773" CY="635.5066719845488" NeighborIndex="29" Weight="1" Delay="0" />
+      <Synapse CX="529.4177802157991" CY="643.133338396196" NeighborIndex="20" Weight="1" Delay="0" />
+      <Synapse CX="799.9911260986036" CY="670.3200116250248" NeighborIndex="38" Weight="1" Delay="0" />
+      <Synapse CX="633.6488951606516" CY="743.9422303538265" NeighborIndex="8" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="343.1111200554882" y="949.6666839078625" Temperature="1" Index="33" State="1" NbStates="2" >
+      <State Threshold="1e-10" Index="1" />
+      <Synapse CX="326.0711193783794" CY="927.1066830114087" NeighborIndex="33" Weight="-1" Delay="0" />
+      <Synapse CX="404.951120923331" CY="943.6666846827229" NeighborIndex="34" Weight="1" Delay="0" />
+      <Synapse CX="451.4311211212184" CY="975.5866848186213" NeighborIndex="35" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="413.3333408611794" y="791.1111255192465" Temperature="1" Index="34" State="0" NbStates="2" >
+      <State Threshold="-0.9999999999" Index="1" />
+      <Synapse CX="351.4933399933358" CY="797.1111247443861" NeighborIndex="33" Weight="-1" Delay="0" />
+      <Synapse CX="386.6933398026009" CY="774.6711248659796" NeighborIndex="34" Weight="1" Delay="0" />
+      <Synapse CX="496.3333408611793" CY="841.1111255192467" NeighborIndex="35" Weight="-1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="6" x="491.1111200554873" y="946.6666839078625" Temperature="1" Index="35" State="1" NbStates="2" >
+      <State Threshold="1.00001" Index="1" />
+      <Synapse CX="455.3511186345125" CY="924.5866830304822" NeighborIndex="35" Weight="1" Delay="0" />
+      <Synapse CX="421.9111188157107" CY="903.9066831425389" NeighborIndex="34" Weight="1" Delay="0" />
+      <Synapse CX="386.7111190064455" CY="926.3466830209454" NeighborIndex="33" Weight="1" Delay="0" />
+      <Synapse CX="323.2533362830127" CY="836.63556628345" NeighborIndex="26" Weight="1" Delay="0" />
+      <Synapse CX="530.5422278239405" CY="842.5022330251744" NeighborIndex="8" Weight="1" Delay="0" />
+      <Synapse CX="426.3111128790879" CY="741.6933410675439" NeighborIndex="20" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="555.1111200554873" y="477.3333390399258" Temperature="1" Index="36" State="0" NbStates="2" >
+      <State Threshold="1e-10" Index="1" />
+      <Synapse CX="538.0711193783785" CY="454.7733381434719" NeighborIndex="36" Weight="-1" Delay="0" />
+      <Synapse CX="616.9511209233308" CY="471.3333398147861" NeighborIndex="37" Weight="1" Delay="0" />
+      <Synapse CX="663.4311211212182" CY="503.253339950685" NeighborIndex="38" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="639.1111200554873" y="310.3333390399259" Temperature="1" Index="37" State="0" NbStates="2" >
+      <State Threshold="-0.9999999999" Index="1" />
+      <Synapse CX="577.2711191876436" CY="316.3333382650655" NeighborIndex="36" Weight="-1" Delay="0" />
+      <Synapse CX="612.4711189969088" CY="293.893338386659" NeighborIndex="37" Weight="1" Delay="0" />
+      <Synapse CX="722.1111200554873" CY="360.3333390399259" NeighborIndex="38" Weight="-1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="7" x="703.1111200554875" y="474.3333390399258" Temperature="1" Index="38" State="1" NbStates="2" >
+      <State Threshold="1.00001" Index="1" />
+      <Synapse CX="667.3511186345128" CY="452.2533381625454" NeighborIndex="38" Weight="1" Delay="0" />
+      <Synapse CX="633.9111188157109" CY="431.5733382746021" NeighborIndex="37" Weight="1" Delay="0" />
+      <Synapse CX="598.7111190064458" CY="454.0133381530086" NeighborIndex="36" Weight="1" Delay="0" />
+      <Synapse CX="662.2933454001393" CY="519.2444527971888" NeighborIndex="47" Weight="1" Delay="0" />
+      <Synapse CX="926.1155735504486" CY="526.7111196316315" NeighborIndex="41" Weight="1" Delay="0" />
+      <Synapse CX="628.5644501382923" CY="526.6800040377509" NeighborIndex="32" Weight="1" Delay="0" />
+      <Synapse CX="620.7422278159931" CY="297.8800011105005" NeighborIndex="14" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="802.6666828151118" y="469.2222277264532" Temperature="1" Index="39" State="0" NbStates="2" >
+      <State Threshold="1e-10" Index="1" />
+      <Synapse CX="785.626682138003" CY="446.6622268299994" NeighborIndex="39" Weight="-1" Delay="0" />
+      <Synapse CX="864.5066836829546" CY="463.2222285013136" NeighborIndex="40" Weight="1" Delay="0" />
+      <Synapse CX="910.9866838808421" CY="495.1422286372122" NeighborIndex="41" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="886.6666828151111" y="302.2222277264539" Temperature="1" Index="40" State="0" NbStates="2" >
+      <State Threshold="-0.9999999999" Index="1" />
+      <Synapse CX="824.8266819472676" CY="308.2222269515935" NeighborIndex="39" Weight="-1" Delay="0" />
+      <Synapse CX="860.0266817565326" CY="285.782227073187" NeighborIndex="40" Weight="1" Delay="0" />
+      <Synapse CX="969.6666828151112" CY="352.2222277264538" NeighborIndex="41" Weight="-1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="7" x="950.6666828151109" y="466.2222277264533" Temperature="1" Index="41" State="1" NbStates="2" >
+      <State Threshold="1.00001" Index="1" />
+      <Synapse CX="914.9066813941362" CY="444.1422268490729" NeighborIndex="41" Weight="1" Delay="0" />
+      <Synapse CX="881.4666815753343" CY="423.4622269611297" NeighborIndex="40" Weight="1" Delay="0" />
+      <Synapse CX="846.2666817660692" CY="445.9022268395362" NeighborIndex="39" Weight="1" Delay="0" />
+      <Synapse CX="727.6622293201498" CY="413.8444471347476" NeighborIndex="38" Weight="1" Delay="0" />
+      <Synapse CX="843.9688965853348" CY="522.6711150815455" NeighborIndex="29" Weight="1" Delay="0" />
+      <Synapse CX="836.1466742630357" CY="293.8711121542952" NeighborIndex="11" Weight="1" Delay="0" />
+      <Synapse CX="662.2933454001395" CY="519.2444527971888" NeighborIndex="44" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="84.0000003642504" y="464.0000054637588" Temperature="1" Index="42" State="0" NbStates="2" >
+      <State Threshold="1e-10" Index="1" />
+      <Synapse CX="66.95999968714163" CY="441.440004567305" NeighborIndex="42" Weight="-1" Delay="0" />
+      <Synapse CX="145.840001232094" CY="458.0000062386192" NeighborIndex="43" Weight="1" Delay="0" />
+      <Synapse CX="192.3200014299813" CY="489.9200063745179" NeighborIndex="44" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="168.0000003642503" y="297.0000054637587" Temperature="1" Index="43" State="0" NbStates="2" >
+      <State Threshold="-0.9999999999" Index="1" />
+      <Synapse CX="106.1599994964067" CY="303.0000046888985" NeighborIndex="42" Weight="-1" Delay="0" />
+      <Synapse CX="141.3599993056718" CY="280.5600048104918" NeighborIndex="43" Weight="1" Delay="0" />
+      <Synapse CX="251.0000003642504" CY="347.0000054637589" NeighborIndex="44" Weight="-1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="7" x="232.0000003642504" y="461.0000054637588" Temperature="1" Index="44" State="1" NbStates="2" >
+      <State Threshold="1.00001" Index="1" />
+      <Synapse CX="196.2399989432757" CY="438.9200045863785" NeighborIndex="44" Weight="1" Delay="0" />
+      <Synapse CX="162.7999991244737" CY="418.2400046984352" NeighborIndex="43" Weight="1" Delay="0" />
+      <Synapse CX="127.5999993152087" CY="440.6800045768417" NeighborIndex="42" Weight="1" Delay="0" />
+      <Synapse CX="398.4711172498301" CY="511.7777859627462" NeighborIndex="47" Weight="1" Delay="0" />
+      <Synapse CX="205.8222214096857" CY="528.4400037076737" NeighborIndex="23" Weight="1" Delay="0" />
+      <Synapse CX="197.9999990873866" CY="299.6400007804233" NeighborIndex="5" Weight="1" Delay="0" />
+      <Synapse CX="520.3733377792219" CY="407.9777803930233" NeighborIndex="41" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="331.5555631238745" y="455.8888941502864" Temperature="1" Index="45" State="0" NbStates="2" >
+      <State Threshold="1e-10" Index="1" />
+      <Synapse CX="314.5155624467658" CY="433.3288932538325" NeighborIndex="45" Weight="-1" Delay="0" />
+      <Synapse CX="393.3955639917174" CY="449.8888949251468" NeighborIndex="46" Weight="1" Delay="0" />
+      <Synapse CX="439.8755641896048" CY="481.8088950610451" NeighborIndex="47" Weight="1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="3" x="415.5555631238739" y="288.8888941502867" Temperature="1" Index="46" State="0" NbStates="2" >
+      <State Threshold="-0.9999999999" Index="1" />
+      <Synapse CX="353.7155622560304" CY="294.8888933754263" NeighborIndex="45" Weight="-1" Delay="0" />
+      <Synapse CX="388.9155620652954" CY="272.4488934970198" NeighborIndex="46" Weight="1" Delay="0" />
+      <Synapse CX="498.5555631238738" CY="338.8888941502868" NeighborIndex="47" Weight="-1" Delay="0" />
+    </Neuron>
+    <Neuron Nb_Neighbors="7" x="479.5555631238736" y="452.8888941502864" Temperature="1" Index="47" State="1" NbStates="2" >
+      <State Threshold="1.00001" Index="1" />
+      <Synapse CX="443.7955617028989" CY="430.808893272906" NeighborIndex="47" Weight="1" Delay="0" />
+      <Synapse CX="410.355561884097" CY="410.1288933849627" NeighborIndex="46" Weight="1" Delay="0" />
+      <Synapse CX="375.1555620748319" CY="432.5688932633693" NeighborIndex="45" Weight="1" Delay="0" />
+      <Synapse CX="520.3733377792219" CY="407.9777803930233" NeighborIndex="38" Weight="1" Delay="0" />
+      <Synapse CX="313.0844462382939" CY="402.1111136512989" NeighborIndex="44" Weight="1" Delay="0" />
+      <Synapse CX="421.2266678567286" CY="524.4311147514684" NeighborIndex="20" Weight="1" Delay="0" />
+      <Synapse CX="413.4044455344294" CY="295.6311118242181" NeighborIndex="2" Weight="1" Delay="0" />
+    </Neuron>
+  </Network>
+  <UpdateSchedulingPlan Nb_UpdateBlocks="0" />
+</Configuration>
