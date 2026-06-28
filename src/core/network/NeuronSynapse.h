@@ -7,6 +7,7 @@
 #include <vector>
 #include <queue>
 #include <QtGui/QPainter>
+#include <QtGui/QPainterPath>
 #include <QtGui/QPen>
 
 class Neuron;

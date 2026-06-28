@@ -3,7 +3,7 @@
 
 #include "Network.h"
 #include "UpdateBlock.h"
-#include<QtGui/QWidget>
+#include<QtWidgets/QWidget>
 
 class BlockSelector : public QObject
 {
