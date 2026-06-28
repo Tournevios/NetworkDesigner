@@ -1,0 +1,10 @@
+PROJECT_NAME           = "NetworkDesigner"
+PROJECT_NUMBER         = 1.0
+OUTPUT_DIRECTORY       = docs/generated
+INPUT                  = src/core src/app
+RECURSIVE              = YES
+FILE_PATTERNS          = *.cpp *.h
+EXTRACT_ALL            = YES
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+HAVE_DOT               = NO
