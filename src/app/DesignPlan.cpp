@@ -319,6 +319,9 @@ void DesignPlan::setUpdateSchedulingPlan(UpdateSchedulingPlan* updateSchedulingP
  * Delete all the neuron when network is deleted
  */
 
+double DesignPlan::getScale() const { return scale; }
+void DesignPlan::setScale(double s) { scale = s; update(); }
+
 DesignPlan::~DesignPlan(){
 
 	for(int i=0; i<network->getNbNeurons();i++){

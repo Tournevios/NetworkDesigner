@@ -30,7 +30,7 @@ NetworkStatesSet * SetOfNetworkStatesSet::getNetworkStatesSet(int index) const{
 	if(index < nbSets){
 		return sets[index].get();
 	}
-	return nullptr;
+	return NULL;
 }
 
 void SetOfNetworkStatesSet::addNetworkState(int index, const NetworkState& networkState){

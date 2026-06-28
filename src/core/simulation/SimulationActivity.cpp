@@ -25,7 +25,7 @@ void SimulationActivity::run(){
 	//ofstream out("simulation.dat");
 	countIter = 0;
 	datfile = getFilepath() +".dat";
-	out = new ofstream("simulation.dat");
+	out = new std::ofstream("simulation.dat");
 	computer->setNetwork(new Network(*initialNetwork));
 	computer->getNetwork()->setTemperature(temperature);
 

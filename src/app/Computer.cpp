@@ -1,4 +1,5 @@
 #include "Computer.h"
+#include <unistd.h>
 
 Computer::Computer()
 {

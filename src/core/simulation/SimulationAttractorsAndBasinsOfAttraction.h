@@ -9,7 +9,7 @@ class SimulationAttractorsAndBasinsOfAttraction : public Simulation
 private:
 	UpdateType updateType;
 	int affinity;
-	static const double temperature = 0.0;
+	static constexpr double temperature = 0.0;
 	int numberOfIterations;
 	int numberOfCycles;
 	int numberOfFixedPoints;

@@ -30,10 +30,10 @@ void pCalculateTransitions::run(){
 			int currentAttractor = sim->allCombinations->getNetworkState(i)->getAttractorNumber();
 			computer->setStateOfTheNetwork(sim->allCombinations->getNetworkState(i));
 
-			if      (sim->getUpdateType() == P)  computer->computeP();
-			else if (sim->getUpdateType() == BS) computer->computeBS();
-			else if (sim->getUpdateType() == S)  computer->computeS();
-			else if (sim->getUpdateType() == BP) computer->computeBP();
+			if      (sim->getUpdateType() == UpdateType::P)  computer->computeP();
+			else if (sim->getUpdateType() == UpdateType::BS) computer->computeBS();
+			else if (sim->getUpdateType() == UpdateType::S)  computer->computeS();
+			else if (sim->getUpdateType() == UpdateType::BP) computer->computeBP();
 
 			tmpNetworkState = NetworkState(computer->getNetwork(), sim->nbStates);
 			int nextOne = sim->indexOf(&tmpNetworkState);
