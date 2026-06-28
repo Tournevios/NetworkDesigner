@@ -629,7 +629,7 @@ std::vector<double> Neuron::getThresholds() const{
 /*
  * Setter of the nodeID
  */
-void Neuron::setNodeID(char * nodeID){
+void Neuron::setNodeID(const char * nodeID){
 	strcpy(this->nodeID, nodeID);
 }
 

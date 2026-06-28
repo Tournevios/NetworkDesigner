@@ -125,7 +125,7 @@ void Computer::computeBS(){
 				for(int j=0; j < ub->getSize(); j++){
 					rnd = Random::Uniform();
 					if(rnd <= synchronyRate)
-								network->getNeuron(ub->getNeuronIndex(j))->setState((bool)(j%2));
+								network->getNeuron(ub->getNeuronIndex(j))->setState(static_cast<bool>(j%2));
 				}
 			}
 
@@ -133,7 +133,7 @@ void Computer::computeBS(){
 				for(int j=0; j < ub->getSize(); j++){
 					rnd = Random::Uniform();
 					if(rnd <= synchronyRate)
-								network->getNeuron(ub->getNeuronIndex(j))->setState((bool)((j+1)%2));
+								network->getNeuron(ub->getNeuronIndex(j))->setState(static_cast<bool>((j+1)%2));
 				}
 			}
 
@@ -193,11 +193,11 @@ void Computer::computeBP(){
 					}
 
 					else if(ub->getUpdateMethods() == FIXE_01){
-						network->getNeuron(ub->getNeuronIndex(i%ub->getSize()))->setTheNewState((bool)(i%2));
+						network->getNeuron(ub->getNeuronIndex(i%ub->getSize()))->setTheNewState(static_cast<bool>(i%2));
 					}
 
 					else if(ub->getUpdateMethods() == FIXE_10){
-						network->getNeuron(ub->getNeuronIndex(i%ub->getSize()))->setTheNewState((bool)((i+1)%2));
+						network->getNeuron(ub->getNeuronIndex(i%ub->getSize()))->setTheNewState(static_cast<bool>((i+1)%2));
 					}
 
 					else if(ub->getUpdateMethods() == RANDOMLY){

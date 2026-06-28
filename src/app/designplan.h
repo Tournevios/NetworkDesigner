@@ -5,9 +5,9 @@
 /* 																			 */
 /*****************************************************************************/
 #pragma once
-#include <QtGui/QFrame>
-#include<QtGui/QMouseEvent>
-#include<QtGui/QWidget>
+#include <QtWidgets/QFrame>
+#include<QtWidgets/QMouseEvent>
+#include<QtWidgets/QWidget>
 #include "Network.h"
 #include "NetworkDesignerParser.h"
 #include <vector>

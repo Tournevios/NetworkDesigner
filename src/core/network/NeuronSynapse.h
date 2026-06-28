@@ -135,7 +135,7 @@ public:
 	int getSynapseDelay(int synapseIndex) const;
 	void refreshSynapses();
 
-	void setNodeID(char * nodeID);
+	void setNodeID(const char * nodeID);
 	const char * getNodeID() const;
 
 	Neuron * getNeighbor(int synapseIndex) const;
