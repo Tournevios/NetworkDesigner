@@ -82,12 +82,7 @@ Neuron::Neuron(const Neuron& neuron){
 
 Neuron::~Neuron()
 {
-	while(nb_neighbors!=0){
-		delete synapses[0];
-		//synapses.erase((vector<Synapse*>::iterator)&synapses[0]);
-		synapses.erase(synapses.begin());
-		nb_neighbors--;
-	}
+	synapses.clear();
 	threshold.clear();
 }
 
@@ -385,10 +380,10 @@ void Neuron::substitute(){
  * Add a synapse between two neurons. The synapse has a weight.
  */
 bool Neuron::addSynapse(Neuron * neighbor, double weight, int delay){
-	for (const Synapse* s : synapses)
+	for (const auto& s : synapses)
 		if (s->getFinalNeuron()->getIndex() == neighbor->getIndex()) return false;
 
-	synapses.push_back(new Synapse(this, neighbor, weight, delay));
+	synapses.push_back(std::make_unique<Synapse>(this, neighbor, weight, delay));
 	nb_neighbors++;
 	return true;
 }
@@ -487,8 +482,8 @@ float Neuron::getSynapseGE(int synapseIndex) const{
  * Return the self synapse of the neuron otherwise return null
  */
 Synapse * Neuron::getSelfSynapse() const{
-	for (Synapse* s : synapses)
-		if (s->getBaseNeuron() == s->getFinalNeuron()) return s;
+	for (const auto& s : synapses)
+		if (s->getBaseNeuron() == s->getFinalNeuron()) return s.get();
 	return nullptr;
 }
 
@@ -496,10 +491,9 @@ Synapse * Neuron::getSelfSynapse() const{
  * Delete a synapse between two neurons based on the index of the synapse
  */
 void Neuron::delSynapseBySynapseIndex(int synapseIndex){
-	if(synapseIndex < nb_neighbors)
-	{
-			synapses.erase((vector<Synapse*>::iterator)&synapses[synapseIndex]);
-			nb_neighbors--;
+	if(synapseIndex < nb_neighbors){
+		synapses.erase(synapses.begin() + synapseIndex);
+		nb_neighbors--;
 	}
 }
 
@@ -508,7 +502,7 @@ void Neuron::delSynapseBySynapseIndex(int synapseIndex){
  */
 Synapse * Neuron::getSynapse(int synapseIndex) const{
 	if(synapseIndex < nb_neighbors) {
-		return synapses[synapseIndex];
+		return synapses[synapseIndex].get();
 	}
 	return nullptr;
 }
@@ -518,14 +512,9 @@ Synapse * Neuron::getSynapse(int synapseIndex) const{
  */
 int Neuron::getSynapseByNeighborIndex(int neighborIndex) const{
 	int synapseIndex = 0;
-	vector<Synapse*>::const_iterator synapsesIterator = synapses.begin();
-
-	while(synapsesIterator != synapses.end()){
-		if((*synapsesIterator)->getFinalNeuron()->getIndex() != neighborIndex){
-			synapsesIterator++;
-			synapseIndex++;
-		}
-		else break;
+	for (const auto& s : synapses){
+		if(s->getFinalNeuron()->getIndex() == neighborIndex) break;
+		synapseIndex++;
 	}
 	return synapseIndex;
 }
@@ -557,7 +546,7 @@ void Neuron::drawMe(QPainter* painter, double scale, double transX, double trans
  * Draw the synapses
  */
 void Neuron::drawSynapses(QPainter* painter, double scale, double transX, double transY){
-	for (Synapse* s : synapses) s->drawMe(painter, scale, transX, transY);
+	for (const auto& s : synapses) s->drawMe(painter, scale, transX, transY);
 }
 
 /*
@@ -578,7 +567,7 @@ void Neuron::setTemperature(double temperature){
  * Refresh the synapse
  */
 void Neuron::refreshSynapses(){
-	for (Synapse* s : synapses) s->refreshMe();
+	for (const auto& s : synapses) s->refreshMe();
 }
 
 /*

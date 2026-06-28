@@ -2,6 +2,7 @@
 #define NEURONSYNAPSE_H_
 
 #include <cmath>
+#include <memory>
 #include <string>
 #include <vector>
 #include <queue>
@@ -154,7 +155,7 @@ private:
 
 	// Synapses
 	int nb_neighbors;
-	std::vector<Synapse*> synapses;
+	std::vector<std::unique_ptr<Synapse>> synapses;
 
 	bool hasANewState;							// Set to true if a computation was done
 	int theNewState;							// The new state of the neuron

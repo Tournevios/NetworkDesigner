@@ -2,6 +2,7 @@
 #define NETWORKSTATESSET_H_
 
 #include "NetworkState.h"
+#include <memory>
 #include <vector>
 #include <iostream>
  
@@ -56,7 +57,7 @@ public:
 	friend int operator==(const NetworkState& lv, const NetworkStatesSet& rv);
 		
 private:
-	std::vector<NetworkState*> set;
+	std::vector<std::unique_ptr<NetworkState>> set;
 	int cardinal;
 	int maxCardinal;
 	bool filled;
