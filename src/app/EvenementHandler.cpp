@@ -1,4 +1,4 @@
-#include<QtWidgets/QMouseEvent>
+#include<QtGui/QMouseEvent>
 #include<QtWidgets/QFileDialog>
 #include<QtWidgets/QMessageBox>
 
@@ -545,7 +545,7 @@ void EvenementHandler::actionCopy_Clicked(bool checked){
 void EvenementHandler::actionPaste_Clicked(bool checked){
 	if(aSimpleCopy){
 		if(aSimpleCopy->getNbNeurons()!=0){
-			network->addNetwork(aSimpleCopy);
+			network->addNetwork(aSimpleCopy.get());
 		}
 		fileWasModified();
 	}
@@ -593,10 +593,10 @@ void EvenementHandler::actionSelect_all_Clicked(bool checked){
 
 void EvenementHandler::networkLayersMenu_aboutToShow(){
 	// A deep seeking algorithm'll do the job
-	stack<Neuron*>  destination;
-	stack<int> distance;
-	vector<int> minimals;
-	vector<int> l1_distances;
+	std::stack<Neuron*>  destination;
+	std::stack<int> distance;
+	std::vector<int> minimals;
+	std::vector<int> l1_distances;
 	Neuron* tmpNeuron;
 	int tmpDistance;
 	//int center_l1_distance = network->getNbNeurons();

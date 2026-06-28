@@ -1,5 +1,6 @@
 #include "SimulationAttractorsAndBasinsOfAttraction.h"
 #include "random-singleton.h"
+#include <vector>
 
 SimulationAttractorsAndBasinsOfAttraction::SimulationAttractorsAndBasinsOfAttraction(Computer * computer):Simulation(computer)
 {
@@ -426,7 +427,7 @@ void SimulationAttractorsAndBasinsOfAttraction::solveAndStore(int neuronIndex){
 			return;
 		}
 		// begin by copying the neuron and all of his neighbors
-		vector<Neuron*> neighbors;
+		std::vector<Neuron*> neighbors;
 		NetworkState tmpNetworkState(computer->getNetwork(), nbStates);
 		NetworkStatesSet * allCombinations = new NetworkStatesSet(-1);
 		for(int i=0; i< computer->getNetwork()->getNeuron(neuronIndex)->getNb_neighbors(); i++){
@@ -446,7 +447,7 @@ void SimulationAttractorsAndBasinsOfAttraction::solveAndStore(int neuronIndex){
 				j++;
 			}
 			if(!inNeighbors)
-				tmpNetworkState.setState(i, -((pow(2.0, static_cast<int>(computer->getNetwork()->getNeuron(i)->getNbStates()))-1));
+				tmpNetworkState.setState(i, -(static_cast<int>(pow(2.0, computer->getNetwork()->getNeuron(i)->getNbStates()))-1));
 			else
 				tmpNetworkState.setState(i, 0);
 		}
@@ -501,7 +502,7 @@ void SimulationAttractorsAndBasinsOfAttraction::solveAndStore(int neuronIndex){
  */
 NetworkStatesSet * SimulationAttractorsAndBasinsOfAttraction::pBackward(NetworkStatesSet * attractor){
 	NetworkStatesSet * a_traiter = new NetworkStatesSet(-1);
-	vector<int> distances;
+	std::vector<int> distances;
 	NetworkState * currentNetworkState;
 	NetworkStatesSet * result = new NetworkStatesSet(*attractor);
 	result->setMaxCardinal(-1);

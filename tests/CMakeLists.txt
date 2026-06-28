@@ -48,3 +48,37 @@ target_link_libraries(NetworkDesigner_tests PRIVATE GTest::GTest GTest::Main ${Q
 
 include(GoogleTest)
 gtest_discover_tests(NetworkDesigner_tests)
+
+# ── Integration tests (require QApplication + example NML files) ─────────────
+set(INTEGRATION_SOURCES
+    integration/test_nml_loading.cpp
+    ${CMAKE_SOURCE_DIR}/src/app/NetworkDesignerParser.cpp
+)
+
+add_executable(NetworkDesigner_integration_tests ${INTEGRATION_SOURCES} ${CORE_SOURCES})
+
+target_compile_definitions(NetworkDesigner_integration_tests PRIVATE
+    EXAMPLES_DIR_DEFAULT="${CMAKE_SOURCE_DIR}/examples"
+)
+
+target_include_directories(NetworkDesigner_integration_tests PRIVATE
+    ${CMAKE_SOURCE_DIR}/src/core/network
+    ${CMAKE_SOURCE_DIR}/src/core/simulation
+    ${CMAKE_SOURCE_DIR}/src/core/state
+    ${CMAKE_SOURCE_DIR}/src/core/scheduling
+    ${CMAKE_SOURCE_DIR}/src/core/utils
+    ${CMAKE_SOURCE_DIR}/src/app
+)
+
+target_link_libraries(NetworkDesigner_integration_tests PRIVATE
+    GTest::GTest ${QT_LIBS}
+)
+
+add_test(
+    NAME IntegrationTests_NmlLoading
+    COMMAND NetworkDesigner_integration_tests
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+set_tests_properties(IntegrationTests_NmlLoading PROPERTIES
+    ENVIRONMENT "DISPLAY=:99;EXAMPLES_DIR=${CMAKE_SOURCE_DIR}/examples"
+)

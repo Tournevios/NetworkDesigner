@@ -22,6 +22,7 @@ set(CORE_SOURCES
 set(APP_SOURCES
     app/main.cpp
     app/networkdesigner.cpp
+    app/designplan.h
     app/DesignPlan.cpp
     app/Computer.cpp
     app/EvenementHandler.cpp

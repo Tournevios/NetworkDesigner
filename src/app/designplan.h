@@ -6,7 +6,7 @@
 /*****************************************************************************/
 #pragma once
 #include <QtWidgets/QFrame>
-#include<QtWidgets/QMouseEvent>
+#include<QtGui/QMouseEvent>
 #include<QtWidgets/QWidget>
 #include "Network.h"
 #include "NetworkDesignerParser.h"
@@ -28,6 +28,9 @@ public:
 	UpdateSchedulingPlan * getUpdateSchedulingPlan() const;
 	void setUpdateSchedulingPlan(UpdateSchedulingPlan * updateSchedulingPlan);
 
+
+	double getScale() const;
+	void setScale(double scale);
 
 	void save(QString path);
 	void load(QString path);

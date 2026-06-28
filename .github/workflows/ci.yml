@@ -20,15 +20,24 @@ jobs:
           sudo apt-get install -y \
             qtbase5-dev \
             qtbase5-dev-tools \
+            libqt5xml5-dev \
             libgtest-dev \
             cmake \
-            ninja-build
+            ninja-build \
+            xvfb
 
       - name: Configure
-        run: cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug
+        run: cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=ON
 
-      - name: Build tests
-        run: cmake --build build --target NetworkDesigner_tests --parallel
+      - name: Build
+        run: cmake --build build --parallel
 
-      - name: Run tests
-        run: ctest --test-dir build --output-on-failure
+      - name: Run unit tests
+        run: ctest --test-dir build -R "^NetworkDesigner_tests" --output-on-failure
+
+      - name: Run integration tests
+        run: |
+          Xvfb :99 -screen 0 1024x768x24 &
+          sleep 1
+          DISPLAY=:99 EXAMPLES_DIR=${{ github.workspace }}/examples \
+            ctest --test-dir build -R "integration" --output-on-failure
