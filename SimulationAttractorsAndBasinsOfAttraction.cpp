@@ -40,7 +40,7 @@ void SimulationAttractorsAndBasinsOfAttraction::run(){
 	NetworkState * initialAllStates;
 	nonExploredSpace = new NetworkStatesSet(-1);
 
-	nbStates = new NetworkState(computer->getNetwork()->getNbNeurons(), NULL);
+	nbStates = new NetworkState(computer->getNetwork()->getNbNeurons(), nullptr);
 
 	for(int i=0; i< computer->getNetwork()->getNbNeurons(); i++){
 		totalNumberOfStates = totalNumberOfStates * computer->getNetwork()->getNeuron(i)->getNbStates();
@@ -230,7 +230,7 @@ NetworkState * SimulationAttractorsAndBasinsOfAttraction::getRandomNetworkState(
 
 NetworkState * SimulationAttractorsAndBasinsOfAttraction::getANonVisitedNetworkState(){
 
-	if(nonExploredSpace->getCardinal() == 0) return NULL;
+	if(nonExploredSpace->getCardinal() == 0) return nullptr;
 	NetworkState * nonVisited = new NetworkState(*(nonExploredSpace->getNetworkState(0)));
 
 	for(int i=0; i < nonVisited->getSize(); i++){
@@ -325,7 +325,7 @@ void SimulationAttractorsAndBasinsOfAttraction::tick(){
  * This function return a set of the predecessors of X according to the update schedule
  */
 NetworkStatesSet * SimulationAttractorsAndBasinsOfAttraction::predecessorOf(NetworkState* x){
-	NetworkStatesSet * result = NULL;
+	NetworkStatesSet * result = nullptr;
 
 	if(updateType == BS){
 	}
@@ -346,7 +346,7 @@ NetworkStatesSet * SimulationAttractorsAndBasinsOfAttraction::predecessorOf(Netw
  */
 NetworkStatesSet * SimulationAttractorsAndBasinsOfAttraction::pPredecessorOf(NetworkState* x){
 
-	NetworkStatesSet * result = NULL;
+	NetworkStatesSet * result = nullptr;
 	if(!(x->coherent())) return new NetworkStatesSet(-1);
 
 	for(int i=0; i < computer->getNetwork()->getNbNeurons(); i++){
@@ -354,7 +354,7 @@ NetworkStatesSet * SimulationAttractorsAndBasinsOfAttraction::pPredecessorOf(Net
 			if(!(solutions[i]->getNetworkStatesSet(x->getState(i))->getFilled())){
 				solveAndStore(i);
 			}
-			if(result==NULL){
+			if(result==nullptr){
 				result = new NetworkStatesSet(*(solutions[i]->getNetworkStatesSet(x->getState(i))));
 				if(!(result->coherent())){
 					*result -= *result;
@@ -510,7 +510,7 @@ NetworkStatesSet * SimulationAttractorsAndBasinsOfAttraction::pBackward(NetworkS
 	if(numberOfVisitedStates < totalNumberOfStates)
 			computer->setProgressBarValue(100*((double)numberOfVisitedStates/(double)totalNumberOfStates));
 	else computer->setProgressBarValue(100.0);*/
-	NetworkStatesSet * tmpResult = NULL;
+	NetworkStatesSet * tmpResult = nullptr;
 
 	int initNumber = numberOfVisitedStates;
 	if(numberOfVisitedStates < totalNumberOfStates)

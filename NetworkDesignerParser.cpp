@@ -13,8 +13,8 @@
  */
 NetworkDesignerParser::NetworkDesignerParser()
 {
-	network = NULL;
-	updateSchedulingPlan = NULL;
+	network = nullptr;
+	updateSchedulingPlan = nullptr;
 }
 
 /*
@@ -324,7 +324,7 @@ void NetworkDesignerParser::save(QString fileName){
 
 	pNetwork = doc.createElement("Network");
 
-	if(network != NULL){
+	if(network != nullptr){
 		pNetwork.setAttribute("Nb_Neurons", network->getNbNeurons());
 		pNetwork.setAttribute("Temperature", network->getTemperature());
 		pNetwork.setAttribute("UniformalTemperature", network->getUniformalTemperature());
@@ -339,7 +339,7 @@ void NetworkDesignerParser::save(QString fileName){
 
 	pUpdateSchedulingPlan = doc.createElement("UpdateSchedulingPlan");
 
-	if(updateSchedulingPlan!=NULL)
+	if(updateSchedulingPlan!=nullptr)
 		pUpdateSchedulingPlan.setAttribute("Nb_UpdateBlocks", updateSchedulingPlan->getNb_blocks());
 	else
 		pUpdateSchedulingPlan.setAttribute("Nb_UpdateBlocks", 0);
@@ -349,7 +349,7 @@ void NetworkDesignerParser::save(QString fileName){
 	if(!file.open(QIODevice::WriteOnly)) return;
 	out.setDevice(&file);
 
-	if(network!=NULL){
+	if(network!=nullptr){
 		for(int i=0; i< network->getNbNeurons(); i++){
 			neuron = network->getNeuron(i);
 			pNeuron = doc.createElement("Neuron");
@@ -382,7 +382,7 @@ void NetworkDesignerParser::save(QString fileName){
 			pNetwork.appendChild(pNeuron);
 		}
 	}
-	if(updateSchedulingPlan!=NULL){
+	if(updateSchedulingPlan!=nullptr){
 		for(int i=0; i < updateSchedulingPlan->getNb_blocks(); i++){
 			pUpdateBlock = doc.createElement("Block");
 			pUpdateBlock.setAttribute("Size", updateSchedulingPlan->getUpdateBlock(i)->getSize());
@@ -456,7 +456,7 @@ void NetworkDesignerParser::load(QString fileName){
 			network->getNeuron(i)->setTemperature(child.toElement().attribute("Temperature").toDouble(okki));
 			network->getNeuron(i)->setX(child.toElement().attribute("x").toDouble(okki));
 			network->getNeuron(i)->setY(child.toElement().attribute("y").toDouble(okki));
-			network->getNeuron(i)->setNodeID((char*)(child.toElement().attribute("NodeID", "noname").toStdString().c_str()));
+			network->getNeuron(i)->setNodeID(child.toElement().attribute("NodeID", "noname").toStdString());
 			Nb_Neighbors = child.toElement().attribute("Nb_Neighbors").toInt(okki);
 
 			if(network->getNeuron(i)->getNbStates() >= 2){

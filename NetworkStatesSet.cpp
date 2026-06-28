@@ -75,7 +75,7 @@ NetworkState* NetworkStatesSet::getNetworkState(int index) const{
 	if(index < cardinal){
 		return set[index];
 	}
-	return NULL;
+	return nullptr;
 }
 
 int NetworkStatesSet::getCardinal() const{

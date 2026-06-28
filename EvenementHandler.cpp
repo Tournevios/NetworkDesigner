@@ -25,8 +25,8 @@ EvenementHandler::EvenementHandler(Ui::MainWindow *parent, Network *network, Upd
 	this->updateSchedulingPlan = updateSchedulingPlan;
 	scale = 1.0f;
 	transX = transY = 0;
-	currentNeuron = NULL;
-	synapseBaseNeuron = NULL;
+	currentNeuron = nullptr;
+	synapseBaseNeuron = nullptr;
 	mouseX = mouseY = 0;
 	midX = midY = -1;
 	fileName = "";
@@ -442,7 +442,7 @@ void EvenementHandler::neuronSelected(Neuron* neuron){
 	emit stateChanged(neuron->getState());
 
 	// April 12th 2010
-	QString tmpQStr1(neuron->getNodeID());
+	QString tmpQStr1(QString::fromStdString(neuron->getNodeID()));
 	emit nodeIDChanged(tmpQStr1);
 	char tmpStr[10];
 	sprintf(tmpStr,"%d", neuron->getIndex());
@@ -480,7 +480,7 @@ void EvenementHandler::synapseSelected(Synapse* synapse){
 void EvenementHandler::cmbUpdateBlock_Changed(int index){
 	 int blockNum;
 	 char blockName[20] = "Block 0";
-	 UpdateBlock * currentUpdateBlock = NULL;
+	 UpdateBlock * currentUpdateBlock = nullptr;
 
 	 if(index == 0){
 		blockNum = parent->cmbUpdateBlock->count();
@@ -603,7 +603,7 @@ void EvenementHandler::actionCopy_Clicked(bool checked){
 }
 
 void EvenementHandler::actionPaste_Clicked(bool checked){
-	if(aSimpleCopy != NULL){
+	if(aSimpleCopy != nullptr){
 		if(aSimpleCopy->getNbNeurons()!=0){
 			network->addNetwork(aSimpleCopy);
 		}
@@ -914,7 +914,7 @@ void EvenementHandler::txtNodeID_Changed(QString nodeID){
 	if(parent->txtNodeID->hasFocus()){
 		for(int i=0; i<network->getNbNeurons();i++){
 			if(network->getNeuron(i)->getSelected()){
-				network->getNeuron(i)->setNodeID((char*)(nodeID.toStdString().c_str()));
+				network->getNeuron(i)->setNodeID(nodeID.toStdString());
 			}
 		}
 		parent->frmDesign->repaint();

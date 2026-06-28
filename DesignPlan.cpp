@@ -9,9 +9,9 @@ using namespace std;
 DesignPlan::DesignPlan(QWidget* parent):QFrame(parent){
 	scale = 1.0f;
 	transX = transY = 0;
-	currentNeuron = NULL;
-	currentSynapse = NULL;
-	synapseBaseNeuron = NULL;
+	currentNeuron = nullptr;
+	currentSynapse = nullptr;
+	synapseBaseNeuron = nullptr;
 	mouseX = mouseY = 0;
 	midX = midY = -1;
 	this->setMouseTracking(true);
@@ -48,8 +48,8 @@ DesignPlan::DesignPlan(QWidget* parent):QFrame(parent){
  */
 void DesignPlan::mousePressEvent(QMouseEvent * event){
 
-	Neuron * n = NULL;
-	Synapse * s = NULL;
+	Neuron * n = nullptr;
+	Synapse * s = nullptr;
 	bool ctrl = event->modifiers() & Qt::ControlModifier;
 	bool alt = event->modifiers() & Qt::AltModifier;
 	bool shift = event->modifiers() & Qt::ShiftModifier;
@@ -61,20 +61,20 @@ void DesignPlan::mousePressEvent(QMouseEvent * event){
 			// Those 7 lines ensure that two neurons'll never be drawn on the same place
 			// And select a neuron in case the cursor is on it.
 			n = network->getNeuron((int)((event->x() - transX)/scale), (int)((event->y() - transY)/scale), (int)(10*2/scale)); // ensure that the maximum distance is 2 * radius
-			if(n != NULL){
+			if(n != nullptr){
 				n = network->getNeuron((int)((event->x() - transX)/scale), (int)((event->y() - transY)/scale), (int)(10/scale)); // Ensure that the maximum distance for selecting is radius
-				if(n != NULL){
+				if(n != nullptr){
 					n->setSelected(true);
 					emit neuronSelectedChanged(n);
 					s = n->getSelfSynapse();
-					if(s!=NULL) emit synapseSelectedChanged(s);
+					if(s!=nullptr) emit synapseSelectedChanged(s);
 					currentNeuron = n;
-					currentSynapse = NULL;
+					currentSynapse = nullptr;
 				}
 			}
 			else{
 				s = network->getSynapse(event->x(), event->y());
-				if(s != NULL){
+				if(s != nullptr){
 					s->setSelected(not s->getSelected());
 					emit synapseSelectedChanged(s);
 					currentSynapse = s;
@@ -86,7 +86,7 @@ void DesignPlan::mousePressEvent(QMouseEvent * event){
 					n->setSelected(true);
 					emit neuronSelectedChanged(n);
 					currentNeuron = n;
-					currentSynapse = NULL;
+					currentSynapse = nullptr;
 					n->setXY((int)((event->x() - transX)/scale), (int)((event->y() - transY)/scale));
 					network->addNeuron(n);
 				}
@@ -95,9 +95,9 @@ void DesignPlan::mousePressEvent(QMouseEvent * event){
 		else if(ctrl and !(alt or shift)){
 			Neuron * n;
 			n = network->getNeuron((int)((event->x() - transX)/scale), (int)((event->y() - transY)/scale), (int)(10/scale));
-			if(n != NULL){
+			if(n != nullptr){
 				if(n->getSelected()){
-					currentNeuron = NULL;
+					currentNeuron = nullptr;
 					n->setSelected(false);
 				}
 				else{
@@ -105,11 +105,11 @@ void DesignPlan::mousePressEvent(QMouseEvent * event){
 					emit neuronSelectedChanged(n);
 					currentNeuron = n;
 				}
-				currentSynapse = NULL;
+				currentSynapse = nullptr;
 			}
 			else{
 				Synapse * s = network->getSynapse(event->x(), event->y());
-				if(s != NULL){
+				if(s != nullptr){
 					s->setSelected(not s->getSelected());
 					emit synapseSelectedChanged(s);
 					currentSynapse = s;
@@ -120,7 +120,7 @@ void DesignPlan::mousePressEvent(QMouseEvent * event){
 		else if(shift and !(alt or ctrl) and (currentUpdateBlock > -1)){
 			Neuron * n;
 			n = network->getNeuron((int)((event->x() - transX)/scale), (int)((event->y() - transY)/scale), (int)(10/scale));
-			if(n != NULL){
+			if(n != nullptr){
 				if(n->getYellowMe()){
 					n->setYellowMe(false);
 					updateSchedulingPlan->getUpdateBlock(currentUpdateBlock)->delNeuronIndex(n->getIndex());
@@ -136,10 +136,10 @@ void DesignPlan::mousePressEvent(QMouseEvent * event){
 	}
 	else if(event->button() & Qt::RightButton){
 		network->deselectAll();
-		currentNeuron = NULL;
-		currentSynapse = NULL;
+		currentNeuron = nullptr;
+		currentSynapse = nullptr;
 		synapseBaseNeuron = network->getNeuron((int)((event->x() - transX) / scale), (int)((event->y() - transY) / scale), (int)(10/scale));
-		if(synapseBaseNeuron!=NULL){
+		if(synapseBaseNeuron!=nullptr){
 			synapseBaseNeuron->setSelected(true);
 			emit neuronSelectedChanged(synapseBaseNeuron);
 		}
@@ -165,9 +165,9 @@ void DesignPlan::mouseReleaseEvent(QMouseEvent * event){
 		midX = -1;
 		midY = -1;
 	}
-	else if((event->button() & Qt::RightButton) and (synapseBaseNeuron != NULL)){
+	else if((event->button() & Qt::RightButton) and (synapseBaseNeuron != nullptr)){
 		Neuron * synapseFinalNeuron = network->getNeuron((int)((event->x() - transX)/scale), (int)((event->y()- transY) / scale), (int)(10/scale));
-		if(synapseFinalNeuron != NULL){
+		if(synapseFinalNeuron != nullptr){
 			network->deselectAll();
 			synapseBaseNeuron->setSelected(true);
 			if(synapseFinalNeuron->addSynapse(synapseBaseNeuron, defaultWeight, defaultDelay)){
@@ -177,9 +177,9 @@ void DesignPlan::mouseReleaseEvent(QMouseEvent * event){
 			}
 		}
 	}
-	synapseBaseNeuron = NULL;
-	currentNeuron = NULL;
-	currentSynapse = NULL;
+	synapseBaseNeuron = nullptr;
+	currentNeuron = nullptr;
+	currentSynapse = nullptr;
 
 	this->repaint();
 }
@@ -241,7 +241,7 @@ void DesignPlan::mouseMoveEvent(QMouseEvent * event){
 	mouseX = event->x();
 	mouseY = event->y();
 	double dX, dY;
-	if(currentNeuron!=NULL){
+	if(currentNeuron!=nullptr){
 		dX = currentNeuron->getX() - (event->x()- transX)/scale;
 		dY = currentNeuron->getY() - (event->y()- transY)/scale;
 		currentNeuron->setXY((event->x()- transX)/scale, (event->y() - transY)/scale);
@@ -251,7 +251,7 @@ void DesignPlan::mouseMoveEvent(QMouseEvent * event){
 		}
 		emit networkIsModified();
 		this->repaint();
-	} else if(currentSynapse != NULL){
+	} else if(currentSynapse != nullptr){
 		//dX = currentSynapse->getBaseNeuron()->getX() - (event->x()- transX)/scale;
 		//currentSynapse->setGExcentricity(currentSynapse->getGExcentricity() - ((float)dX/50000));
 		currentSynapse->setCX((event->x() - transX)/scale);
@@ -259,7 +259,7 @@ void DesignPlan::mouseMoveEvent(QMouseEvent * event){
 		emit networkIsModified();
 		this->repaint();
 	}
-	if(synapseBaseNeuron != NULL){
+	if(synapseBaseNeuron != nullptr){
 		this->repaint();
 	}
 	if((midX != -1)){
@@ -277,11 +277,11 @@ void DesignPlan::mouseMoveEvent(QMouseEvent * event){
 void DesignPlan::paintEvent(QPaintEvent * event){
 	QPainter painter(this);
 	if(loaded){
-		if(synapseBaseNeuron != NULL){
+		if(synapseBaseNeuron != nullptr){
 			painter.setPen(QPen(Qt::black, 2*scale, Qt::SolidLine, Qt::RoundCap));
 			painter.drawLine((int)(synapseBaseNeuron->getX()*scale + transX),(int)(synapseBaseNeuron->getY() * scale + transY), mouseX, mouseY);
 		}
-		if (network != NULL)
+		if (network != nullptr)
 			network->drawMe(&painter, scale, transX, transY);
 	}
 

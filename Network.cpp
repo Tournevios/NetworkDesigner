@@ -61,6 +61,8 @@ void Network::addNetwork(Network * network){
 
 Network::~Network()
 {
+	for (Neuron* n : neurons) delete n;
+	neurons.clear();
 }
 
 /*
@@ -103,11 +105,10 @@ double Network::getTemperature() const{
  * Deselect all the neurons
  */
 void Network::deselectAll(){
-	for(int i=0; i< nb_neurons; i++){
-		neurons[i]->setSelected(false);
-		for(int j=0; j < neurons[i]->getNb_neighbors();j++){
-			neurons[i]->getSynapse(j)->setSelected(false);
-		}
+	for (Neuron* n : neurons) {
+		n->setSelected(false);
+		for (int j = 0; j < n->getNb_neighbors(); ++j)
+			n->getSynapse(j)->setSelected(false);
 	}
 }
 
@@ -121,7 +122,7 @@ Neuron* Network::getNeuron(int x, int y, int radius) const{
 			return neurons[i];			
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 /*
@@ -135,7 +136,7 @@ Synapse * Network::getSynapse(int x, int y) const{
 			}
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 /*
  * This function return a neuron based on its index
@@ -144,13 +145,13 @@ Neuron* Network::getNeuron(int index) const{
 	if((index>=0) and (index<nb_neurons))
 			return neurons[index];
 	else 
-		return NULL;
+		return nullptr;
 }
 
 /*
  * This methods calculate the new global stat of the network using a block sequential update
-
-void Network::computeBS(UpdateSchedulingPlan* sp, double synchronyRate){
+ * (removed: computeBS and computeBP were superseded by Computer::computeBS/computeBP)
+ *
 	
 	int nb_blocks = sp->getNb_blocks();
 	double rnd;
@@ -284,7 +285,7 @@ void Network::addNeuron(Neuron* neuron){
  */
 void Network::delNeuron(int index){
 	Neuron * neuron = getNeuron(index);
-	if(neuron != NULL){
+	if(neuron != nullptr){
 
 		// All synapses conncected to the neuron 'll be deleted
 		for(int i = 0; i<nb_neurons; i++){
@@ -314,10 +315,7 @@ void Network::delNeuron(int index){
  */
 int Network::getState(bool* states) const{
 	int i = 0;
-	for(vector<Neuron*>::const_iterator iter = neurons.begin(); iter != neurons.end(); iter++){
-		states[i] = (*iter)->getState();
-		i++;
-	}
+	for (const Neuron* n : neurons) states[i++] = n->getState();
 	return i;
 }
 
@@ -326,15 +324,6 @@ int Network::getState(bool* states) const{
  * Draw the synapses then the neurons
  */
 void Network::drawMe(QPainter* painter, float scale, int transX, int transY){
-	vector<Neuron*>::iterator iter = neurons.begin();
-	for(int i=0; i<nb_neurons;i++){
-			(*iter)->drawSynapses(painter, scale, transX, transY);
-			iter++;
-	}
-	
-	iter = neurons.begin();
-	for(int i=0; i<nb_neurons;i++){
-		(*iter)->drawMe(painter, scale, transX, transY);
-		iter++;
-	}
+	for (Neuron* n : neurons) n->drawSynapses(painter, scale, transX, transY);
+	for (Neuron* n : neurons) n->drawMe(painter, scale, transX, transY);
 }

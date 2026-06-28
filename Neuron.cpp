@@ -19,7 +19,7 @@ void Neuron::init(){
 	yellowMe = false;
 	temperature = 0;
 	state = true;
-	strcpy(nodeID, "noname");
+	nodeID = "noname";
 }
 
 Neuron::Neuron()
@@ -67,7 +67,7 @@ Neuron::Neuron(const Neuron& neuron){
 	yellowMe = false;
 	hasANewState = false;
 	theNewState = 0;
-	strcpy(nodeID, neuron.getNodeID());
+	nodeID = neuron.getNodeID();
 
 	/*
 	 * for(int i=0; i<neuron->getNb_neighbors();i++){
@@ -166,7 +166,7 @@ int* Neuron::getColor(){
 Neuron * Neuron::getNeighbor(int synapseIndex) const{
 	if(synapseIndex < nb_neighbors)
 		return synapses[synapseIndex]->getFinalNeuron();
-	return NULL;
+	return nullptr;
 }
 
 /*
@@ -385,12 +385,8 @@ void Neuron::substitute(){
  * Add a synapse between two neurons. The synapse has a weight.
  */
 bool Neuron::addSynapse(Neuron * neighbor, double weight, int delay){
-	//addSynapse(neighbor, weight, 0, 0, 0);
-	vector<Synapse*>::iterator iter = synapses.begin();
-	while(iter != synapses.end()){
-		if((*iter)->getFinalNeuron()->getIndex() == neighbor->getIndex())	return false;
-		iter++;
-	}
+	for (const Synapse* s : synapses)
+		if (s->getFinalNeuron()->getIndex() == neighbor->getIndex()) return false;
 
 	synapses.push_back(new Synapse(this, neighbor, weight, delay));
 	nb_neighbors++;
@@ -426,7 +422,7 @@ int* Neuron::getSynapseColor(int synapseIndex){
 	if(synapseIndex < nb_neighbors) {
 			return synapsesColor[synapseIndex];
 	}
-	return NULL;
+	return nullptr;
 }
 */
 
@@ -491,12 +487,9 @@ float Neuron::getSynapseGE(int synapseIndex) const{
  * Return the self synapse of the neuron otherwise return null
  */
 Synapse * Neuron::getSelfSynapse() const{
-	vector<Synapse*>::const_iterator iter = synapses.begin();
-	while(iter!=synapses.end()){
-		if((*iter)->getBaseNeuron()==(*iter)->getFinalNeuron()) return *iter;
-		iter++;
-	}
-	return NULL;
+	for (Synapse* s : synapses)
+		if (s->getBaseNeuron() == s->getFinalNeuron()) return s;
+	return nullptr;
 }
 
 /*
@@ -517,7 +510,7 @@ Synapse * Neuron::getSynapse(int synapseIndex) const{
 	if(synapseIndex < nb_neighbors) {
 		return synapses[synapseIndex];
 	}
-	return NULL;
+	return nullptr;
 }
 
 /*
@@ -564,11 +557,7 @@ void Neuron::drawMe(QPainter* painter, double scale, double transX, double trans
  * Draw the synapses
  */
 void Neuron::drawSynapses(QPainter* painter, double scale, double transX, double transY){
-	vector<Synapse*>::iterator iter = synapses.begin();
-	while(iter != synapses.end()){
-		(*iter)->drawMe(painter, scale, transX, transY);
-		 iter++;
-	}
+	for (Synapse* s : synapses) s->drawMe(painter, scale, transX, transY);
 }
 
 /*
@@ -589,11 +578,7 @@ void Neuron::setTemperature(double temperature){
  * Refresh the synapse
  */
 void Neuron::refreshSynapses(){
-	vector<Synapse*>::iterator iter = synapses.begin();
-	while(iter != synapses.end()){
-		(*iter)->refreshMe();
-		 iter++;
-	}
+	for (Synapse* s : synapses) s->refreshMe();
 }
 
 /*
@@ -631,14 +616,14 @@ vector<double> Neuron::getThresholds() const{
 /*
  * Setter of the nodeID
  */
-void Neuron::setNodeID(char * nodeID){
-	strcpy(this->nodeID, nodeID);
+void Neuron::setNodeID(const std::string& nodeID){
+	this->nodeID = nodeID;
 }
 
 /*
  * Getter for the nodeID
  */
-const char * Neuron::getNodeID() const{
+const std::string& Neuron::getNodeID() const{
 	return nodeID;
 }
 

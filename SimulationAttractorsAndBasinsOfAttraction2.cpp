@@ -32,7 +32,7 @@ void SimulationAttractorsAndBasinsOfAttraction2::generateAllStates(){
 	// Generation de tout les états possibles du réseau.
 	int numberOfStates;
 	totalNumberOfStates = 1;
-	nbStates = new NetworkState(computer->getNetwork()->getNbNeurons(), NULL);
+	nbStates = new NetworkState(computer->getNetwork()->getNbNeurons(), nullptr);
 	for(int i=0; i< computer->getNetwork()->getNbNeurons(); i++){
 		totalNumberOfStates = totalNumberOfStates * computer->getNetwork()->getNeuron(i)->getNbStates();
 		nbStates->setState(i, computer->getNetwork()->getNeuron(i)->getNbStates());
@@ -149,13 +149,13 @@ void SimulationAttractorsAndBasinsOfAttraction2::run(){
 	/*for(int i=0; i < 10; i++){
 		parts[i][0] = i * (totalNumberOfStates/10);
 		parts[i][1] = (i+1) * (totalNumberOfStates/10) - 1;
-		if((rc1=pthread_create( &threads[i], NULL, &pcalculateTransitions, (void*)parts[i])) )
+		if((rc1=pthread_create( &threads[i], nullptr, &pcalculateTransitions, (void*)parts[i])) )
 		 {
 		     printf("Thread creation failed: %d\n", rc1);
 		 }
 	}
 	for(int i=0; i < 10; i++){
-		pthread_join( threads[i], NULL);
+		pthread_join( threads[i], nullptr);
 	}*/
 	//calculateTransitions();
 	computer->setProgressBarValue(0);
