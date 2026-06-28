@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>style.qss</file>
+        <file>icons/new.svg</file>
+        <file>icons/open.svg</file>
+        <file>icons/save.svg</file>
+        <file>icons/delete.svg</file>
+        <file>icons/start.svg</file>
+        <file>icons/stop.svg</file>
+        <file>icons/neuron.svg</file>
+        <file>icons/synapse.svg</file>
+    </qresource>
+</RCC>
