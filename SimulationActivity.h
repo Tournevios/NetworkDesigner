@@ -19,8 +19,8 @@ private:
 	int countIter;
 public:
 	SimulationActivity(Computer * computer);
-	virtual ~SimulationActivity();
-	void run();
+	~SimulationActivity() override;
+	void run() override;
 
 	void setAffinity(int affinity);
 	int getAffinity() const;
@@ -30,7 +30,7 @@ public:
 
 
 public slots:
-	void tick();
+	void tick() override;
 };
 
 #endif /*SIMULATIONACTIVITY_H_*/

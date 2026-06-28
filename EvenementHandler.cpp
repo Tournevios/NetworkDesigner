@@ -74,12 +74,8 @@ void EvenementHandler::updateMe(){
 	while(parent->cmbUpdateBlock->count()>0) parent->cmbUpdateBlock->removeItem(0);
 
 	parent->cmbUpdateBlock->addItem("Add a new block...");
-	char blockName[20];
-
-	for(int i=0; i < updateSchedulingPlan->getNb_blocks(); i++) {
-		sprintf(blockName, "Block %d",i);
-		parent->cmbUpdateBlock->addItem(blockName);
-	}
+	for(int i=0; i < updateSchedulingPlan->getNb_blocks(); i++)
+		parent->cmbUpdateBlock->addItem("Block " + QString::number(i));
 }
 
 /*
@@ -444,10 +440,7 @@ void EvenementHandler::neuronSelected(Neuron* neuron){
 	// April 12th 2010
 	QString tmpQStr1(QString::fromStdString(neuron->getNodeID()));
 	emit nodeIDChanged(tmpQStr1);
-	char tmpStr[10];
-	sprintf(tmpStr,"%d", neuron->getIndex());
-	QString tmpQStr2(tmpStr);
-	emit nodeIndexChanged(tmpQStr2);
+	emit nodeIndexChanged(QString::number(neuron->getIndex()));
 	//
 
 
@@ -479,13 +472,11 @@ void EvenementHandler::synapseSelected(Synapse* synapse){
  */
 void EvenementHandler::cmbUpdateBlock_Changed(int index){
 	 int blockNum;
-	 char blockName[20] = "Block 0";
 	 UpdateBlock * currentUpdateBlock = nullptr;
 
 	 if(index == 0){
 		blockNum = parent->cmbUpdateBlock->count();
-		sprintf(blockName, "Block %d",blockNum);
-	 	parent->cmbUpdateBlock->addItem(blockName);
+	 	parent->cmbUpdateBlock->addItem("Block " + QString::number(blockNum));
 	 	currentUpdateBlock = new UpdateBlock();
 	 	updateSchedulingPlan->addUpdateBlock(currentUpdateBlock);
 	 	parent->frmDesign->setCurrentUpdateBlock(blockNum - 1);
@@ -574,7 +565,6 @@ void EvenementHandler::actionCut_Clicked(bool checked){
 
 void EvenementHandler::actionCopy_Clicked(bool checked){
 	delete aSimpleCopy;
-	bool okki;
 	int v=0, w=0;
 	aSimpleCopy = new Network();
 	for(int i=0; i<network->getNbNeurons(); i++){
@@ -592,7 +582,7 @@ void EvenementHandler::actionCopy_Clicked(bool checked){
 					for(int l=0; l<network->getNeuron(i)->getSynapse(j)->getFinalNeuron()->getIndex();l++){
 						if(network->getNeuron(l)->getSelected()) w++;
 					}
-					okki = aSimpleCopy->getNeuron(v)->addSynapse(aSimpleCopy->getNeuron(w), network->getNeuron(i)->getSynapse(j)->getWeight(), network->getNeuron(i)->getSynapse(j)->getDelay());
+					aSimpleCopy->getNeuron(v)->addSynapse(aSimpleCopy->getNeuron(w), network->getNeuron(i)->getSynapse(j)->getWeight(), network->getNeuron(i)->getSynapse(j)->getDelay());
 					aSimpleCopy->getNeuron(v)->getSynapse(aSimpleCopy->getNeuron(v)->getNb_neighbors()-1)->setCX(network->getNeuron(i)->getSynapse(j)->getCX());
 					aSimpleCopy->getNeuron(v)->getSynapse(aSimpleCopy->getNeuron(v)->getNb_neighbors()-1)->setCY(network->getNeuron(i)->getSynapse(j)->getCY());
 				}
@@ -778,23 +768,20 @@ void EvenementHandler::networkLayersMenu_aboutToShow(){
 
 	// Connecting Slots
 
-	char centerText[30];
-	sprintf(centerText, "Centers -- Excentricity = %d", layers[0].getL1_distance());
-
-	layerActions.push_back(new QAction(centerText, networkLayersMenu));
+	layerActions.push_back(new QAction(
+		"Centers -- Excentricity = " + QString::number(layers[0].getL1_distance()), networkLayersMenu));
 	connect(layerActions[0], SIGNAL(triggered(bool)), &layers[0], SLOT(select(bool)));
 	connect(&layers[0], SIGNAL(repaintPlease()), this, SLOT(repaintPlease()));
 	for(int i=1; i < (int)layers.size() - 1;i++){
-		char layerText[30];
-		sprintf(layerText, "Layer %d -- Excentricity = %d", i, layers[i].getL1_distance());
-		layerActions.push_back(new QAction(layerText, networkLayersMenu));
+		layerActions.push_back(new QAction(
+			"Layer " + QString::number(i) + " -- Excentricity = " + QString::number(layers[i].getL1_distance()),
+			networkLayersMenu));
 		connect(layerActions[i], SIGNAL(triggered(bool)), &layers[i], SLOT(select(bool)));
 		connect(&layers[i], SIGNAL(repaintPlease()), this, SLOT(repaintPlease()));
 	}
 
-	char borderText[30];
-	sprintf(borderText, "Borders -- Excentricity = %d", layers[(int)layers.size()-1].getL1_distance());
-	layerActions.push_back(new QAction(borderText, networkLayersMenu));
+	layerActions.push_back(new QAction(
+		"Borders -- Excentricity = " + QString::number(layers[(int)layers.size()-1].getL1_distance()), networkLayersMenu));
 	connect(layerActions[layerActions.size() - 1], SIGNAL(triggered(bool)), &layers[layers.size() - 1], SLOT(select(bool)));
 	connect(&layers[layers.size() - 1], SIGNAL(repaintPlease()), this, SLOT(repaintPlease()));
 
@@ -866,13 +853,10 @@ void EvenementHandler::sbNbStates_Changed(int nbStates){
 */
 
 void EvenementHandler::cmbState_Updating(int nbStates){
-	char layerText[30];
 	QStringList qslStates;
-	string stateStr;
 	if(nbStates > 0){
 		for(int i=0; i<nbStates; i++){
-			sprintf(layerText, "State %d", i);
-			qslStates << layerText;
+			qslStates << "State " + QString::number(i);
 		}
 		while(parent->cmbState->count() != 0) parent->cmbState->removeItem(0);
 		parent->cmbState->insertItems((int)-1, qslStates);

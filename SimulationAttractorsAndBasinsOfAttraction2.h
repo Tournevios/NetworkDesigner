@@ -21,8 +21,8 @@ public:
 	pCalculateTransitions();
 	pCalculateTransitions(SimulationAttractorsAndBasinsOfAttraction2 * simulation, Computer * computer, int startIndex, int endIndex);
 	pCalculateTransitions(const pCalculateTransitions& pcalculateTransitions);
-	void run();
-	virtual ~pCalculateTransitions();
+	void run() override;
+	~pCalculateTransitions() override;
 protected:
 	SimulationAttractorsAndBasinsOfAttraction2* sim;
 	Computer * computer;
@@ -54,9 +54,9 @@ private:
 public:
 	SimulationAttractorsAndBasinsOfAttraction2();
 	SimulationAttractorsAndBasinsOfAttraction2(Computer * computer);
-	virtual ~SimulationAttractorsAndBasinsOfAttraction2();
+	~SimulationAttractorsAndBasinsOfAttraction2() override;
 
-	void run();
+	void run() override;
 
 	void setAffinity(int affinity);
 	int getAffinity() const;
@@ -96,7 +96,7 @@ public:
 	NetworkState * getANonVisitedNetworkState();
 
 public slots:
-	void tick();
+	void tick() override;
 signals:
 	void startThreads(QThread::Priority);
 };

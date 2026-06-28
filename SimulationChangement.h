@@ -25,8 +25,8 @@ private:
 
 public:
 	SimulationChangement(Computer * computer);
-	virtual ~SimulationChangement();
-	void run();
+	~SimulationChangement() override;
+	void run() override;
 
 	void setAffinity(int affinity);
 	int getAffinity() const;
@@ -36,7 +36,7 @@ public:
 
 
 public slots:
-	void tick();
+	void tick() override;
 
 };
 
