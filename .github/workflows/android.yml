@@ -55,9 +55,9 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Install NDK
+      - name: Install NDK and platform 33
         run: |
-          sdkmanager "ndk;${{ env.ANDROID_NDK_VERSION }}"
+          sdkmanager "ndk;${{ env.ANDROID_NDK_VERSION }}" "platforms;android-33" "build-tools;33.0.2"
           echo "ANDROID_NDK_ROOT=$ANDROID_SDK_ROOT/ndk/${{ env.ANDROID_NDK_VERSION }}" >> $GITHUB_ENV
 
       # Install both Qt variants via aqt for predictable, fixed paths
