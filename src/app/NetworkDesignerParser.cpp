@@ -3,7 +3,7 @@
 #include <QtXml/QDomElement>
 #include <QtXml/QDomNode>
 #include <QTextStream>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QMessageBox>
 #include <QFile>
 #include <iostream>
 #include <memory>
