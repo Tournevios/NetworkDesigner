@@ -43,7 +43,6 @@ public:
 	void deselectAll();
 
 private:
-	int nb_neurons;
 	std::vector<std::unique_ptr<Neuron>> neurons;
 	double temperature;
 	bool uniformalTemperature;

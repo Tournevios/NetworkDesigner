@@ -9,7 +9,6 @@ using namespace std;
 
 void Neuron::init(){
 	Random::Uniform<double>(0.0,1.0);
-	nb_neighbors = 0;
 	nbStates = 2;
 	threshold.push_back(0.0001);
 	hasANewState = false;
@@ -52,8 +51,6 @@ Neuron::Neuron(int index, int state, int nbStates, vector<double> threshold)
 }
 
 Neuron::Neuron(const Neuron& neuron){
-
-	nb_neighbors = 0;
 	//Synapse * synapse;
 	index = neuron.getIndex();
 	temperature = neuron.getTemperature();
@@ -75,7 +72,7 @@ Neuron::Neuron(const Neuron& neuron){
 		synapse->setCX(neuron->getSynapse(i)->getCX());
 		synapse->setCY(neuron->getSynapse(i)->getCY());
 		synapses.push(synapse);
-		nb_neighbors++;
+		(int)synapses.size()++;
 	}
 	 */
 }
@@ -112,12 +109,9 @@ void Neuron::setThreshold(int stateIndex, double thresholdValue){
 }
 
 int Neuron::getNb_neighbors() const{
-	return nb_neighbors;
+	return (int)synapses.size();
 }
 
-void Neuron::setNb_neighbors(int nb_neighbors){
-	this->nb_neighbors = nb_neighbors;
-}
 
 void Neuron::setXY(double x, double y){
 	setX(x);
@@ -125,7 +119,7 @@ void Neuron::setXY(double x, double y){
 }
 
 void Neuron::setX(double x){
-	for(int i=0; i< nb_neighbors; i++){
+	for(int i=0; i< (int)synapses.size(); i++){
 		synapses[i]->setCX(synapses[i]->getCX() - (this->x - x));
 	}
 	this->x = x;
@@ -133,7 +127,7 @@ void Neuron::setX(double x){
 }
 
 void Neuron::setY(double y){
-	for(int i=0; i< nb_neighbors; i++){
+	for(int i=0; i< (int)synapses.size(); i++){
 		synapses[i]->setCY(synapses[i]->getCY() - (this->y - y));
 	}
 	this->y = y;
@@ -159,7 +153,7 @@ int* Neuron::getColor(){
 */
 
 Neuron * Neuron::getNeighbor(int synapseIndex) const{
-	if(synapseIndex < nb_neighbors)
+	if(synapseIndex < (int)synapses.size())
 		return synapses[synapseIndex]->getFinalNeuron();
 	return nullptr;
 }
@@ -208,7 +202,7 @@ void Neuron::compute2(double temperature){
 
 		sum.push_back(threshold[0] * state);
 		sum.push_back(threshold[0] * not(state));
-		for(int i = 0; i < nb_neighbors; i++){
+		for(int i = 0; i < (int)synapses.size(); i++){
 			sum[0] += synapses[i]->getWeight() * (not synapses[i]->getStateOfTheFinalNeuron());
 			sum[1] += synapses[i]->getWeight() * synapses[i]->getStateOfTheFinalNeuron();
 		}
@@ -233,7 +227,7 @@ void Neuron::compute(double temperature){
 	double max = 0.0;
 	//temperature = temperature * K_BOLTZMANN;
 	sum.push_back(0.00);
-	for(int i = 0; i < nb_neighbors; i++){
+	for(int i = 0; i < (int)synapses.size(); i++){
 			/*if(synapses[i]->getFinalNeuron()->getIndex() == 9)
 				sum[0] += synapses[i]->getWeight();
 			else*/
@@ -384,7 +378,6 @@ bool Neuron::addSynapse(Neuron * neighbor, double weight, int delay){
 		if (s->getFinalNeuron()->getIndex() == neighbor->getIndex()) return false;
 
 	synapses.push_back(std::make_unique<Synapse>(this, neighbor, weight, delay));
-	nb_neighbors++;
 	return true;
 }
 /*
@@ -393,7 +386,7 @@ void Neuron::addSynapse(Neuron * neighbor, double weight, int red, int green, in
 	neighbors.push_back(neighbor);
 	weights.push_back(weight);
 	synapsesColor.push_back(color);
-	nb_neighbors++;
+	(int)synapses.size()++;
 }
 */
 
@@ -402,7 +395,7 @@ void Neuron::addSynapse(Neuron * neighbor, double weight, int red, int green, in
  */
 /*
 void Neuron::setSynapseColor(int synapseIndex, int red, int green, int blue){
-	if(synapseIndex < nb_neighbors) {
+	if(synapseIndex < (int)synapses.size()) {
 		synapsesColor[synapseIndex][0] = red;
 		synapsesColor[synapseIndex][1] = green;
 		synapsesColor[synapseIndex][2] = blue;
@@ -414,7 +407,7 @@ void Neuron::setSynapseColor(int synapseIndex, int red, int green, int blue){
  */
 /*
 int* Neuron::getSynapseColor(int synapseIndex){
-	if(synapseIndex < nb_neighbors) {
+	if(synapseIndex < (int)synapses.size()) {
 			return synapsesColor[synapseIndex];
 	}
 	return nullptr;
@@ -425,7 +418,7 @@ int* Neuron::getSynapseColor(int synapseIndex){
  * Modify the weight of the synapse
  */
 void Neuron::setSynapseWeight(int synapseIndex, double weight){
-	if(synapseIndex < nb_neighbors) {
+	if(synapseIndex < (int)synapses.size()) {
 		synapses[synapseIndex]->setWeight(weight);
 	}
 }
@@ -434,7 +427,7 @@ void Neuron::setSynapseWeight(int synapseIndex, double weight){
  * Return the weight of the synapse
  */
 double Neuron::getSynapseWeight(int synapseIndex) const{
-	if(synapseIndex < nb_neighbors) {
+	if(synapseIndex < (int)synapses.size()) {
 		return synapses[synapseIndex]->getWeight();
 	}
 	return 0;
@@ -444,7 +437,7 @@ double Neuron::getSynapseWeight(int synapseIndex) const{
  * Return the synapse's delay
  */
 int Neuron::getSynapseDelay(int synapseIndex) const{
-	if(synapseIndex < nb_neighbors) {
+	if(synapseIndex < (int)synapses.size()) {
 		return synapses[synapseIndex]->getDelay();
 	}
 	return 0;
@@ -454,7 +447,7 @@ int Neuron::getSynapseDelay(int synapseIndex) const{
  * Set the synapse's delay
  */
 void Neuron::setSynapseDelay(int synapseIndex, int synapseDelay){
-	if(synapseIndex < nb_neighbors) {
+	if(synapseIndex < (int)synapses.size()) {
 		synapses[synapseIndex]->setDelay(synapseDelay);
 	}
 }
@@ -463,7 +456,7 @@ void Neuron::setSynapseDelay(int synapseIndex, int synapseDelay){
  * Modify the graphical excentricity of the synapse
  */
 void Neuron::setSynapseGE(int synapseIndex, float gE){
-	if(synapseIndex < nb_neighbors) {
+	if(synapseIndex < (int)synapses.size()) {
 		synapses[synapseIndex]->setGExcentricity(gE);
 	}
 }
@@ -472,7 +465,7 @@ void Neuron::setSynapseGE(int synapseIndex, float gE){
  * Return the graphical excentricity of the synapse
  */
 float Neuron::getSynapseGE(int synapseIndex) const{
-	if(synapseIndex < nb_neighbors) {
+	if(synapseIndex < (int)synapses.size()) {
 		return synapses[synapseIndex]->getGExcentricity();
 	}
 	return 0;
@@ -491,17 +484,15 @@ Synapse * Neuron::getSelfSynapse() const{
  * Delete a synapse between two neurons based on the index of the synapse
  */
 void Neuron::delSynapseBySynapseIndex(int synapseIndex){
-	if(synapseIndex < nb_neighbors){
+	if(synapseIndex < (int)synapses.size())
 		synapses.erase(synapses.begin() + synapseIndex);
-		nb_neighbors--;
-	}
 }
 
 /*
  * Get synapse by synapse Index
  */
 Synapse * Neuron::getSynapse(int synapseIndex) const{
-	if(synapseIndex < nb_neighbors) {
+	if(synapseIndex < (int)synapses.size()) {
 		return synapses[synapseIndex].get();
 	}
 	return nullptr;

@@ -58,7 +58,6 @@ public:
 		
 private:
 	std::vector<std::unique_ptr<NetworkState>> set;
-	int cardinal;
 	int maxCardinal;
 	bool filled;
 
