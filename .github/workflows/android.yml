@@ -2,19 +2,40 @@ name: Android – Build APK
 
 on:
   push:
-    branches: [master, claude/networkdesigner-windows-mobile-kgdpz3]
+    branches: [master]
   pull_request:
     branches: [master]
   workflow_dispatch:
     inputs:
+      build:
+        description: 'Run build (required to trigger on feature branches)'
+        type: boolean
+        default: false
       create_release:
         description: 'Create GitHub Release'
         type: boolean
         default: false
 
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      should_build: ${{ steps.decide.outputs.should_build }}
+    steps:
+      - id: decide
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/master" || "${{ github.event_name }}" == "pull_request" ]]; then
+            echo "should_build=true" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.build }}" == "true" ]]; then
+            echo "should_build=true" >> $GITHUB_OUTPUT
+          else
+            echo "should_build=false" >> $GITHUB_OUTPUT
+          fi
+
   build-android:
     name: Build APK (arm64-v8a, Qt6)
+    needs: check
+    if: needs.check.outputs.should_build == 'true'
     runs-on: ubuntu-latest
 
     env:
@@ -34,10 +55,19 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Install NDK
+      - name: Install NDK and platform 34
         run: |
-          sdkmanager "ndk;${{ env.ANDROID_NDK_VERSION }}"
+          sdkmanager "ndk;${{ env.ANDROID_NDK_VERSION }}" "platforms;android-34" "build-tools;34.0.0"
           echo "ANDROID_NDK_ROOT=$ANDROID_SDK_ROOT/ndk/${{ env.ANDROID_NDK_VERSION }}" >> $GITHUB_ENV
+
+      - name: Keep only android-34 platform
+        run: |
+          # All ext preview platforms (android-35-extXX, android-36-extXX, etc)
+          # installed by setup-android have corrupt android.jar — remove everything
+          # except the android-34 we just installed explicitly.
+          find "$ANDROID_SDK_ROOT/platforms" -mindepth 1 -maxdepth 1 \
+            ! -name "android-34" -exec rm -rf {} +
+          ls "$ANDROID_SDK_ROOT/platforms/"
 
       # Install both Qt variants via aqt for predictable, fixed paths
       - name: Install aqt
@@ -68,32 +98,22 @@ jobs:
             -DCMAKE_PREFIX_PATH="$QT_ANDROID_ROOT" \
             -DQt6_DIR="$QT_ANDROID_ROOT/lib/cmake/Qt6" \
             -DQT_HOST_PATH="$QT_HOST_PATH" \
+            -DANDROID_SDK_ROOT="$ANDROID_SDK_ROOT" \
             -DCMAKE_BUILD_TYPE=Release \
             -DBUILD_TESTS=OFF
 
       - name: Build
         run: cmake --build build-android --parallel
 
-      - name: Package APK with androiddeployqt
-        run: |
-          DEPLOY_JSON=$(find build-android -name "android-NetworkDesigner-deployment-settings.json" | head -1)
-          if [ -z "$DEPLOY_JSON" ]; then
-            echo "Deployment JSON not found, listing build-android:"
-            find build-android -name "*.json" | head -20
-            exit 1
-          fi
-          echo "Using deployment JSON: $DEPLOY_JSON"
-          "$QT_ANDROID_ROOT/bin/androiddeployqt" \
-            --input "$DEPLOY_JSON" \
-            --output build-android/android-build \
-            --android-platform android-33 \
-            --jdk "$JAVA_HOME" \
-            --apk
-
       - name: Locate APK
         id: find-apk
         run: |
-          APK=$(find build-android/android-build -name "*.apk" | head -1)
+          APK=$(find build-android -name "*.apk" | head -1)
+          if [ -z "$APK" ]; then
+            echo "APK not found, listing build-android outputs:"
+            find build-android -name "*.apk" -o -name "*.aab" 2>/dev/null | head -20
+            exit 1
+          fi
           echo "Found APK: $APK"
           echo "apk_path=$APK" >> $GITHUB_OUTPUT
 

@@ -2,19 +2,40 @@ name: Windows – Build & Installer
 
 on:
   push:
-    branches: [master, claude/networkdesigner-windows-mobile-kgdpz3]
+    branches: [master]
   pull_request:
     branches: [master]
   workflow_dispatch:
     inputs:
+      build:
+        description: 'Run build (required to trigger on feature branches)'
+        type: boolean
+        default: false
       create_release:
         description: 'Create GitHub Release'
         type: boolean
         default: false
 
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      should_build: ${{ steps.decide.outputs.should_build }}
+    steps:
+      - id: decide
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/master" || "${{ github.event_name }}" == "pull_request" ]]; then
+            echo "should_build=true" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.build }}" == "true" ]]; then
+            echo "should_build=true" >> $GITHUB_OUTPUT
+          else
+            echo "should_build=false" >> $GITHUB_OUTPUT
+          fi
+
   build-windows:
     name: Build (Windows, Qt5 MSVC)
+    needs: check
+    if: needs.check.outputs.should_build == 'true'
     runs-on: windows-latest
 
     steps:
@@ -84,7 +105,7 @@ jobs:
           $script | Out-File -Encoding UTF8 installer.nsi
 
       - name: Build installer
-        run: makensis installer.nsi
+        run: '& "C:\Program Files (x86)\NSIS\makensis.exe" installer.nsi'
 
       - name: Upload installer artifact
         uses: actions/upload-artifact@v4
