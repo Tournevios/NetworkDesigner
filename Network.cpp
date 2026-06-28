@@ -22,8 +22,6 @@ Network::Network(){
 }
 
 Network::Network(const Network& network){
-	bool okki;
-	
 	temperature = network.getTemperature();
 	uniformalTemperature = network.getUniformalTemperature();
 	Random::Uniform<double>(0.0,1.0);
@@ -34,7 +32,7 @@ Network::Network(const Network& network){
 	
 	for(int i=0; i<(int)neurons.size(); i++){
 		for(int j=0; j<network.getNeuron(i)->getNb_neighbors();j++){
-			okki = getNeuron(i)->addSynapse(getNeuron(network.getNeuron(i)->getSynapse(j)->getFinalNeuron()->getIndex()), network.getNeuron(i)->getSynapseWeight(j), network.getNeuron(i)->getSynapseDelay(j));
+				getNeuron(i)->addSynapse(getNeuron(network.getNeuron(i)->getSynapse(j)->getFinalNeuron()->getIndex()), network.getNeuron(i)->getSynapseWeight(j), network.getNeuron(i)->getSynapseDelay(j));
 			getNeuron(i)->getSynapse(j)->setCX(network.getNeuron(i)->getSynapse(j)->getCX());
 			getNeuron(i)->getSynapse(j)->setCY(network.getNeuron(i)->getSynapse(j)->getCY());
 		}
@@ -43,7 +41,6 @@ Network::Network(const Network& network){
 
 void Network::addNetwork(Network * network){
 	int initial_nb_neurons = (int)neurons.size();
-	bool okki;
 	deselectAll();
 	for(int i=0; i<network->getNbNeurons(); i++){
 		addNeuron(new Neuron(*(network->getNeuron(i))));
@@ -52,7 +49,7 @@ void Network::addNetwork(Network * network){
 	
 	for(int i=0; i<network->getNbNeurons(); i++){
 		for(int j=0; j<network->getNeuron(i)->getNb_neighbors();j++){
-				okki = getNeuron(i+initial_nb_neurons)->addSynapse(getNeuron(network->getNeuron(i)->getSynapse(j)->getFinalNeuron()->getIndex()+initial_nb_neurons), network->getNeuron(i)->getSynapseWeight(j), network->getNeuron(i)->getSynapseDelay(j));
+				getNeuron(i+initial_nb_neurons)->addSynapse(getNeuron(network->getNeuron(i)->getSynapse(j)->getFinalNeuron()->getIndex()+initial_nb_neurons), network->getNeuron(i)->getSynapseWeight(j), network->getNeuron(i)->getSynapseDelay(j));
 				getNeuron(i+initial_nb_neurons)->getSynapse(j)->setCX(network->getNeuron(i)->getSynapse(j)->getCX());
 				getNeuron(i+initial_nb_neurons)->getSynapse(j)->setCY(network->getNeuron(i)->getSynapse(j)->getCY());
 		}

@@ -16,8 +16,8 @@ private:
 public:
 	SimulationDiffusion();
 	SimulationDiffusion(Computer * computer);
-	virtual ~SimulationDiffusion();
-	void run();
+	~SimulationDiffusion() override;
+	void run() override;
 
 	void setAffinity(int affinity);
 	int getAffinity() const;
@@ -27,7 +27,7 @@ public:
 
 
 public slots:
-	void tick();
+	void tick() override;
 };
 
 #endif /*SIMULATIONDIFFUSION_H_*/

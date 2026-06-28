@@ -26,8 +26,8 @@ private:
 
 public:
 	SimulationAttractorsAndBasinsOfAttraction(Computer * computer);
-	virtual ~SimulationAttractorsAndBasinsOfAttraction();
-	void run();
+	~SimulationAttractorsAndBasinsOfAttraction() override;
+	void run() override;
 
 	void setAffinity(int affinity);
 	int getAffinity() const;
@@ -50,7 +50,7 @@ public:
 	void solveAndStore(int neuronIndex);
 
 public slots:
-	void tick();
+	void tick() override;
 };
 
 #endif /*SIMULATIONATTRACTORSANDBASINSOFATTRACTION_H_*/
