@@ -60,10 +60,13 @@ jobs:
           sdkmanager "ndk;${{ env.ANDROID_NDK_VERSION }}" "platforms;android-33" "build-tools;33.0.2"
           echo "ANDROID_NDK_ROOT=$ANDROID_SDK_ROOT/ndk/${{ env.ANDROID_NDK_VERSION }}" >> $GITHUB_ENV
 
-      - name: Remove broken preview Android platforms
+      - name: Keep only android-33 platform
         run: |
-          # All android-36 variants (ext18, ext19, ...) have corrupt android.jar
-          rm -rf "$ANDROID_SDK_ROOT/platforms"/android-36* || true
+          # All ext preview platforms (android-35-extXX, android-36-extXX, etc)
+          # installed by setup-android have corrupt android.jar — remove everything
+          # except the android-33 we just installed explicitly.
+          find "$ANDROID_SDK_ROOT/platforms" -mindepth 1 -maxdepth 1 \
+            ! -name "android-33" -exec rm -rf {} +
           ls "$ANDROID_SDK_ROOT/platforms/"
 
       # Install both Qt variants via aqt for predictable, fixed paths
