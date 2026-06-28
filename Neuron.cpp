@@ -1,8 +1,11 @@
 #include "NeuronSynapse.h"
 #include <cmath>
+#include <algorithm>
 #include "constFile.h"
 #include <iostream>
 #include "random-singleton.h"
+#include <QtGui/QRadialGradient>
+#include <QtGui/QFont>
 
 
 using namespace std;
@@ -514,23 +517,64 @@ int Neuron::getSynapseByNeighborIndex(int neighborIndex) const{
  * Draw the neuron.
  */
 void Neuron::drawMe(QPainter* painter, double scale, double transX, double transY){
-	// Draw The Neuron
-			painter->setRenderHint(QPainter::Antialiasing, true);
-			if(yellowMe)
-				painter->setPen(QPen(Qt::yellow, 3*scale, Qt::SolidLine, Qt::RoundCap));
-			else if(!selected)
-				painter->setPen(QPen(Qt::black, 3*scale, Qt::SolidLine, Qt::RoundCap));
-			else
-				painter->setPen(QPen(Qt::blue, 3*scale, Qt::SolidLine, Qt::RoundCap));
+    painter->setRenderHint(QPainter::Antialiasing, true);
+    painter->setRenderHint(QPainter::TextAntialiasing, true);
 
-			if(state > 1)
-				painter->setBrush(QBrush(Qt::darkGreen, Qt::SolidPattern));
-			else if(state == 1)
-				painter->setBrush(QBrush(Qt::green, Qt::SolidPattern));
-			else
-				painter->setBrush(QBrush(Qt::red, Qt::SolidPattern));
+    const double cx = x * scale + transX;
+    const double cy = y * scale + transY;
+    const double r  = 13.0 * scale;
+    const QRectF rect(cx - r, cy - r, 2 * r, 2 * r);
 
-			painter->drawEllipse(QRectF((x-10)*scale + transX, (y-10)*scale + transY, 20*scale, 20*scale));
+    // --- fill color by state (dark theme palette) ---
+    QColor baseColor;
+    if (state > 1)       baseColor = QColor(0xa6, 0xe3, 0xa1); // green
+    else if (state == 1) baseColor = QColor(0x89, 0xb4, 0xfa); // blue
+    else                 baseColor = QColor(0xf3, 0x8b, 0xa8); // red/inactive
+
+    // radial gradient: lighter centre, darker edge
+    QRadialGradient grad(cx - r * 0.3, cy - r * 0.3, r * 1.3);
+    grad.setColorAt(0.0, baseColor.lighter(130));
+    grad.setColorAt(1.0, baseColor.darker(150));
+
+    // drop shadow
+    painter->setPen(Qt::NoPen);
+    painter->setBrush(QColor(0, 0, 0, 60));
+    painter->drawEllipse(rect.translated(2 * scale, 3 * scale));
+
+    // body
+    painter->setBrush(grad);
+
+    if (yellowMe) {
+        // block-mode highlight: yellow glow ring
+        painter->setPen(QPen(QColor(0xf9, 0xe2, 0xaf), 3.0 * scale, Qt::SolidLine, Qt::RoundCap));
+    } else if (selected) {
+        // selection: accent glow
+        painter->setPen(QPen(QColor(0xcb, 0xa6, 0xf7), 3.0 * scale, Qt::SolidLine, Qt::RoundCap));
+    } else {
+        painter->setPen(QPen(QColor(0x31, 0x32, 0x44), 1.5 * scale, Qt::SolidLine, Qt::RoundCap));
+    }
+
+    painter->drawEllipse(rect);
+
+    // state label inside the neuron
+    painter->setPen(QColor(0x1e, 0x1e, 0x2e));
+    QFont f = painter->font();
+    f.setPixelSize(std::max(8, static_cast<int>(10 * scale)));
+    f.setBold(true);
+    painter->setFont(f);
+    painter->drawText(rect, Qt::AlignCenter, QString::number(state));
+
+    // nodeID label below the neuron
+    if (!nodeID.empty()) {
+        painter->setPen(QColor(0xa6, 0xad, 0xc8));
+        QFont lf = painter->font();
+        lf.setBold(false);
+        lf.setPixelSize(std::max(7, static_cast<int>(9 * scale)));
+        painter->setFont(lf);
+        QRectF labelRect(cx - 30 * scale, cy + r + 2 * scale, 60 * scale, 14 * scale);
+        painter->drawText(labelRect, Qt::AlignCenter,
+                          QString::fromStdString(nodeID));
+    }
 }
 
 /*

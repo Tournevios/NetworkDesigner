@@ -51,6 +51,12 @@ public:
 	void computeP();
 	void computeS();
 
+private:
+	double neuronTemperature(int j) const;
+	void   maybeRepaint();
+	void   computeAndSubstitute(int j, double syncRate);
+	void   applyBlockMethod(UpdateBlock* ub, double syncRate, int iterIndex);
+
 signals:
 	void tick();
 	void setProgressBarValue_Signal(int);
