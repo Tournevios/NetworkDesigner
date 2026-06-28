@@ -55,7 +55,7 @@ void NetworkStatesSet::addNetworkStatesSet(const NetworkStatesSet& networkStates
  */
 void NetworkStatesSet::addNetworkState(const NetworkState& networkState){
 
-	if((cardinal >= maxCardinal) and (maxCardinal>0)){
+	if((cardinal >= maxCardinal) && (maxCardinal>0)){
 		deleteOneElement(0);
 	}
 
@@ -102,7 +102,7 @@ void NetworkStatesSet::printMe() const{
 }
 
 void NetworkStatesSet::setMaxCardinal(int maxCardinal){
-	if((maxCardinal < cardinal) and (maxCardinal>=0)){
+	if((maxCardinal < cardinal) && (maxCardinal>=0)){
 		while(cardinal > maxCardinal) deleteOneElement(cardinal-1);		
 		cardinal = maxCardinal; 
 	}
@@ -117,7 +117,7 @@ void NetworkStatesSet::addAndCompress(const NetworkState& networkState){
 
 	
 	// Add a the networkState to the set
-	while((i < this->getCardinal()) and (!added)){
+	while((i < this->getCardinal()) && (!added)){
 		NetworkState tmpResult = *(this->getNetworkState(i)) + networkState;
 		if(tmpResult.coherent()){
 			added = true;
@@ -293,7 +293,7 @@ const NetworkStatesSet operator-(const NetworkStatesSet& lv, const NetworkState&
 const NetworkStatesSet operator*(const NetworkStatesSet& lv, const NetworkStatesSet& rv){
 	NetworkStatesSet result(-1);
 
-	if((lv.getCardinal() <=0) or (rv.getCardinal() <=0)) {
+	if((lv.getCardinal() <=0) || (rv.getCardinal() <=0)) {
 		return result;
 	}
 	/*result = lv - (lv -rv);
@@ -312,7 +312,7 @@ const NetworkStatesSet operator*(const NetworkStatesSet& lv, const NetworkStates
 /*
  * When using pseudo state: a state minus a state is the deleting the possibilitier that the left
  * operand is equivalent to the right one if !!!!!!the operation is permitted!!!!!!! .ie
- * if there is a relation of equivalence or order between the two NetworkState s
+ * if there is a relation of equivalence || order between the two NetworkState s
  * 
  */
  
@@ -327,7 +327,7 @@ const NetworkStatesSet operator*(const NetworkStatesSet& lv, const NetworkStates
 	int index=0;
 	int count = 0;
 	
-	if(!(lv.coherent() or rv.coherent())) return result;	
+	if(!(lv.coherent() || rv.coherent())) return result;	
 	modified = true;
 	bool incoherent;
 	index = -1;
@@ -336,14 +336,14 @@ const NetworkStatesSet operator*(const NetworkStatesSet& lv, const NetworkStates
 		modified = false;
 		incoherent = false;	
 		for(int i=0; i < lv.getSize(); i++){
-			if(lv.getState(i) != rv.getState(i) and lv.getState(i) >=0 and rv.getState(i) >=0){
-					if((lv.getState(i) >= 0) and (rv.getState(i) >= 0)){
+			if(lv.getState(i) != rv.getState(i) && lv.getState(i) >=0 && rv.getState(i) >=0){
+					if((lv.getState(i) >= 0) && (rv.getState(i) >= 0)){
 						while(result.getCardinal() > 0) result.removeNetworkState(0);
 						result.addNetworkState(lv);
 						return result;
 					}
 			} 
-			else if((i > index) and not modified){
+			else if((i > index) && ! modified){
 				modified = true;
 				index = i;
 				if(lv.getState(i)<-1)  leftValue = -lv.getState(i);
@@ -365,7 +365,7 @@ const NetworkStatesSet operator*(const NetworkStatesSet& lv, const NetworkStates
 					globalModified = true;
 				}
 			}
-			else if(not modified and i <= index){
+			else if(! modified && i <= index){
 				if(lv.getState(i)<-1)  leftValue = -lv.getState(i);
 				else if(lv.getState(i)>-1) leftValue = (long int)pow(2.0, (double) lv.getState(i));
 				
@@ -384,7 +384,7 @@ const NetworkStatesSet operator*(const NetworkStatesSet& lv, const NetworkStates
 			}	
              
 		}
-		if(modified and not incoherent) result.addNetworkState(tmpNetworkState); 
+		if(modified && ! incoherent) result.addNetworkState(tmpNetworkState); 
 	}
 	return result;
 }

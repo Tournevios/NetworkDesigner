@@ -80,7 +80,7 @@ void Synapse::setSelected(bool selected){
 }
 
 /*
- * Build and draw the graphical representation (QPainterPath) of the arrow
+ * Build && draw the graphical representation (QPainterPath) of the arrow
  */
 void Synapse::drawMe(QPainter * painter, double scale, double transX, double transY){
 	
@@ -135,7 +135,7 @@ void Synapse::drawMe(QPainter * painter, double scale, double transX, double tra
 	// Updating
     gPath = rectPath;
     
-    if(baseNeuron->getSelected() and finalNeuron->getSelected()) selected = true;
+    if(baseNeuron->getSelected() && finalNeuron->getSelected()) selected = true;
     
     Qt::PenStyle myStyle;
     

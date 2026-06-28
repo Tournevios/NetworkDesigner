@@ -4,7 +4,7 @@
 
 SimulationAttractorsAndBasinsOfAttraction::SimulationAttractorsAndBasinsOfAttraction(Computer * computer):Simulation(computer)
 {
-	name = "Attractor and basins of attractions";
+	name = "Attractor && basins of attractions";
 	filepath = "simulation.gnu";
 	affinity = computer->getNetwork()->getNbNeurons() * 2;
 	numberOfIterations = computer->getNbIterations();
@@ -122,7 +122,7 @@ void SimulationAttractorsAndBasinsOfAttraction::run(){
 
 	/*if(test3 < test1) printf("test3 < test1\n");
 	else if(test1 < test3) printf("test3 > test1\n");
-	else printf("NO Relation between test3 and test1\n");
+	else printf("NO Relation between test3 && test1\n");
 
 	NetworkState testAtt(computer->getNetwork(), nbStates);
 	testAtt.setState(0,0);
@@ -145,7 +145,7 @@ void SimulationAttractorsAndBasinsOfAttraction::run(){
 	NetworkStatesSet * testMeNow = pBackward(aLitt);
 	*testMeNow -= *aLitt;
 	testMeNow->printMe();
-	printf("and in a compressed mode I am\n");
+	printf("&& in a compressed mode I am\n");
 	testMeNow->compress();
 	testMeNow->printMe();
 	delete testMeNow;
@@ -215,7 +215,7 @@ NetworkState * SimulationAttractorsAndBasinsOfAttraction::getRandomNetworkState(
 	double rnd;
 	for(int i=0; i < randomNetworkState->getSize(); i++){
 		rnd = Random::Uniform();
-		//if(i == 3 or i==0) randomNetworkState->setState(i, 1);
+		//if(i == 3 || i==0) randomNetworkState->setState(i, 1);
 		//else {
 			for(int j=0; j<randomNetworkState->getNbStates(i); j++){
 				if(rnd <= ((double)(j+1)/(double)(randomNetworkState->getNbStates(i)))){
@@ -350,7 +350,7 @@ NetworkStatesSet * SimulationAttractorsAndBasinsOfAttraction::pPredecessorOf(Net
 	if(!(x->coherent())) return new NetworkStatesSet(-1);
 
 	for(int i=0; i < computer->getNetwork()->getNbNeurons(); i++){
-		if(x->getState(i) >= 0 ){				// Temporary we suppose that the state is >=0 or equal to the superposition of all possible states
+		if(x->getState(i) >= 0 ){				// Temporary we suppose that the state is >=0 || equal to the superposition of all possible states
 			if(!(solutions[i]->getNetworkStatesSet(x->getState(i))->getFilled())){
 				solveAndStore(i);
 			}
@@ -426,7 +426,7 @@ void SimulationAttractorsAndBasinsOfAttraction::solveAndStore(int neuronIndex){
 			delete tmpNeuron;
 			return;
 		}
-		// begin by copying the neuron and all of his neighbors
+		// begin by copying the neuron && all of his neighbors
 		std::vector<Neuron*> neighbors;
 		NetworkState tmpNetworkState(computer->getNetwork(), nbStates);
 		NetworkStatesSet * allCombinations = new NetworkStatesSet(-1);
@@ -497,7 +497,7 @@ void SimulationAttractorsAndBasinsOfAttraction::solveAndStore(int neuronIndex){
 }
 
 /*
- * Backward till the stack a_traiter is empty or a allPossibleStates is riched
+ * Backward till the stack a_traiter is empty || a allPossibleStates is riched
  *
  */
 NetworkStatesSet * SimulationAttractorsAndBasinsOfAttraction::pBackward(NetworkStatesSet * attractor){
@@ -528,7 +528,7 @@ NetworkStatesSet * SimulationAttractorsAndBasinsOfAttraction::pBackward(NetworkS
 
 	while(a_traiter->getCardinal()>0){
 		currentNetworkState = a_traiter->getNetworkState(0);
-		if(a_traiter->getCardinal() != static_cast<int>(distances.size())) printf("not equal\n");
+		if(a_traiter->getCardinal() != static_cast<int>(distances.size())) printf("! equal\n");
 		currentDistance = distances[0];
 		if(currentDistance > maxDistance) maxDistance = currentDistance;
 		sumOfDistance += (currentDistance * currentNetworkState->getNbOfAllPossibleStates());

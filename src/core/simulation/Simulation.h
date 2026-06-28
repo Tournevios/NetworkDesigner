@@ -25,7 +25,7 @@ public:
 	Simulation();
 	virtual ~Simulation();
 
-	// name getter and setter
+	// name getter && setter
 	virtual std::string getName() const;
 	virtual void setName(std::string name);
 

@@ -106,7 +106,7 @@ NetworkState operator*(const NetworkState& lv, const NetworkState& rv){
 		rState = rv.getState(i);
 		if(myState == rState) result.setState(i, rState);
 		else{
-			if((myState == -1) or (rState == -1)) result.setState(i, -1);
+			if((myState == -1) || (rState == -1)) result.setState(i, -1);
 			else if((myState<0) && (rState<0)){
 				long int newState = ((-myState)&(-rState));
 				if(newState == 0) result.setState(i, -1);
@@ -158,7 +158,7 @@ int operator==(const NetworkState& lv, const NetworkState& rv){
 			else if((myState>=0) && (rState<0))
 				if(!(((long int)pow((double)2,myState)) && (-rState))) return false;
 			else if((myState<0) && (rState<0))
-				if(((-myState) && not(-rState)) or (not(-myState) && (-rState))) return false;
+				if(((-myState) && !(-rState)) || (!(-myState) && (-rState))) return false;
 		}
 	}
 	return true;
@@ -225,7 +225,7 @@ bool NetworkState::getDuplicated(){
 }
 
 /*
- * Return if a state is **....*...* or no.
+ * Return if a state is **....*...* || no.
  */
 int NetworkState::isAllPossibleStates() const{
 	for(int i=0; i < static_cast<int>(states.size()); i++){

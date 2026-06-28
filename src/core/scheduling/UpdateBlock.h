@@ -6,7 +6,7 @@
 class UpdateBlock
 {
 public:
-	// Constructor and destructor
+	// Constructor && destructor
 	UpdateBlock();
 	UpdateBlock(const UpdateBlock& updateBlock);
 	virtual ~UpdateBlock();
@@ -16,7 +16,7 @@ public:
 	void delNeuronIndex(int index);
 	void decrementGreaterThan(int index);
 
-	// Getters and setters
+	// Getters && setters
 	int getUpdateMethods() const;
 	void setUpdateMethods(int UpdateMethods);
 	int getSize() const;

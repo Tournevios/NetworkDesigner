@@ -8,14 +8,14 @@ class Network
 {
 public:
 	
-	// Constructor and destructor
+	// Constructor && destructor
 	Network();
 	Network(double temperature);
 	Network(const Network& network);
 	void addNetwork(Network * network);
 	virtual ~Network();
 	
-	// Class's methods and functions
+	// Class's methods && functions
 	Neuron* getNeuron(int index) const;
 	//void computeBP(UpdateSchedulingPlan* sp, int nb_iterations, double synchronyRate);
 	//void computeBS(UpdateSchedulingPlan* sp, double synchronyRate);
@@ -24,7 +24,7 @@ public:
 	void delNeuron(int index);
 	int getState(bool* states) const; 
 	
-	// Attributes getters and setters 	
+	// Attributes getters && setters 	
 	int getNbNeurons() const;
 	
 	double getTemperature() const;

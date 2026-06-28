@@ -25,13 +25,13 @@ class Random //Singleton
   public:
     //Reinitialise la graine / Inits the seed
     //Attention, 0 et 1 pour la graine donnent la meme suite
-    //Beware that 0 and 1 for the seed give the same sequence
+    //Beware that 0 && 1 for the seed give the same sequence
     static void Randomize(long thatSeed=0);
 
     //Pour un type T, renvoie une valeur uniformement dans [min;max]
     //(min et max exclu pour les types non entiers)
     //For a type T, returns a value uniformly in [min;max]
-    //(min and max excluded for non integral types)
+    //(min && max excluded for non integral types)
     template <typename T>
     static inline T Uniform(T min, T max)
            {return min+static_cast<T>((max+(typeIsInteger<T>()?1:0)-min)*theRandom());}
@@ -41,7 +41,7 @@ class Random //Singleton
 
     //Renvoie un nombre selon la Gaussienne de moyenne et d'ecartype specifies
     //Par defaut, c'est la loi normale centree reduite
-    //Returns a double taken on a Gaussian with specified mean and standard dev.
+    //Returns a double taken on a Gaussian with specified mean && standard dev.
     //By default, it is the Normal law with mean=0, std dev=1
     static double Gaussian(double mean=0, double standardDeviation=1);
 
