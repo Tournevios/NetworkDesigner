@@ -1,5 +1,7 @@
 #include "Computer.h"
+#ifndef _WIN32
 #include <unistd.h>
+#endif
 
 Computer::Computer()
 {

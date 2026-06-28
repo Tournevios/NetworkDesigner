@@ -143,7 +143,7 @@ void DesignPlan::mousePressEvent(QMouseEvent * event){
 			emit neuronSelectedChanged(synapseBaseNeuron);
 		}
 	}
-	else if(event->button() & Qt::MidButton){
+	else if(event->button() & Qt::MiddleButton){
 		midX = event->x();
 		midY = event->y();
 	}
@@ -160,7 +160,7 @@ void DesignPlan::mouseReleaseEvent(QMouseEvent * event){
 	//bool alt = event->modifiers() & Qt::AltModifier;
 	//bool shift = event->modifiers() & Qt::ShiftModifier;
 
-	if(event->button() & Qt::MidButton){
+	if(event->button() & Qt::MiddleButton){
 		midX = -1;
 		midY = -1;
 	}
@@ -187,7 +187,7 @@ void DesignPlan::mouseReleaseEvent(QMouseEvent * event){
  * Upload the zoom parameters
  */
 void DesignPlan::wheelEvent(QWheelEvent * event){
-	if(event->delta()>0){
+	if(event->angleDelta().y()>0){
 		if(scale + 0.05f <= 2) scale += 0.05f;
 	}
 	else{

@@ -20,6 +20,7 @@ jobs:
     env:
       ANDROID_NDK_VERSION: '25.1.8937393'
       QT_VERSION: '6.7.3'
+      QT_DIR: '${{ github.workspace }}/Qt'
 
     steps:
       - uses: actions/checkout@v4
@@ -30,48 +31,35 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Set up Android SDK / NDK
+      - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Install NDK ${{ env.ANDROID_NDK_VERSION }}
+      - name: Install NDK
         run: |
           sdkmanager "ndk;${{ env.ANDROID_NDK_VERSION }}"
           echo "ANDROID_NDK_ROOT=$ANDROID_SDK_ROOT/ndk/${{ env.ANDROID_NDK_VERSION }}" >> $GITHUB_ENV
 
-      # Install Qt desktop (host tools: moc, uic, rcc, qmake)
+      # Install both Qt variants via aqt for predictable, fixed paths
+      - name: Install aqt
+        run: pip install aqtinstall
+
       - name: Install Qt desktop (host tools)
-        uses: jurplel/install-qt-action@v4
-        with:
-          version: ${{ env.QT_VERSION }}
-          host: 'linux'
-          target: 'desktop'
-          arch: 'linux_gcc_64'
-          cache: true
-          dir: '${{ github.workspace }}/Qt'
-          set-env: true
+        run: |
+          aqt install-qt linux desktop ${{ env.QT_VERSION }} linux_gcc_64 \
+            --outputdir ${{ env.QT_DIR }}
+          echo "QT_HOST_PATH=${{ env.QT_DIR }}/${{ env.QT_VERSION }}/gcc_64" >> $GITHUB_ENV
 
-      - name: Save Qt host path
-        run: echo "QT_HOST_PATH=$QT_ROOT_DIR" >> $GITHUB_ENV
-
-      # Install Qt for Android (arm64-v8a cross-compile libraries)
       - name: Install Qt for Android (arm64-v8a)
-        uses: jurplel/install-qt-action@v4
-        with:
-          version: ${{ env.QT_VERSION }}
-          host: 'linux'
-          target: 'android'
-          arch: 'android_arm64_v8a'
-          cache: true
-          dir: '${{ github.workspace }}/Qt'
-          set-env: true
+        run: |
+          aqt install-qt linux android ${{ env.QT_VERSION }} android_arm64_v8a \
+            --outputdir ${{ env.QT_DIR }}
+          echo "QT_ANDROID_ROOT=${{ env.QT_DIR }}/${{ env.QT_VERSION }}/android_arm64_v8a" >> $GITHUB_ENV
+
+      - name: Add Qt tools to PATH
+        run: echo "${{ env.QT_DIR }}/${{ env.QT_VERSION }}/gcc_64/bin" >> $GITHUB_PATH
 
       - name: Configure (Android arm64)
         run: |
-          # Locate Android Qt6 and host Qt6 installation roots
-          QT_ANDROID_ROOT="$QT_ROOT_DIR"
-          echo "Qt Android root: $QT_ANDROID_ROOT"
-          echo "Qt Host path:    $QT_HOST_PATH"
-
           cmake -B build-android \
             -DCMAKE_TOOLCHAIN_FILE="$ANDROID_NDK_ROOT/build/cmake/android.toolchain.cmake" \
             -DANDROID_ABI=arm64-v8a \
@@ -88,7 +76,13 @@ jobs:
       - name: Package APK with androiddeployqt
         run: |
           DEPLOY_JSON=$(find build-android -name "android-NetworkDesigner-deployment-settings.json" | head -1)
-          androiddeployqt \
+          if [ -z "$DEPLOY_JSON" ]; then
+            echo "Deployment JSON not found, listing build-android:"
+            find build-android -name "*.json" | head -20
+            exit 1
+          fi
+          echo "Using deployment JSON: $DEPLOY_JSON"
+          "$QT_ANDROID_ROOT/bin/androiddeployqt" \
             --input "$DEPLOY_JSON" \
             --output build-android/android-build \
             --android-platform android-33 \
@@ -99,6 +93,7 @@ jobs:
         id: find-apk
         run: |
           APK=$(find build-android/android-build -name "*.apk" | head -1)
+          echo "Found APK: $APK"
           echo "apk_path=$APK" >> $GITHUB_OUTPUT
 
       - name: Upload APK artifact
