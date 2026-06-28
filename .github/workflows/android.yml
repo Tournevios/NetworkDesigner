@@ -105,26 +105,15 @@ jobs:
       - name: Build
         run: cmake --build build-android --parallel
 
-      - name: Package APK with androiddeployqt
-        run: |
-          DEPLOY_JSON=$(find build-android -name "android-NetworkDesigner-deployment-settings.json" | head -1)
-          if [ -z "$DEPLOY_JSON" ]; then
-            echo "Deployment JSON not found, listing build-android:"
-            find build-android -name "*.json" | head -20
-            exit 1
-          fi
-          echo "Using deployment JSON: $DEPLOY_JSON"
-          "$QT_ANDROID_ROOT/bin/androiddeployqt" \
-            --input "$DEPLOY_JSON" \
-            --output build-android/android-build \
-            --android-platform android-34 \
-            --jdk "$JAVA_HOME" \
-            --apk
-
       - name: Locate APK
         id: find-apk
         run: |
-          APK=$(find build-android/android-build -name "*.apk" | head -1)
+          APK=$(find build-android -name "*.apk" | head -1)
+          if [ -z "$APK" ]; then
+            echo "APK not found, listing build-android outputs:"
+            find build-android -name "*.apk" -o -name "*.aab" 2>/dev/null | head -20
+            exit 1
+          fi
           echo "Found APK: $APK"
           echo "apk_path=$APK" >> $GITHUB_OUTPUT
 
