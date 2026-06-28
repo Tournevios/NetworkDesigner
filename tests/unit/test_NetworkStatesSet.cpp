@@ -19,17 +19,17 @@ static NetworkState makeConcreteState(int size, long int val, NetworkState* nbS)
 // ── Construction ──────────────────────────────────────────────────────────────
 
 TEST(NetworkStatesSetTest, DefaultConstructorEmptyCardinal) {
-    NetworkStatesSet nss;
+    NetworkStatesSet nss(-1);
     EXPECT_EQ(nss.getCardinal(), 0);
 }
 
 TEST(NetworkStatesSetTest, DefaultMaxCardinalIsMinusOne) {
-    NetworkStatesSet nss;
+    NetworkStatesSet nss(-1);
     EXPECT_EQ(nss.getMaxCardinal(), -1);
 }
 
 TEST(NetworkStatesSetTest, DefaultFilledIsFalse) {
-    NetworkStatesSet nss;
+    NetworkStatesSet nss(-1);
     EXPECT_FALSE(nss.getFilled());
 }
 
@@ -42,7 +42,7 @@ TEST(NetworkStatesSetTest, MaxCardinalConstructor) {
 // ── addNetworkState / getCardinal / getNetworkState ───────────────────────────
 
 TEST(NetworkStatesSetTest, AddNetworkStateIncreasesCardinal) {
-    NetworkStatesSet nss;
+    NetworkStatesSet nss(-1);
     NetworkState nbS = makeBinaryNbS(2);
     NetworkState s = makeConcreteState(2, 1, &nbS);
     nss.addNetworkState(s);
@@ -50,7 +50,7 @@ TEST(NetworkStatesSetTest, AddNetworkStateIncreasesCardinal) {
 }
 
 TEST(NetworkStatesSetTest, AddMultipleStates) {
-    NetworkStatesSet nss;
+    NetworkStatesSet nss(-1);
     NetworkState nbS = makeBinaryNbS(2);
     nss.addNetworkState(makeConcreteState(2, 0, &nbS));
     nss.addNetworkState(makeConcreteState(2, 1, &nbS));
@@ -59,7 +59,7 @@ TEST(NetworkStatesSetTest, AddMultipleStates) {
 }
 
 TEST(NetworkStatesSetTest, GetNetworkStateReturnsCorrectState) {
-    NetworkStatesSet nss;
+    NetworkStatesSet nss(-1);
     NetworkState nbS = makeBinaryNbS(2);
     NetworkState s0 = makeConcreteState(2, 0, &nbS);
     NetworkState s1 = makeConcreteState(2, 1, &nbS);
@@ -70,14 +70,14 @@ TEST(NetworkStatesSetTest, GetNetworkStateReturnsCorrectState) {
 }
 
 TEST(NetworkStatesSetTest, GetNetworkStateOutOfBoundsReturnsNull) {
-    NetworkStatesSet nss;
+    NetworkStatesSet nss(-1);
     EXPECT_EQ(nss.getNetworkState(0), nullptr);
 }
 
 // ── removeNetworkState ────────────────────────────────────────────────────────
 
 TEST(NetworkStatesSetTest, RemoveNetworkStateDecreasesCardinal) {
-    NetworkStatesSet nss;
+    NetworkStatesSet nss(-1);
     NetworkState nbS = makeBinaryNbS(2);
     nss.addNetworkState(makeConcreteState(2, 0, &nbS));
     nss.addNetworkState(makeConcreteState(2, 1, &nbS));
@@ -86,7 +86,7 @@ TEST(NetworkStatesSetTest, RemoveNetworkStateDecreasesCardinal) {
 }
 
 TEST(NetworkStatesSetTest, RemoveNetworkStateOutOfBoundsDoesNothing) {
-    NetworkStatesSet nss;
+    NetworkStatesSet nss(-1);
     NetworkState nbS = makeBinaryNbS(2);
     nss.addNetworkState(makeConcreteState(2, 0, &nbS));
     nss.removeNetworkState(99);
@@ -109,7 +109,7 @@ TEST(NetworkStatesSetTest, MaxCardinalEvictsOldestWhenFull) {
 }
 
 TEST(NetworkStatesSetTest, SetMaxCardinalTruncatesExistingSet) {
-    NetworkStatesSet nss;
+    NetworkStatesSet nss(-1);
     NetworkState nbS = makeBinaryNbS(1);
     nss.addNetworkState(makeConcreteState(1, 0, &nbS));
     nss.addNetworkState(makeConcreteState(1, 1, &nbS));
@@ -121,7 +121,7 @@ TEST(NetworkStatesSetTest, SetMaxCardinalTruncatesExistingSet) {
 // ── setFilled / getFilled ─────────────────────────────────────────────────────
 
 TEST(NetworkStatesSetTest, SetFilled) {
-    NetworkStatesSet nss;
+    NetworkStatesSet nss(-1);
     nss.setFilled(true);
     EXPECT_TRUE(nss.getFilled());
 }
@@ -129,7 +129,7 @@ TEST(NetworkStatesSetTest, SetFilled) {
 // ── coherent() ────────────────────────────────────────────────────────────────
 
 TEST(NetworkStatesSetTest, CoherentTrueWhenAllStatesCoherent) {
-    NetworkStatesSet nss;
+    NetworkStatesSet nss(-1);
     NetworkState nbS = makeBinaryNbS(2);
     nss.addNetworkState(makeConcreteState(2, 1, &nbS));
     nss.addNetworkState(makeConcreteState(2, 0, &nbS));
@@ -137,7 +137,7 @@ TEST(NetworkStatesSetTest, CoherentTrueWhenAllStatesCoherent) {
 }
 
 TEST(NetworkStatesSetTest, CoherentFalseWhenAStateHasMinusOne) {
-    NetworkStatesSet nss;
+    NetworkStatesSet nss(-1);
     NetworkState nbS = makeBinaryNbS(2);
     // state left with default -1 values
     nss.addNetworkState(NetworkState(2, &nbS));
@@ -147,7 +147,7 @@ TEST(NetworkStatesSetTest, CoherentFalseWhenAStateHasMinusOne) {
 // ── Copy constructor ──────────────────────────────────────────────────────────
 
 TEST(NetworkStatesSetTest, CopyConstructorPreservesCardinal) {
-    NetworkStatesSet nss;
+    NetworkStatesSet nss(-1);
     NetworkState nbS = makeBinaryNbS(2);
     nss.addNetworkState(makeConcreteState(2, 0, &nbS));
     nss.addNetworkState(makeConcreteState(2, 1, &nbS));
@@ -157,7 +157,7 @@ TEST(NetworkStatesSetTest, CopyConstructorPreservesCardinal) {
 }
 
 TEST(NetworkStatesSetTest, CopyConstructorIsDeep) {
-    NetworkStatesSet nss;
+    NetworkStatesSet nss(-1);
     NetworkState nbS = makeBinaryNbS(1);
     nss.addNetworkState(makeConcreteState(1, 0, &nbS));
 
@@ -168,18 +168,18 @@ TEST(NetworkStatesSetTest, CopyConstructorIsDeep) {
 // ── operator= ────────────────────────────────────────────────────────────────
 
 TEST(NetworkStatesSetTest, AssignmentCopiesContent) {
-    NetworkStatesSet a;
+    NetworkStatesSet a(-1);
     NetworkState nbS = makeBinaryNbS(1);
     a.addNetworkState(makeConcreteState(1, 1, &nbS));
 
-    NetworkStatesSet b;
+    NetworkStatesSet b(-1);
     b = a;
     EXPECT_EQ(b.getCardinal(), 1);
     EXPECT_EQ(b.getNetworkState(0)->getState(0), 1);
 }
 
 TEST(NetworkStatesSetTest, SelfAssignmentIsSafe) {
-    NetworkStatesSet nss;
+    NetworkStatesSet nss(-1);
     NetworkState nbS = makeBinaryNbS(1);
     nss.addNetworkState(makeConcreteState(1, 0, &nbS));
     nss = nss;
@@ -190,10 +190,10 @@ TEST(NetworkStatesSetTest, SelfAssignmentIsSafe) {
 
 TEST(NetworkStatesSetTest, AddNetworkStatesSetMergesAll) {
     NetworkState nbS = makeBinaryNbS(1);
-    NetworkStatesSet a;
+    NetworkStatesSet a(-1);
     a.addNetworkState(makeConcreteState(1, 0, &nbS));
 
-    NetworkStatesSet b;
+    NetworkStatesSet b(-1);
     b.addNetworkState(makeConcreteState(1, 1, &nbS));
     b.addNetworkState(makeConcreteState(1, 0, &nbS));
 

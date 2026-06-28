@@ -29,8 +29,9 @@ set(CORE_SOURCES
     ${CMAKE_SOURCE_DIR}/src/core/scheduling/UpdateBlock.cpp
     ${CMAKE_SOURCE_DIR}/src/core/scheduling/UpdateSchedulingPlan.cpp
     ${CMAKE_SOURCE_DIR}/src/core/scheduling/BlockSelector.cpp
-    ${CMAKE_SOURCE_DIR}/src/core/utils/pCalculateTransitions.cpp
     ${CMAKE_SOURCE_DIR}/src/core/utils/random-singleton.cpp
+    # pCalculateTransitions.cpp inclut transitivemet Simulation.h → Computer.h (src/app)
+    # À ajouter ici uniquement quand src/app sera inclus dans le build de test
 )
 
 add_executable(NetworkDesigner_tests ${TEST_SOURCES} ${CORE_SOURCES})
