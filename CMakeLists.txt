@@ -29,10 +29,9 @@ if(NOT ANDROID)
     add_subdirectory(tests)
 endif()
 
-# Android deployment descriptor consumed by androiddeployqt
+# Android: point androiddeployqt at our custom manifest
 if(ANDROID)
-    include(${QT_ANDROID_CMAKE_FILE} OPTIONAL)
-    set_property(TARGET NetworkDesigner APPEND PROPERTY
+    set_target_properties(NetworkDesigner PROPERTIES
         QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_SOURCE_DIR}/android"
     )
 endif()
