@@ -13,16 +13,13 @@ set(TEST_SOURCES
     unit/test_Simulation.cpp
 )
 
+# Only compile what the current tests actually use.
+# Simulation subclasses depend on Computer (src/app) and QThread — add them
+# here only once a QCoreApplication fixture is introduced.
 set(CORE_SOURCES
     ${CMAKE_SOURCE_DIR}/src/core/network/Network.cpp
     ${CMAKE_SOURCE_DIR}/src/core/network/Neuron.cpp
     ${CMAKE_SOURCE_DIR}/src/core/network/Synapse.cpp
-    ${CMAKE_SOURCE_DIR}/src/core/simulation/Simulation.cpp
-    ${CMAKE_SOURCE_DIR}/src/core/simulation/SimulationActivity.cpp
-    ${CMAKE_SOURCE_DIR}/src/core/simulation/SimulationAttractorsAndBasinsOfAttraction.cpp
-    ${CMAKE_SOURCE_DIR}/src/core/simulation/SimulationAttractorsAndBasinsOfAttraction2.cpp
-    ${CMAKE_SOURCE_DIR}/src/core/simulation/SimulationChangement.cpp
-    ${CMAKE_SOURCE_DIR}/src/core/simulation/SimulationDiffusion.cpp
     ${CMAKE_SOURCE_DIR}/src/core/state/NetworkState.cpp
     ${CMAKE_SOURCE_DIR}/src/core/state/NetworkState2.cpp
     ${CMAKE_SOURCE_DIR}/src/core/state/NetworkStatesSet.cpp
