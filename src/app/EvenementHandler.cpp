@@ -606,7 +606,7 @@ void EvenementHandler::networkLayersMenu_aboutToShow(){
 	network->deselectAll();
 
 	if(layerActions.size() != 0){
-		for(int i=0; i<(int)layerActions.size(); i++){
+		for(int i=0; i<static_cast<int>(layerActions.size()); i++){
 			layerActions[i]->disconnect();
 			delete layerActions[i];
 		}
@@ -701,14 +701,14 @@ void EvenementHandler::networkLayersMenu_aboutToShow(){
 
 	for(int i=1; i < network->getNbNeurons(); i++){
 		int j=0;
-		while(j<(int)layers.size()){
+		while(j<static_cast<int>(layers.size())){
 			if(layers[j].getL1_distance() == l1_distances[i]){
 				layers[j].addNeuronIndex(i);
 				break;
 			}
 			j++;
 		}
-		if(j == (int)layers.size()){
+		if(j == static_cast<int>(layers.size())){
 			BlockSelector newLayerBlockSelector(network,l1_distances[i], i);
 			layers.push_back(newLayerBlockSelector);
 		}
@@ -722,7 +722,7 @@ void EvenementHandler::networkLayersMenu_aboutToShow(){
 		QString("Centers -- Excentricity = %1").arg(layers[0].getL1_distance()), networkLayersMenu));
 	connect(layerActions[0], &QAction::triggered, &layers[0], &BlockSelector::select);
 	connect(&layers[0], &BlockSelector::repaintPlease, this, &EvenementHandler::repaintPlease);
-	for(int i=1; i < (int)layers.size() - 1;i++){
+	for(int i=1; i < static_cast<int>(layers.size()) - 1;i++){
 		layerActions.push_back(new QAction(
 			QString("Layer %1 -- Excentricity = %2").arg(i).arg(layers[i].getL1_distance()), networkLayersMenu));
 		connect(layerActions[i], &QAction::triggered, &layers[i], &BlockSelector::select);
@@ -734,7 +734,7 @@ void EvenementHandler::networkLayersMenu_aboutToShow(){
 	connect(layerActions[layerActions.size() - 1], &QAction::triggered, &layers[layers.size() - 1], &BlockSelector::select);
 	connect(&layers[layers.size() - 1], &BlockSelector::repaintPlease, this, &EvenementHandler::repaintPlease);
 
-	for(int i=0; i<(int)layerActions.size(); i++) networkLayersMenu->addAction(layerActions[i]);
+	for(int i=0; i<static_cast<int>(layerActions.size()); i++) networkLayersMenu->addAction(layerActions[i]);
 }
 
 /*
@@ -807,7 +807,7 @@ void EvenementHandler::cmbState_Updating(int nbStates){
 		for(int i=0; i<nbStates; i++)
 			qslStates << QString("State %1").arg(i);
 		while(parent->cmbState->count() != 0) parent->cmbState->removeItem(0);
-		parent->cmbState->insertItems((int)-1, qslStates);
+		parent->cmbState->insertItems(-1, qslStates);
 	}
 	fileWasModified();
 }
