@@ -34,7 +34,7 @@ DesignPlan::DesignPlan(QWidget* parent):QFrame(parent){
 }
 
 /*
- * A free area is an empty area such that the minimal distance between its points and all
+ * A free area is an empty area such that the minimal distance between its points && all
  * the neurons of the network is larger than 2 times the radius of a neuron.
  * If left button pressed in a free area then create a neuron
  * else select a neuron: if ctrl is holded than add to selection else only this neuron is selected.
@@ -55,7 +55,7 @@ void DesignPlan::mousePressEvent(QMouseEvent * event){
 
 	this->setFocus();
 	if(event->button() & Qt::LeftButton){
-		if (!(ctrl or alt or shift)){
+		if (!(ctrl || alt || shift)){
 			network->deselectAll();
 			// Those 7 lines ensure that two neurons'll never be drawn on the same place
 			// And select a neuron in case the cursor is on it.
@@ -74,7 +74,7 @@ void DesignPlan::mousePressEvent(QMouseEvent * event){
 			else{
 				s = network->getSynapse(event->x(), event->y());
 				if(s != nullptr){
-					s->setSelected(not s->getSelected());
+					s->setSelected(! s->getSelected());
 					emit synapseSelectedChanged(s);
 					currentSynapse = s;
 				}
@@ -91,7 +91,7 @@ void DesignPlan::mousePressEvent(QMouseEvent * event){
 				}
 			}
 		}
-		else if(ctrl and !(alt or shift)){
+		else if(ctrl && !(alt || shift)){
 			Neuron * n;
 			n = network->getNeuron(static_cast<int>((event->x() - transX)/scale), static_cast<int>((event->y() - transY)/scale), static_cast<int>(10/scale));
 			if(n != nullptr){
@@ -109,14 +109,14 @@ void DesignPlan::mousePressEvent(QMouseEvent * event){
 			else{
 				Synapse * s = network->getSynapse(event->x(), event->y());
 				if(s != nullptr){
-					s->setSelected(not s->getSelected());
+					s->setSelected(! s->getSelected());
 					emit synapseSelectedChanged(s);
 					currentSynapse = s;
 				}
 			}
 
 		}
-		else if(shift and !(alt or ctrl) and (currentUpdateBlock > -1)){
+		else if(shift && !(alt || ctrl) && (currentUpdateBlock > -1)){
 			Neuron * n;
 			n = network->getNeuron(static_cast<int>((event->x() - transX)/scale), static_cast<int>((event->y() - transY)/scale), static_cast<int>(10/scale));
 			if(n != nullptr){
@@ -164,7 +164,7 @@ void DesignPlan::mouseReleaseEvent(QMouseEvent * event){
 		midX = -1;
 		midY = -1;
 	}
-	else if((event->button() & Qt::RightButton) and (synapseBaseNeuron != nullptr)){
+	else if((event->button() & Qt::RightButton) && (synapseBaseNeuron != nullptr)){
 		Neuron * synapseFinalNeuron = network->getNeuron(static_cast<int>((event->x() - transX)/scale), static_cast<int>((event->y()- transY) / scale), static_cast<int>(10/scale));
 		if(synapseFinalNeuron != nullptr){
 			network->deselectAll();
@@ -234,7 +234,7 @@ void DesignPlan::keyPressEvent( QKeyEvent * event ){
 }
 
 /*
- * upload the mouse coordinate and the parameters of the translation.
+ * upload the mouse coordinate && the parameters of the translation.
  */
 void DesignPlan::mouseMoveEvent(QMouseEvent * event){
 	mouseX = event->x();
@@ -245,7 +245,7 @@ void DesignPlan::mouseMoveEvent(QMouseEvent * event){
 		dY = currentNeuron->getY() - (event->y()- transY)/scale;
 		currentNeuron->setXY((event->x()- transX)/scale, (event->y() - transY)/scale);
 		for(int i=0; i<network->getNbNeurons(); i++){
-			if((network->getNeuron(i)->getIndex()!=currentNeuron->getIndex()) and (network->getNeuron(i)->getSelected()))
+			if((network->getNeuron(i)->getIndex()!=currentNeuron->getIndex()) && (network->getNeuron(i)->getSelected()))
 				network->getNeuron(i)->setXY(network->getNeuron(i)->getX()-dX ,network->getNeuron(i)->getY()-dY);
 		}
 		emit networkIsModified();
@@ -271,7 +271,7 @@ void DesignPlan::mouseMoveEvent(QMouseEvent * event){
 }
 
 /*
- * Paint the network and a representation of the synapse the user is currently building.
+ * Paint the network && a representation of the synapse the user is currently building.
  */
 void DesignPlan::paintEvent(QPaintEvent * event){
 	QPainter painter(this);
@@ -385,7 +385,7 @@ void DesignPlan::setDefaultThresholds(const Neuron* neuron){
  */
 
 void DesignPlan::setDefaultThreshold(int stateIndex, double threshold){
-	if((stateIndex <= static_cast<int>(defaultThreshold.size())) and (stateIndex > 0)){
+	if((stateIndex <= static_cast<int>(defaultThreshold.size())) && (stateIndex > 0)){
 		defaultThreshold[stateIndex - 1] = threshold;
 	}
 }

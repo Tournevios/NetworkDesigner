@@ -336,7 +336,7 @@ void EvenementHandler::pbStart_click(bool checked){
 		}
 	}
 
-	else if(parent->cmbSimulationType->currentText() == "Attractor and basins"){
+	else if(parent->cmbSimulationType->currentText() == "Attractor && basins"){
 		auto sim = std::make_unique<SimulationAttractorsAndBasinsOfAttraction>(computer.get());
 		auto myView = std::make_unique<UpdateBlock>();
 		for(int i=0; i < network->getNbNeurons();i++)
@@ -347,7 +347,7 @@ void EvenementHandler::pbStart_click(bool checked){
 		else if(parent->cmbScheduleType->currentText() == "Block Sequential"){ sim->setUpdateType(UpdateType::BS); sim->run(); }
 		else if(parent->cmbScheduleType->currentText() == "Sequential")      { sim->setUpdateType(UpdateType::S);  sim->run(); }
 	}
-	else if(parent->cmbSimulationType->currentText() == "Attractor and basins V2"){
+	else if(parent->cmbSimulationType->currentText() == "Attractor && basins V2"){
 		auto sim = std::make_unique<SimulationAttractorsAndBasinsOfAttraction2>(computer.get());
 		auto myView = std::make_unique<UpdateBlock>();
 		for(int i=0; i < network->getNbNeurons();i++)
@@ -370,7 +370,7 @@ void EvenementHandler::pbStart_click(bool checked){
 }
 
 /*
- * Stop the simulation and referesh the synapses
+ * Stop the simulation && referesh the synapses
  */
 void EvenementHandler::pbStop_click(bool checked){
 	for(int i=0; i < network->getNbNeurons(); i++){
@@ -379,8 +379,8 @@ void EvenementHandler::pbStop_click(bool checked){
 }
 
 /*
- * The value of the state radio button and the threshold are those of the latest selected neuron
- * And set the default state and threshold's value for futur neuron.
+ * The value of the state radio button && the threshold are those of the latest selected neuron
+ * And set the default state && threshold's value for futur neuron.
  */
 void EvenementHandler::neuronSelected(Neuron* neuron){
 
@@ -410,7 +410,7 @@ void EvenementHandler::neuronSelected(Neuron* neuron){
 
 /*
  * The value of the sbWeight is the value of the latest selected synapse
- * And set the default weight and delay values for the futur synapse.
+ * And set the default weight && delay values for the futur synapse.
  */
 void EvenementHandler::synapseSelected(Synapse* synapse){
 
@@ -465,7 +465,7 @@ QString EvenementHandler::getFileName() const{
 }
 
 /*
- * Switch between the network and the schedule design modes.
+ * Switch between the network && the schedule design modes.
  */
 void EvenementHandler::toolBox_currentChanged(int index){
 	if(parent->toolBox->itemText(index) == "Update schedule"){
@@ -692,7 +692,7 @@ void EvenementHandler::networkLayersMenu_aboutToShow(){
 				}
 			}
 			for(int j = 0; j< network->getNbNeurons(); j++){
-				if((minimals[j]>l1_distances[i]) and (minimals[j]!=network->getNbNeurons()))l1_distances[i] = minimals[j];
+				if((minimals[j]>l1_distances[i]) && (minimals[j]!=network->getNbNeurons()))l1_distances[i] = minimals[j];
 			}
 	}
 

@@ -164,18 +164,18 @@ void NetworkDesignerParser::exportToGNBoxPremodel(QString fileName){
 			for(int j=0; j < network->getNbNeurons();j++){
 				interact = false;
 				k=0;
-				while((not interact) and (k < network->getNeuron(j)->getNb_neighbors())){
+				while((! interact) && (k < network->getNeuron(j)->getNb_neighbors())){
 					if(network->getNeuron(j)->getNeighbor(k)->getIndex() == i){
 						interact = true;
 						break;
 					}
 					k++;
 				}
-				if(interact and not putAComma){
+				if(interact && ! putAComma){
 					out << "i(x_" << j <<",1)";
 					putAComma = true;
 				}
-				else if (interact and putAComma)
+				else if (interact && putAComma)
 					out << ", i(x_" << j <<",1)";
 			}
 			if(i == network->getNbNeurons()-1)
@@ -262,14 +262,14 @@ void NetworkDesignerParser::exportToGNBoxPremodel(QString fileName){
 			for(int j=0; j < network->getNeuron(i)->getNb_neighbors() ;j++){
 				/*interact = false;
 				k=0;
-				while((not interact) and (k < network->getNeuron(j)->getNb_neighbors())){
+				while((! interact) && (k < network->getNeuron(j)->getNb_neighbors())){
 					if(network->getNeuron(j)->getNeighbor(k)->getIndex() == i){
 						interact = true;
 						break;
 					}
 					k++;
 				}*/
-				if(not putAComma){
+				if(! putAComma){
 					out << "i(x_" << network->getNeuron(i)->getSynapse(j)->getFinalNeuron()->getIndex() <<",1)";
 					putAComma = true;
 				}
@@ -295,7 +295,7 @@ void NetworkDesignerParser::exportToGNBoxPremodel(QString fileName){
 
 
 /*
- * This methods use Qt DOM to parse the network, the UpdateSchedulingPlan and the simulation.
+ * This methods use Qt DOM to parse the network, the UpdateSchedulingPlan && the simulation.
  * The first child of the root node is the network: the network contains neurons
  * Each neuron of the network is saved with its attributes.
  * The second child of the root node is the UpdateSchedulingPlan which is composed by UpdateBlocks
@@ -447,7 +447,7 @@ void NetworkDesignerParser::load(QString fileName){
 
 	Nb_Neurons = node.toElement().attribute("Nb_Neurons").toInt(&okki);
 	network = new Network(node.toElement().attribute("Temperature").toDouble(&okki));		// Read the Temperature parameter
-	network->setUniformalTemperature(static_cast<bool>(node.toElement().attribute("UniformalTemperature").toInt(&okki))); // Read if the temperature is uniform or note
+	network->setUniformalTemperature(static_cast<bool>(node.toElement().attribute("UniformalTemperature").toInt(&okki))); // Read if the temperature is uniform || note
 	if(Nb_Neurons>0){
 		for(int i=0; i < Nb_Neurons;i++)	network->addNeuron(new Neuron());
 		child = node.firstChild();											// Read neurons
