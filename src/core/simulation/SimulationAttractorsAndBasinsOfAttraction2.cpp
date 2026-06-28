@@ -16,7 +16,7 @@ SimulationAttractorsAndBasinsOfAttraction2::SimulationAttractorsAndBasinsOfAttra
 
 SimulationAttractorsAndBasinsOfAttraction2::SimulationAttractorsAndBasinsOfAttraction2(Computer * computer):Simulation(computer){
 	// TODO Auto-generated constructor stub
-	name = "Attractor and basins of attractions V2";
+	name = "Attractor && basins of attractions V2";
 	filepath = "simulation.gnu";
 	affinity = 100000;
 	computer->setNbIterations(1);
@@ -239,7 +239,7 @@ void SimulationAttractorsAndBasinsOfAttraction2::linkThem(int startingIndex){
 		computer->setProgressBarValue(static_cast<int>(100*((double)numberOfVisitedStates/(double)totalNumberOfStates)));
 		currentState->setNextOne(indexOf(nextState));
 
-		if((nextState->isVisited()) and !(nextState->isIsAttractor()) and (nextState->getAttractorNumber()==-1)){
+		if((nextState->isVisited()) && !(nextState->isIsAttractor()) && (nextState->getAttractorNumber()==-1)){
 			attractorFound(indexOf(nextState));
 			setAttractorNumber(startingIndex, attractors.size() - 1);
 		}

@@ -87,7 +87,7 @@ double Random::theRandom(void)
 //fin theRandom()
 
 //Renvoie un double de la Gaussienne de moyenne et d'ecartype specifies
-//Returns a double taken on a Gaussian with specified mean and standard deviation
+//Returns a double taken on a Gaussian with specified mean && standard deviation
 double Random::Gaussian(double mean, double standardDeviation)
 {
   const int NbTirages = 12; //augmenter pour une meilleure precision. 12 est bien.
@@ -102,7 +102,7 @@ double Random::Gaussian(double mean, double standardDeviation)
   //on etale suivant l'ecartype / spread with standard deviation
   //le 12 n'a rien a voir avec NbTirages, mais explique pourquoi justement, on prend souvent
   //NbTirages = 12
-  //the 12 is not related to NbTirages, but it explains why it is often chosen that NbTirages=12
+  //the 12 is ! related to NbTirages, but it explains why it is often chosen that NbTirages=12
   valeur *= (NbTirages == 12) ? standardDeviation
                               : sqrt(12/static_cast<double>(NbTirages))*standardDeviation;
 

@@ -210,9 +210,9 @@ void Neuron::compute2(double temperature){
 		std::vector<double> transitionProbabilities;		// Transition probabilities from state to others
 
 		sum.push_back(threshold[0] * state);
-		sum.push_back(threshold[0] * not(state));
+		sum.push_back(threshold[0] * !(state));
 		for(int i = 0; i < nb_neighbors; i++){
-			sum[0] += synapses[i]->getWeight() * (not synapses[i]->getStateOfTheFinalNeuron());
+			sum[0] += synapses[i]->getWeight() * (! synapses[i]->getStateOfTheFinalNeuron());
 			sum[1] += synapses[i]->getWeight() * synapses[i]->getStateOfTheFinalNeuron();
 		}
 
@@ -253,13 +253,13 @@ void Neuron::compute(double temperature){
 
 
 	if(temperature==0){
-		//if(index == 3 or index == 0) {theNewState = 1; hasANewState = true; return;}
+		//if(index == 3 || index == 0) {theNewState = 1; hasANewState = true; return;}
 		theNewState = 0;
 		double tmpSum = max;
 		for(int i=0; i<nbStates - 1;i++){
-			//printf("%d is %f >= %f and state is %d\n", index, tmpSum, sum[i], i+1);
+			//printf("%d is %f >= %f && state is %d\n", index, tmpSum, sum[i], i+1);
 			if((i+1) < (nbStates - 1)){
-				if(sum[i] >= 0 and sum[i+1] < 0){
+				if(sum[i] >= 0 && sum[i+1] < 0){
 					theNewState = i+1;
 					tmpSum = sum[i];
 					break;
@@ -271,7 +271,7 @@ void Neuron::compute(double temperature){
 				break;
 			}
 
-			/*if((sum[i] <= tmpSum) and (sum[i]>=0)){
+			/*if((sum[i] <= tmpSum) && (sum[i]>=0)){
 				theNewState = i+1;
 				tmpSum = sum[i];
 			}*/
@@ -305,7 +305,7 @@ void Neuron::compute(double temperature){
 		boltzmannTerm.push_back(0.0);			// Fictif boltzmann Term for calculus associated to the threshold of the N+1 state
 		// If we are in the state 0 we move up
 		// If we're in the last state we move down
-		// Else we randomly choose between going up or down
+		// Else we randomly choose between going up || down
 
 		if(state == 0)	rd1 = 0.1;
 		else if(state == nbStates - 1)	rd1 = 0.9;
@@ -334,7 +334,7 @@ void Neuron::compute(double temperature){
 			rd1 = Random::Uniform();
 			double s = 0;
 			int i = 0;
-			while((rd1>s) and (i+state < nbStates)){
+			while((rd1>s) && (i+state < nbStates)){
 				s+=transitionProbabilities[i];
 				i++;
 			}
@@ -359,7 +359,7 @@ void Neuron::compute(double temperature){
 			rd1 = Random::Uniform();
 			double s = 0;
 			int i = 0;
-			while((rd1>s) and (i<=state)){
+			while((rd1>s) && (i<=state)){
 				s+=transitionProbabilities[i];
 				i++;
 			}
@@ -367,7 +367,7 @@ void Neuron::compute(double temperature){
 		}
 
 	}
-		//	Moving up is prior but the probability of staying and moving to an upper state must be satisfied
+		//	Moving up is prior but the probability of staying && moving to an upper state must be satisfied
 	hasANewState = true;
 }
 

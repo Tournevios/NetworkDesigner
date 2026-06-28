@@ -32,14 +32,14 @@ public:
 	void compress();
 	void removeDuplications();
 	
-	// Extern and friendly Opertators
+	// Extern && friendly Opertators
 	friend const NetworkStatesSet operator+(const NetworkStatesSet& lv, const NetworkStatesSet& rv);
 	friend const NetworkStatesSet operator*(const NetworkStatesSet& lv, const NetworkStatesSet& rv);
 
 	friend const NetworkStatesSet operator-(const NetworkStatesSet& lv, const NetworkStatesSet& rv);
 	friend const NetworkStatesSet operator-(const NetworkStatesSet& lv, const NetworkState& rv);	
 	
-	// Member increment and decrement operators
+	// Member increment && decrement operators
 	void operator+=(const NetworkState& rv);
 	void operator-=(const NetworkState& rv);
 	void operator*=(const NetworkState& rv);

@@ -11,7 +11,7 @@ class Neuron;
 class Synapse
 {
 public:
-	// Getters and Setters
+	// Getters && Setters
 	Synapse();
 	Synapse(Neuron * baseNeuron, Neuron * finalNeuron, double weight, int delay=0);
 	virtual ~Synapse();
@@ -63,7 +63,7 @@ private:
 class Neuron
 {
 public:
-	// Constructors and destructor
+	// Constructors && destructor
 	Neuron();
 	Neuron(int index);
 	//Neuron(int index, bool state);
@@ -72,7 +72,7 @@ public:
 	virtual ~Neuron();
 
 
-	// Getters and setters
+	// Getters && setters
 	int getIndex() const;
 	void setIndex(int index);
 
@@ -109,7 +109,7 @@ public:
 	bool getYellowMe() const;
 	void setYellowMe(bool yellowMe);
 
-	// Class's Methods and functions
+	// Class's Methods && functions
 	void compute(double temperature);
 	void compute2(double temperature);
 	void substitute();
@@ -145,7 +145,7 @@ protected:
 private:
 
 	int index;
-	int state;									// Active or not
+	int state;									// Active || !
 	int nbStates;
 	std::vector<double> threshold;
 	double temperature;
@@ -159,7 +159,7 @@ private:
 	int theNewState;							// The new state of the neuron
 
 	// Drawing parameters
-	double x, y;									// x and y in the widget coordinate system
+	double x, y;									// x && y in the widget coordinate system
 /*	int color[3];								// The color of the neuron in the RGB system
 	vector<int[3]> synapsesColor;				// Synapses colors in the RGB system
 */

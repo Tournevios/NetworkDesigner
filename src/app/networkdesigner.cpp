@@ -1,14 +1,14 @@
 #include "networkdesigner.h"
 #include "NetworkDesignerParser.h"
 #include "designplan.h"
-#include <QtWidgets/QMainWindow>
-#include <QtWidgets/QToolBar>
-#include <QtWidgets/QAction>
-#include <QtGui/QIcon>
-#include <QtWidgets/QLabel>
-#include <QtGui/QPixmap>
-#include <QtWidgets/QStatusBar>
-#include <QtWidgets/QApplication>
+#include <QMainWindow>
+#include <QToolBar>
+#include <QAction>
+#include <QIcon>
+#include <QLabel>
+#include <QPixmap>
+#include <QStatusBar>
+#include <QApplication>
 
 // Helper: load an SVG from Qt resources as a fixed-size QIcon.
 static QIcon svgIcon(const QString& path, int size = 20) {

@@ -8,12 +8,12 @@ class UpdateSchedulingPlan
 
 public:
 
-	// Constructors and destuctors
+	// Constructors && destuctors
 	UpdateSchedulingPlan();
 	UpdateSchedulingPlan(const UpdateSchedulingPlan& updateSchedulingPlan);
 	virtual ~UpdateSchedulingPlan();
 
-	// Getters and setters
+	// Getters && setters
 	int getNb_blocks() const;
 	void addUpdateBlock(std::unique_ptr<UpdateBlock> ub);
 	void delUpdateBlock(int index);
