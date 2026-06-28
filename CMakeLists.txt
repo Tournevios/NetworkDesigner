@@ -23,5 +23,28 @@ endif()
 
 add_subdirectory(src)
 
-enable_testing()
-add_subdirectory(tests)
+# Tests are not built for Android (no GTest port)
+if(NOT ANDROID)
+    enable_testing()
+    add_subdirectory(tests)
+endif()
+
+# Android deployment descriptor consumed by androiddeployqt
+if(ANDROID)
+    include(${QT_ANDROID_CMAKE_FILE} OPTIONAL)
+    set_property(TARGET NetworkDesigner APPEND PROPERTY
+        QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_SOURCE_DIR}/android"
+    )
+endif()
+
+# CPack installer (Windows only)
+if(WIN32)
+    set(CPACK_GENERATOR "NSIS")
+    set(CPACK_PACKAGE_NAME "NetworkDesigner")
+    set(CPACK_PACKAGE_VENDOR "NetworkDesigner")
+    set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+    set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Discrete-state neural network design tool")
+    set(CPACK_NSIS_DISPLAY_NAME "NetworkDesigner")
+    set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
+    include(CPack)
+endif()
