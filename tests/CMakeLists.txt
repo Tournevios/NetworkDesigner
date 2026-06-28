@@ -11,6 +11,8 @@ set(TEST_SOURCES
     unit/test_Network.cpp
     unit/test_NetworkState.cpp
     unit/test_Simulation.cpp
+    unit/test_NetworkStatesSet.cpp
+    unit/test_Neuron.cpp
 )
 
 # Only compile what the current tests actually use.
