@@ -503,7 +503,7 @@ Synapse * Neuron::getSelfSynapse() const{
 void Neuron::delSynapseBySynapseIndex(int synapseIndex){
 	if(synapseIndex < nb_neighbors)
 	{
-			synapses.erase((std::vector<Synapse*>::iterator)&synapses[synapseIndex]);
+			synapses.erase(synapses.begin() + synapseIndex);
 			nb_neighbors--;
 	}
 }

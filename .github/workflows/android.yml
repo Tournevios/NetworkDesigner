@@ -2,19 +2,40 @@ name: Android – Build APK
 
 on:
   push:
-    branches: [master, claude/networkdesigner-windows-mobile-kgdpz3]
+    branches: [master]
   pull_request:
     branches: [master]
   workflow_dispatch:
     inputs:
+      build:
+        description: 'Run build (required to trigger on feature branches)'
+        type: boolean
+        default: false
       create_release:
         description: 'Create GitHub Release'
         type: boolean
         default: false
 
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      should_build: ${{ steps.decide.outputs.should_build }}
+    steps:
+      - id: decide
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/master" || "${{ github.event_name }}" == "pull_request" ]]; then
+            echo "should_build=true" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.build }}" == "true" ]]; then
+            echo "should_build=true" >> $GITHUB_OUTPUT
+          else
+            echo "should_build=false" >> $GITHUB_OUTPUT
+          fi
+
   build-android:
     name: Build APK (arm64-v8a, Qt6)
+    needs: check
+    if: needs.check.outputs.should_build == 'true'
     runs-on: ubuntu-latest
 
     env:
