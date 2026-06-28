@@ -1,5 +1,4 @@
-#ifndef SIMULATIONCHANGEMENT_H_
-#define SIMULATIONCHANGEMENT_H_
+#pragma once
 
 #include "Simulation.h"
 #include <vector>
@@ -7,7 +6,7 @@
 class SimulationChangement : public Simulation
 {
 private:
-	int updateType;
+	UpdateType updateType;
 	int affinity;
 
 	int totalNumberOfChangeToOne;
@@ -25,19 +24,17 @@ private:
 
 public:
 	SimulationChangement(Computer * computer);
-	~SimulationChangement() override;
-	void run() override;
+	virtual ~SimulationChangement();
+	void run();
 
 	void setAffinity(int affinity);
 	int getAffinity() const;
 
-	void setUpdateType(int updateType);
-	int getUpdateType() const;
+	void setUpdateType(UpdateType updateType);
+	UpdateType getUpdateType() const;
 
 
 public slots:
-	void tick() override;
+	void tick();
 
 };
-
-#endif /*SIMULATIONCHANGEMENT_H_*/

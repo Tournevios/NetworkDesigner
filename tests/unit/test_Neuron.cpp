@@ -61,7 +61,7 @@ TEST(NeuronTest, SetAndGetTemperature) {
 TEST(NeuronTest, SetAndGetNodeID) {
     Neuron n;
     n.setNodeID("A1");
-    EXPECT_EQ(n.getNodeID(), "A1");
+    EXPECT_STREQ(n.getNodeID(), "A1");
 }
 
 TEST(NeuronTest, SetNbStatesExpandsThresholds) {

@@ -1,10 +1,9 @@
 #include "Simulation.h"
-using namespace std;
 
 Simulation::Simulation(Computer * computer)
 {
 	this->computer = computer;
-	connect(computer, SIGNAL(tick()), this, SLOT(tick()));
+	connect(computer, &Computer::tick, this, &Simulation::tick);
 	name = "Simulation";
 	filepath = "simulation.gnu";
 	copyNetwork(computer->getNetwork());
@@ -26,28 +25,28 @@ Simulation::~Simulation()
 /*
  * name's getter
  */
-string Simulation::getName() const{
+std::string Simulation::getName() const{
 	return name;
 }
 
 /*
  * name's setter
  */
-void Simulation::setName(string name){
+void Simulation::setName(std::string name){
 	this->name = name;
 }
 
 /*
  * filepath's getter
  */
-string Simulation::getFilepath() const{
+std::string Simulation::getFilepath() const{
 	return filepath;
 }
 
 /*
  * filepath's setter
  */
-void Simulation::setFilepath(string filepath){
+void Simulation::setFilepath(std::string filepath){
 	this->filepath = filepath;
 }
 

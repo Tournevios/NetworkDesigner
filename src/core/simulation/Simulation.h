@@ -1,5 +1,4 @@
-#ifndef SIMULATION_H_
-#define SIMULATION_H_
+#pragma once
 
 #include "UpdateBlock.h"
 #include "Network.h"
@@ -7,10 +6,7 @@
 #include <fstream>
 #include <QThread>
 
-#define P 0
-#define BP 1
-#define BS 2
-#define S 3
+enum class UpdateType { P = 0, BP = 1, BS = 2, S = 3 };
 
 class Simulation : public QThread // , public QWidget
 {
@@ -50,5 +46,3 @@ public slots:
 	virtual void tick()=0;
 
 };
-
-#endif /*SIMULATION_H_*/

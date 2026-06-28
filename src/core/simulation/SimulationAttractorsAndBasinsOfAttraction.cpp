@@ -1,6 +1,5 @@
 #include "SimulationAttractorsAndBasinsOfAttraction.h"
 #include "random-singleton.h"
-using namespace std;
 
 SimulationAttractorsAndBasinsOfAttraction::SimulationAttractorsAndBasinsOfAttraction(Computer * computer):Simulation(computer)
 {
@@ -40,7 +39,7 @@ void SimulationAttractorsAndBasinsOfAttraction::run(){
 	NetworkState * initialAllStates;
 	nonExploredSpace = new NetworkStatesSet(-1);
 
-	nbStates = new NetworkState(computer->getNetwork()->getNbNeurons(), nullptr);
+	nbStates = new NetworkState(computer->getNetwork()->getNbNeurons(), NULL);
 
 	for(int i=0; i< computer->getNetwork()->getNbNeurons(); i++){
 		totalNumberOfStates = totalNumberOfStates * computer->getNetwork()->getNeuron(i)->getNbStates();
@@ -152,10 +151,10 @@ void SimulationAttractorsAndBasinsOfAttraction::run(){
 	printf("))))))))))))))\n");
 	//(test2-test3).printMe();
 */
-	if(updateType == P)		computer->computeP();
-	else if(updateType == BS) computer->computeBS();
-	else if(updateType == S) computer->computeS();
-	else if(updateType == BP) computer->computeBP();
+	if(updateType == UpdateType::P)		computer->computeP();
+	else if(updateType == UpdateType::BS) computer->computeBS();
+	else if(updateType == UpdateType::S) computer->computeS();
+	else if(updateType == UpdateType::BP) computer->computeBP();
 
 	bool exist;
 	while(numberOfVisitedStates != totalNumberOfStates){
@@ -188,10 +187,10 @@ void SimulationAttractorsAndBasinsOfAttraction::run(){
 
 			stateBuffer->addNetworkState(NetworkState(computer->getNetwork(), nbStates));
 
-			if(updateType == P)		computer->computeP();
-			else if(updateType == BS) computer->computeBS();
-			else if(updateType == S) computer->computeS();
-			else if(updateType == BP) computer->computeBP();
+			if(updateType == UpdateType::P)		computer->computeP();
+			else if(updateType == UpdateType::BS) computer->computeBS();
+			else if(updateType == UpdateType::S) computer->computeS();
+			else if(updateType == UpdateType::BP) computer->computeBP();
 		}
 		delete rndNetworkState;
 
@@ -230,7 +229,7 @@ NetworkState * SimulationAttractorsAndBasinsOfAttraction::getRandomNetworkState(
 
 NetworkState * SimulationAttractorsAndBasinsOfAttraction::getANonVisitedNetworkState(){
 
-	if(nonExploredSpace->getCardinal() == 0) return nullptr;
+	if(nonExploredSpace->getCardinal() == 0) return NULL;
 	NetworkState * nonVisited = new NetworkState(*(nonExploredSpace->getNetworkState(0)));
 
 	for(int i=0; i < nonVisited->getSize(); i++){
@@ -262,14 +261,14 @@ inline int SimulationAttractorsAndBasinsOfAttraction::getAffinity() const{
 /*
  * UpdateType's setter
  */
-void SimulationAttractorsAndBasinsOfAttraction::setUpdateType(int updateType){
+void SimulationAttractorsAndBasinsOfAttraction::setUpdateType(UpdateType updateType){
 	this->updateType = updateType;
 }
 
 /*
  * UpdateType's getter
  */
-inline int SimulationAttractorsAndBasinsOfAttraction::getUpdateType() const{
+inline UpdateType SimulationAttractorsAndBasinsOfAttraction::getUpdateType() const{
 	return updateType;
 }
 
@@ -325,16 +324,16 @@ void SimulationAttractorsAndBasinsOfAttraction::tick(){
  * This function return a set of the predecessors of X according to the update schedule
  */
 NetworkStatesSet * SimulationAttractorsAndBasinsOfAttraction::predecessorOf(NetworkState* x){
-	NetworkStatesSet * result = nullptr;
+	NetworkStatesSet * result = NULL;
 
-	if(updateType == BS){
+	if(updateType == UpdateType::BS){
 	}
-	else if(updateType == P){
+	else if(updateType == UpdateType::P){
 		result = pPredecessorOf(x);
 	}
-	else if(updateType == BP){
+	else if(updateType == UpdateType::BP){
 	}
-	else if(updateType == S){
+	else if(updateType == UpdateType::S){
 	}
 	return result;
 
@@ -346,7 +345,7 @@ NetworkStatesSet * SimulationAttractorsAndBasinsOfAttraction::predecessorOf(Netw
  */
 NetworkStatesSet * SimulationAttractorsAndBasinsOfAttraction::pPredecessorOf(NetworkState* x){
 
-	NetworkStatesSet * result = nullptr;
+	NetworkStatesSet * result = NULL;
 	if(!(x->coherent())) return new NetworkStatesSet(-1);
 
 	for(int i=0; i < computer->getNetwork()->getNbNeurons(); i++){
@@ -354,7 +353,7 @@ NetworkStatesSet * SimulationAttractorsAndBasinsOfAttraction::pPredecessorOf(Net
 			if(!(solutions[i]->getNetworkStatesSet(x->getState(i))->getFilled())){
 				solveAndStore(i);
 			}
-			if(result==nullptr){
+			if(result==NULL){
 				result = new NetworkStatesSet(*(solutions[i]->getNetworkStatesSet(x->getState(i))));
 				if(!(result->coherent())){
 					*result -= *result;
@@ -510,7 +509,7 @@ NetworkStatesSet * SimulationAttractorsAndBasinsOfAttraction::pBackward(NetworkS
 	if(numberOfVisitedStates < totalNumberOfStates)
 			computer->setProgressBarValue(100*((double)numberOfVisitedStates/(double)totalNumberOfStates));
 	else computer->setProgressBarValue(100.0);*/
-	NetworkStatesSet * tmpResult = nullptr;
+	NetworkStatesSet * tmpResult = NULL;
 
 	int initNumber = numberOfVisitedStates;
 	if(numberOfVisitedStates < totalNumberOfStates)

@@ -5,8 +5,7 @@
  *      Author: hbenamor
  */
 
-#ifndef NETWORKSTATE2_H_
-#define NETWORKSTATE2_H_
+#pragma once
 
 #include "NetworkState.h"
 
@@ -38,5 +37,3 @@ protected:
 	int attractorNumber;
 	int nextOne;
 };
-
-#endif /* NETWORKSTATE2_H_ */

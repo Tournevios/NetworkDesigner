@@ -8,7 +8,6 @@
 #include "SimulationAttractorsAndBasinsOfAttraction2.h"
 #include "random-singleton.h"
 #include <cmath>
-using namespace std;
 
 SimulationAttractorsAndBasinsOfAttraction2::SimulationAttractorsAndBasinsOfAttraction2() {
 	// TODO Auto-generated constructor stub
@@ -32,7 +31,7 @@ void SimulationAttractorsAndBasinsOfAttraction2::generateAllStates(){
 	// Generation de tout les états possibles du réseau.
 	int numberOfStates;
 	totalNumberOfStates = 1;
-	nbStates = new NetworkState(computer->getNetwork()->getNbNeurons(), nullptr);
+	nbStates = new NetworkState(computer->getNetwork()->getNbNeurons(), NULL);
 	for(int i=0; i< computer->getNetwork()->getNbNeurons(); i++){
 		totalNumberOfStates = totalNumberOfStates * computer->getNetwork()->getNeuron(i)->getNbStates();
 		nbStates->setState(i, computer->getNetwork()->getNeuron(i)->getNbStates());
@@ -108,10 +107,10 @@ void SimulationAttractorsAndBasinsOfAttraction2::calculateTransitions(){
 		for(int j=0; j < affinity; j++){
 			currentAttractor = allCombinations->getNetworkState(i)->getAttractorNumber();
 			computer->setStateOfTheNetwork(allCombinations->getNetworkState(i));
-			if(updateType == P)		computer->computeP();
-			else if(updateType == BS) computer->computeBS();
-			else if(updateType == S) computer->computeS();
-			else if(updateType == BP) computer->computeBP();
+			if(updateType == UpdateType::P)		computer->computeP();
+			else if(updateType == UpdateType::BS) computer->computeBS();
+			else if(updateType == UpdateType::S) computer->computeS();
+			else if(updateType == UpdateType::BP) computer->computeBP();
 			tmpNetworkState = NetworkState(computer->getNetwork(), nbStates);
 			nextOne = indexOf(&tmpNetworkState);
 			nextAttractor = allCombinations->getNetworkState(nextOne)->getAttractorNumber();
@@ -149,13 +148,13 @@ void SimulationAttractorsAndBasinsOfAttraction2::run(){
 	/*for(int i=0; i < 10; i++){
 		parts[i][0] = i * (totalNumberOfStates/10);
 		parts[i][1] = (i+1) * (totalNumberOfStates/10) - 1;
-		if((rc1=pthread_create( &threads[i], nullptr, &pcalculateTransitions, (void*)parts[i])) )
+		if((rc1=pthread_create( &threads[i], NULL, &pcalculateTransitions, (void*)parts[i])) )
 		 {
 		     printf("Thread creation failed: %d\n", rc1);
 		 }
 	}
 	for(int i=0; i < 10; i++){
-		pthread_join( threads[i], nullptr);
+		pthread_join( threads[i], NULL);
 	}*/
 	//calculateTransitions();
 	computer->setProgressBarValue(0);
@@ -229,10 +228,10 @@ void SimulationAttractorsAndBasinsOfAttraction2::linkThem(int startingIndex){
 		currentState->setVisited(true);
 		computer->setStateOfTheNetwork(currentState);
 
-		if(updateType == P)		computer->computeP();
-		else if(updateType == BS) computer->computeBS();
-		else if(updateType == S) computer->computeS();
-		else if(updateType == BP) computer->computeBP();
+		if(updateType == UpdateType::P)		computer->computeP();
+		else if(updateType == UpdateType::BS) computer->computeBS();
+		else if(updateType == UpdateType::S) computer->computeS();
+		else if(updateType == UpdateType::BP) computer->computeBP();
 
 		tmpNetworkState = NetworkState(computer->getNetwork(), nbStates);
 		nextState = allCombinations->getNetworkState(indexOf(&tmpNetworkState));
@@ -279,7 +278,7 @@ int SimulationAttractorsAndBasinsOfAttraction2::getAffinity() const{
 /*
  * UpdateType's setter
  */
-void SimulationAttractorsAndBasinsOfAttraction2::setUpdateType(int updateType){
+void SimulationAttractorsAndBasinsOfAttraction2::setUpdateType(UpdateType updateType){
 	this->updateType = updateType;
 }
 
@@ -303,7 +302,7 @@ int SimulationAttractorsAndBasinsOfAttraction2::numberOfOne(NetworkState * netwo
 /*
  * UpdateType's getter
  */
-int SimulationAttractorsAndBasinsOfAttraction2::getUpdateType() const{
+UpdateType SimulationAttractorsAndBasinsOfAttraction2::getUpdateType() const{
 	return updateType;
 }
 

@@ -1,5 +1,4 @@
-#ifndef UPDATEBLOCK_H_
-#define UPDATEBLOCK_H_
+#pragma once
 
 #include <vector>
 #include "constFile.h"
@@ -30,5 +29,3 @@ private:
 	int UpdateMethods;				// The way that this block on neurons is updated
 
 };
-
-#endif /*UPDATEBLOCK_H_*/

@@ -1,5 +1,4 @@
-#ifndef EVENEMENTHANDLER_H_
-#define EVENEMENTHANDLER_H_
+#pragma once
 #include "UpdateSchedulingPlan.h"
 #include "ui_mainWindow.h"
 #include "constFile.h"
@@ -113,5 +112,3 @@ private:
 	std::vector<BlockSelector> layers;
 	std::vector<QAction *> layerActions;
 };
-
-#endif /*EVENEMENTHANDLER_H_*/

@@ -1,17 +1,13 @@
 #include "NeuronSynapse.h"
 #include <cmath>
-#include <algorithm>
 #include "constFile.h"
 #include <iostream>
 #include "random-singleton.h"
-#include <QtGui/QRadialGradient>
-#include <QtGui/QFont>
 
-
-using namespace std;
 
 void Neuron::init(){
 	Random::Uniform<double>(0.0,1.0);
+	nb_neighbors = 0;
 	nbStates = 2;
 	threshold.push_back(0.0001);
 	hasANewState = false;
@@ -21,7 +17,7 @@ void Neuron::init(){
 	yellowMe = false;
 	temperature = 0;
 	state = true;
-	nodeID = "noname";
+	strcpy(nodeID, "noname");
 }
 
 Neuron::Neuron()
@@ -41,7 +37,7 @@ Neuron::Neuron(int index)
 	this->index = index;
 }
 
-Neuron::Neuron(int index, int state, int nbStates, vector<double> threshold)
+Neuron::Neuron(int index, int state, int nbStates, std::vector<double> threshold)
 {
 	init();
 	this->index = index;
@@ -54,6 +50,8 @@ Neuron::Neuron(int index, int state, int nbStates, vector<double> threshold)
 }
 
 Neuron::Neuron(const Neuron& neuron){
+
+	nb_neighbors = 0;
 	//Synapse * synapse;
 	index = neuron.getIndex();
 	temperature = neuron.getTemperature();
@@ -67,7 +65,7 @@ Neuron::Neuron(const Neuron& neuron){
 	yellowMe = false;
 	hasANewState = false;
 	theNewState = 0;
-	nodeID = neuron.getNodeID();
+	strcpy(nodeID, neuron.getNodeID());
 
 	/*
 	 * for(int i=0; i<neuron->getNb_neighbors();i++){
@@ -75,14 +73,19 @@ Neuron::Neuron(const Neuron& neuron){
 		synapse->setCX(neuron->getSynapse(i)->getCX());
 		synapse->setCY(neuron->getSynapse(i)->getCY());
 		synapses.push(synapse);
-		(int)synapses.size()++;
+		nb_neighbors++;
 	}
 	 */
 }
 
 Neuron::~Neuron()
 {
-	synapses.clear();
+	while(nb_neighbors!=0){
+		delete synapses[0];
+		//synapses.erase((vector<Synapse*>::iterator)&synapses[0]);
+		synapses.erase(synapses.begin());
+		nb_neighbors--;
+	}
 	threshold.clear();
 }
 
@@ -112,9 +115,12 @@ void Neuron::setThreshold(int stateIndex, double thresholdValue){
 }
 
 int Neuron::getNb_neighbors() const{
-	return (int)synapses.size();
+	return nb_neighbors;
 }
 
+void Neuron::setNb_neighbors(int nb_neighbors){
+	this->nb_neighbors = nb_neighbors;
+}
 
 void Neuron::setXY(double x, double y){
 	setX(x);
@@ -122,7 +128,7 @@ void Neuron::setXY(double x, double y){
 }
 
 void Neuron::setX(double x){
-	for(int i=0; i< (int)synapses.size(); i++){
+	for(int i=0; i< nb_neighbors; i++){
 		synapses[i]->setCX(synapses[i]->getCX() - (this->x - x));
 	}
 	this->x = x;
@@ -130,7 +136,7 @@ void Neuron::setX(double x){
 }
 
 void Neuron::setY(double y){
-	for(int i=0; i< (int)synapses.size(); i++){
+	for(int i=0; i< nb_neighbors; i++){
 		synapses[i]->setCY(synapses[i]->getCY() - (this->y - y));
 	}
 	this->y = y;
@@ -156,9 +162,9 @@ int* Neuron::getColor(){
 */
 
 Neuron * Neuron::getNeighbor(int synapseIndex) const{
-	if(synapseIndex < (int)synapses.size())
+	if(synapseIndex < nb_neighbors)
 		return synapses[synapseIndex]->getFinalNeuron();
-	return nullptr;
+	return NULL;
 }
 
 /*
@@ -198,14 +204,14 @@ void Neuron::setTheNewState(int theNewState){
 }
 
 void Neuron::compute2(double temperature){
-		vector<double> sum;
-		vector<double> expoTerm;
-		vector<double> boltzmannTerm;				// vector of boltzmann term associated to thresholds
-		vector<double> transitionProbabilities;		// Transition probabilities from state to others
+		std::vector<double> sum;
+		std::vector<double> expoTerm;
+		std::vector<double> boltzmannTerm;				// vector of boltzmann term associated to thresholds
+		std::vector<double> transitionProbabilities;		// Transition probabilities from state to others
 
 		sum.push_back(threshold[0] * state);
 		sum.push_back(threshold[0] * not(state));
-		for(int i = 0; i < (int)synapses.size(); i++){
+		for(int i = 0; i < nb_neighbors; i++){
 			sum[0] += synapses[i]->getWeight() * (not synapses[i]->getStateOfTheFinalNeuron());
 			sum[1] += synapses[i]->getWeight() * synapses[i]->getStateOfTheFinalNeuron();
 		}
@@ -222,15 +228,15 @@ void Neuron::compute2(double temperature){
  */
 void Neuron::compute(double temperature){
 
-	vector<double> sum;
-	vector<double> expoTerm;
-	vector<double> boltzmannTerm;				// vector of boltzmann term associated to thresholds
-	vector<double> transitionProbabilities;		// Transition probabilities from state to others
+	std::vector<double> sum;
+	std::vector<double> expoTerm;
+	std::vector<double> boltzmannTerm;				// vector of boltzmann term associated to thresholds
+	std::vector<double> transitionProbabilities;		// Transition probabilities from state to others
 	double rd1; 			// Random number
 	double max = 0.0;
 	//temperature = temperature * K_BOLTZMANN;
 	sum.push_back(0.00);
-	for(int i = 0; i < (int)synapses.size(); i++){
+	for(int i = 0; i < nb_neighbors; i++){
 			/*if(synapses[i]->getFinalNeuron()->getIndex() == 9)
 				sum[0] += synapses[i]->getWeight();
 			else*/
@@ -377,10 +383,15 @@ void Neuron::substitute(){
  * Add a synapse between two neurons. The synapse has a weight.
  */
 bool Neuron::addSynapse(Neuron * neighbor, double weight, int delay){
-	for (const auto& s : synapses)
-		if (s->getFinalNeuron()->getIndex() == neighbor->getIndex()) return false;
+	//addSynapse(neighbor, weight, 0, 0, 0);
+	std::vector<Synapse*>::iterator iter = synapses.begin();
+	while(iter != synapses.end()){
+		if((*iter)->getFinalNeuron()->getIndex() == neighbor->getIndex())	return false;
+		iter++;
+	}
 
-	synapses.push_back(std::make_unique<Synapse>(this, neighbor, weight, delay));
+	synapses.push_back(new Synapse(this, neighbor, weight, delay));
+	nb_neighbors++;
 	return true;
 }
 /*
@@ -389,7 +400,7 @@ void Neuron::addSynapse(Neuron * neighbor, double weight, int red, int green, in
 	neighbors.push_back(neighbor);
 	weights.push_back(weight);
 	synapsesColor.push_back(color);
-	(int)synapses.size()++;
+	nb_neighbors++;
 }
 */
 
@@ -398,7 +409,7 @@ void Neuron::addSynapse(Neuron * neighbor, double weight, int red, int green, in
  */
 /*
 void Neuron::setSynapseColor(int synapseIndex, int red, int green, int blue){
-	if(synapseIndex < (int)synapses.size()) {
+	if(synapseIndex < nb_neighbors) {
 		synapsesColor[synapseIndex][0] = red;
 		synapsesColor[synapseIndex][1] = green;
 		synapsesColor[synapseIndex][2] = blue;
@@ -410,10 +421,10 @@ void Neuron::setSynapseColor(int synapseIndex, int red, int green, int blue){
  */
 /*
 int* Neuron::getSynapseColor(int synapseIndex){
-	if(synapseIndex < (int)synapses.size()) {
+	if(synapseIndex < nb_neighbors) {
 			return synapsesColor[synapseIndex];
 	}
-	return nullptr;
+	return NULL;
 }
 */
 
@@ -421,7 +432,7 @@ int* Neuron::getSynapseColor(int synapseIndex){
  * Modify the weight of the synapse
  */
 void Neuron::setSynapseWeight(int synapseIndex, double weight){
-	if(synapseIndex < (int)synapses.size()) {
+	if(synapseIndex < nb_neighbors) {
 		synapses[synapseIndex]->setWeight(weight);
 	}
 }
@@ -430,7 +441,7 @@ void Neuron::setSynapseWeight(int synapseIndex, double weight){
  * Return the weight of the synapse
  */
 double Neuron::getSynapseWeight(int synapseIndex) const{
-	if(synapseIndex < (int)synapses.size()) {
+	if(synapseIndex < nb_neighbors) {
 		return synapses[synapseIndex]->getWeight();
 	}
 	return 0;
@@ -440,7 +451,7 @@ double Neuron::getSynapseWeight(int synapseIndex) const{
  * Return the synapse's delay
  */
 int Neuron::getSynapseDelay(int synapseIndex) const{
-	if(synapseIndex < (int)synapses.size()) {
+	if(synapseIndex < nb_neighbors) {
 		return synapses[synapseIndex]->getDelay();
 	}
 	return 0;
@@ -450,7 +461,7 @@ int Neuron::getSynapseDelay(int synapseIndex) const{
  * Set the synapse's delay
  */
 void Neuron::setSynapseDelay(int synapseIndex, int synapseDelay){
-	if(synapseIndex < (int)synapses.size()) {
+	if(synapseIndex < nb_neighbors) {
 		synapses[synapseIndex]->setDelay(synapseDelay);
 	}
 }
@@ -459,7 +470,7 @@ void Neuron::setSynapseDelay(int synapseIndex, int synapseDelay){
  * Modify the graphical excentricity of the synapse
  */
 void Neuron::setSynapseGE(int synapseIndex, float gE){
-	if(synapseIndex < (int)synapses.size()) {
+	if(synapseIndex < nb_neighbors) {
 		synapses[synapseIndex]->setGExcentricity(gE);
 	}
 }
@@ -468,7 +479,7 @@ void Neuron::setSynapseGE(int synapseIndex, float gE){
  * Return the graphical excentricity of the synapse
  */
 float Neuron::getSynapseGE(int synapseIndex) const{
-	if(synapseIndex < (int)synapses.size()) {
+	if(synapseIndex < nb_neighbors) {
 		return synapses[synapseIndex]->getGExcentricity();
 	}
 	return 0;
@@ -478,27 +489,33 @@ float Neuron::getSynapseGE(int synapseIndex) const{
  * Return the self synapse of the neuron otherwise return null
  */
 Synapse * Neuron::getSelfSynapse() const{
-	for (const auto& s : synapses)
-		if (s->getBaseNeuron() == s->getFinalNeuron()) return s.get();
-	return nullptr;
+	std::vector<Synapse*>::const_iterator iter = synapses.begin();
+	while(iter!=synapses.end()){
+		if((*iter)->getBaseNeuron()==(*iter)->getFinalNeuron()) return *iter;
+		iter++;
+	}
+	return NULL;
 }
 
 /*
  * Delete a synapse between two neurons based on the index of the synapse
  */
 void Neuron::delSynapseBySynapseIndex(int synapseIndex){
-	if(synapseIndex < (int)synapses.size())
-		synapses.erase(synapses.begin() + synapseIndex);
+	if(synapseIndex < nb_neighbors)
+	{
+			synapses.erase((std::vector<Synapse*>::iterator)&synapses[synapseIndex]);
+			nb_neighbors--;
+	}
 }
 
 /*
  * Get synapse by synapse Index
  */
 Synapse * Neuron::getSynapse(int synapseIndex) const{
-	if(synapseIndex < (int)synapses.size()) {
-		return synapses[synapseIndex].get();
+	if(synapseIndex < nb_neighbors) {
+		return synapses[synapseIndex];
 	}
-	return nullptr;
+	return NULL;
 }
 
 /*
@@ -506,9 +523,14 @@ Synapse * Neuron::getSynapse(int synapseIndex) const{
  */
 int Neuron::getSynapseByNeighborIndex(int neighborIndex) const{
 	int synapseIndex = 0;
-	for (const auto& s : synapses){
-		if(s->getFinalNeuron()->getIndex() == neighborIndex) break;
-		synapseIndex++;
+	std::vector<Synapse*>::const_iterator synapsesIterator = synapses.begin();
+
+	while(synapsesIterator != synapses.end()){
+		if((*synapsesIterator)->getFinalNeuron()->getIndex() != neighborIndex){
+			synapsesIterator++;
+			synapseIndex++;
+		}
+		else break;
 	}
 	return synapseIndex;
 }
@@ -517,71 +539,34 @@ int Neuron::getSynapseByNeighborIndex(int neighborIndex) const{
  * Draw the neuron.
  */
 void Neuron::drawMe(QPainter* painter, double scale, double transX, double transY){
-    painter->setRenderHint(QPainter::Antialiasing, true);
-    painter->setRenderHint(QPainter::TextAntialiasing, true);
+	// Draw The Neuron
+			painter->setRenderHint(QPainter::Antialiasing, true);
+			if(yellowMe)
+				painter->setPen(QPen(Qt::yellow, 3*scale, Qt::SolidLine, Qt::RoundCap));
+			else if(!selected)
+				painter->setPen(QPen(Qt::black, 3*scale, Qt::SolidLine, Qt::RoundCap));
+			else
+				painter->setPen(QPen(Qt::blue, 3*scale, Qt::SolidLine, Qt::RoundCap));
 
-    const double cx = x * scale + transX;
-    const double cy = y * scale + transY;
-    const double r  = 13.0 * scale;
-    const QRectF rect(cx - r, cy - r, 2 * r, 2 * r);
+			if(state > 1)
+				painter->setBrush(QBrush(Qt::darkGreen, Qt::SolidPattern));
+			else if(state == 1)
+				painter->setBrush(QBrush(Qt::green, Qt::SolidPattern));
+			else
+				painter->setBrush(QBrush(Qt::red, Qt::SolidPattern));
 
-    // --- fill color by state (dark theme palette) ---
-    QColor baseColor;
-    if (state > 1)       baseColor = QColor(0xa6, 0xe3, 0xa1); // green
-    else if (state == 1) baseColor = QColor(0x89, 0xb4, 0xfa); // blue
-    else                 baseColor = QColor(0xf3, 0x8b, 0xa8); // red/inactive
-
-    // radial gradient: lighter centre, darker edge
-    QRadialGradient grad(cx - r * 0.3, cy - r * 0.3, r * 1.3);
-    grad.setColorAt(0.0, baseColor.lighter(130));
-    grad.setColorAt(1.0, baseColor.darker(150));
-
-    // drop shadow
-    painter->setPen(Qt::NoPen);
-    painter->setBrush(QColor(0, 0, 0, 60));
-    painter->drawEllipse(rect.translated(2 * scale, 3 * scale));
-
-    // body
-    painter->setBrush(grad);
-
-    if (yellowMe) {
-        // block-mode highlight: yellow glow ring
-        painter->setPen(QPen(QColor(0xf9, 0xe2, 0xaf), 3.0 * scale, Qt::SolidLine, Qt::RoundCap));
-    } else if (selected) {
-        // selection: accent glow
-        painter->setPen(QPen(QColor(0xcb, 0xa6, 0xf7), 3.0 * scale, Qt::SolidLine, Qt::RoundCap));
-    } else {
-        painter->setPen(QPen(QColor(0x31, 0x32, 0x44), 1.5 * scale, Qt::SolidLine, Qt::RoundCap));
-    }
-
-    painter->drawEllipse(rect);
-
-    // state label inside the neuron
-    painter->setPen(QColor(0x1e, 0x1e, 0x2e));
-    QFont f = painter->font();
-    f.setPixelSize(std::max(8, static_cast<int>(10 * scale)));
-    f.setBold(true);
-    painter->setFont(f);
-    painter->drawText(rect, Qt::AlignCenter, QString::number(state));
-
-    // nodeID label below the neuron
-    if (!nodeID.empty()) {
-        painter->setPen(QColor(0xa6, 0xad, 0xc8));
-        QFont lf = painter->font();
-        lf.setBold(false);
-        lf.setPixelSize(std::max(7, static_cast<int>(9 * scale)));
-        painter->setFont(lf);
-        QRectF labelRect(cx - 30 * scale, cy + r + 2 * scale, 60 * scale, 14 * scale);
-        painter->drawText(labelRect, Qt::AlignCenter,
-                          QString::fromStdString(nodeID));
-    }
+			painter->drawEllipse(QRectF((x-10)*scale + transX, (y-10)*scale + transY, 20*scale, 20*scale));
 }
 
 /*
  * Draw the synapses
  */
 void Neuron::drawSynapses(QPainter* painter, double scale, double transX, double transY){
-	for (const auto& s : synapses) s->drawMe(painter, scale, transX, transY);
+	std::vector<Synapse*>::iterator iter = synapses.begin();
+	while(iter != synapses.end()){
+		(*iter)->drawMe(painter, scale, transX, transY);
+		 iter++;
+	}
 }
 
 /*
@@ -602,7 +587,11 @@ void Neuron::setTemperature(double temperature){
  * Refresh the synapse
  */
 void Neuron::refreshSynapses(){
-	for (const auto& s : synapses) s->refreshMe();
+	std::vector<Synapse*>::iterator iter = synapses.begin();
+	while(iter != synapses.end()){
+		(*iter)->refreshMe();
+		 iter++;
+	}
 }
 
 /*
@@ -633,21 +622,21 @@ int Neuron::getNbStates() const{
 /*
  * Return all the thresholds
  */
-vector<double> Neuron::getThresholds() const{
+std::vector<double> Neuron::getThresholds() const{
 	return threshold;
 }
 
 /*
  * Setter of the nodeID
  */
-void Neuron::setNodeID(const std::string& nodeID){
-	this->nodeID = nodeID;
+void Neuron::setNodeID(char * nodeID){
+	strcpy(this->nodeID, nodeID);
 }
 
 /*
  * Getter for the nodeID
  */
-const std::string& Neuron::getNodeID() const{
+const char * Neuron::getNodeID() const{
 	return nodeID;
 }
 

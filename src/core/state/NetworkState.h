@@ -1,5 +1,4 @@
-#ifndef NETWORKSTATE_H_
-#define NETWORKSTATE_H_
+#pragma once
 
 #include <vector>
 #include <cmath>
@@ -61,5 +60,3 @@ protected:
 	int nextOne;
 
 };
-
-#endif /*NETWORKSTATE_H_*/

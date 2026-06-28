@@ -7,7 +7,7 @@ NetworkState::NetworkState(void){
 }
 NetworkState::~NetworkState(void){
 	states.clear();
-	nbStates = nullptr;
+	nbStates = NULL;
 }
 
 NetworkState::NetworkState(const NetworkState& networkState){
@@ -67,7 +67,7 @@ NetworkState operator+(const NetworkState& lv, const NetworkState& rv){
 	long int myState, rState;
 	bool modified = false;
 	NetworkState result(lv.getSize(), lv.getNbStatesNS());
-	//if(this->getSize() != rv.getSize()) return nullptr;;
+	//if(this->getSize() != rv.getSize()) return NULL;;
 
 	for(int i=0; i<lv.getSize(); i++){
 		myState = lv.getState(i);
@@ -82,7 +82,7 @@ NetworkState operator+(const NetworkState& lv, const NetworkState& rv){
 		}
 		else {
 			//delete result;
-			//return nullptr;
+			//return NULL;
 			for(int j=i; j<lv.getSize(); j++) result.setState(j, -1);
 			return result;
 		}
@@ -99,7 +99,7 @@ NetworkState operator*(const NetworkState& lv, const NetworkState& rv){
 	NetworkState result(lv.getSize(), lv.getNbStatesNS());
 	long int myState, rState;
 
-	//if(this->getSize() != rv.getSize()) return nullptr;
+	//if(this->getSize() != rv.getSize()) return NULL;
 
 	for(int i=0; i<lv.getSize(); i++){
 		myState = lv.getState(i);
@@ -213,7 +213,7 @@ void NetworkState::printMe() const{
 	for(int i=0; i<(int)states.size() - 1; i++){
 		std::cout<< states[i] << " ** ";
 	}
-	std::cout << states[(int)states.size() - 1] << std::endl;
+	std::cout << states[(int)states.size() - 1] << '\n';
 }
 
 void NetworkState::setDuplicated(bool duplicated){

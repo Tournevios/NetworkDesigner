@@ -1,7 +1,7 @@
-#ifndef SETOFNETWORKSTATESSET_H_
-#define SETOFNETWORKSTATESSET_H_
+#pragma once
 
 #include "NetworkStatesSet.h"
+#include <memory>
 
 class SetOfNetworkStatesSet
 {
@@ -13,8 +13,6 @@ public:
 	void addNetworkState(int index, const NetworkState& networkState);
 	void deleteOneElement(int index);
 private:
-	std::vector<NetworkStatesSet*> sets;
+	std::vector<std::unique_ptr<NetworkStatesSet>> sets;
 	int nbSets;	
 };
-
-#endif /*SETOFNETWORKSTATESSET_H_*/

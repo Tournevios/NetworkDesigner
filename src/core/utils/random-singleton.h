@@ -6,8 +6,6 @@
 //This header file provides a good random generator. It is the one of L'Ecuyer
 //with Bays-Durham shuffle, found in Numerical Recipes(http://www.nr.com)
 
-#ifndef __RANDOM_H__
-#define __RANDOM_H__
 #pragma once
 
 #include <cmath>
@@ -97,8 +95,6 @@ class Random //Singleton
   private:
     static Random Singleton; //Instanciation unique / Single instanciation
 };
-
-#endif // __RANDOM_H__
 
 
 

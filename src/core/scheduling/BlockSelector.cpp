@@ -6,7 +6,7 @@ BlockSelector::BlockSelector()
 }
 
 BlockSelector::BlockSelector(const BlockSelector& blockSelector):QObject(){
-	this->updateBlock = new UpdateBlock(*(blockSelector.getUpdateBlock()));
+	this->updateBlock = std::make_unique<UpdateBlock>(*(blockSelector.getUpdateBlock()));
 	this->l1_distance = blockSelector.getL1_distance();
 	this->network = blockSelector.getNetwork();
 }
@@ -15,7 +15,6 @@ BlockSelector::BlockSelector(const BlockSelector& blockSelector):QObject(){
 BlockSelector::~BlockSelector()
 {
 	this->disconnect();
-	delete updateBlock;
 }
 
 /*
@@ -23,7 +22,7 @@ BlockSelector::~BlockSelector()
  */
 BlockSelector::BlockSelector(Network * network, int l1_distance, int firstIndex){
 	this->network = network;
-	updateBlock = new UpdateBlock();
+	updateBlock = std::make_unique<UpdateBlock>();
 	updateBlock->addNeuronIndex(firstIndex);
 	this->l1_distance = l1_distance;
 }
@@ -64,7 +63,7 @@ int operator<(const BlockSelector& left, const BlockSelector& right){
  * UpdateBlock's getter
  */
 UpdateBlock * BlockSelector::getUpdateBlock() const{
-	return updateBlock;
+	return updateBlock.get();
 }
 
 /*
@@ -80,6 +79,6 @@ Network * BlockSelector::getNetwork() const{
 BlockSelector& BlockSelector::operator=(const BlockSelector& blockSelector){
 	l1_distance = blockSelector.getL1_distance();
 	network = blockSelector.getNetwork();
-	updateBlock = new UpdateBlock(*(blockSelector.getUpdateBlock()));
+	updateBlock = std::make_unique<UpdateBlock>(*(blockSelector.getUpdateBlock()));
 	return *this;
 }
