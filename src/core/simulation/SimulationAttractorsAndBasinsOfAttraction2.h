@@ -5,8 +5,7 @@
  *      Author: hbenamor
  */
 
-#ifndef SIMULATIONATTRACTORSANDBASINSOFATTRACTION2_H_
-#define SIMULATIONATTRACTORSANDBASINSOFATTRACTION2_H_
+#pragma once
 
 #include "Simulation.h"
 #include "SetOfNetworkStatesSet.h"
@@ -21,8 +20,8 @@ public:
 	pCalculateTransitions();
 	pCalculateTransitions(SimulationAttractorsAndBasinsOfAttraction2 * simulation, Computer * computer, int startIndex, int endIndex);
 	pCalculateTransitions(const pCalculateTransitions& pcalculateTransitions);
-	void run() override;
-	~pCalculateTransitions() override;
+	void run();
+	virtual ~pCalculateTransitions();
 protected:
 	SimulationAttractorsAndBasinsOfAttraction2* sim;
 	Computer * computer;
@@ -37,7 +36,7 @@ class SimulationAttractorsAndBasinsOfAttraction2 : public Simulation
 {
 	friend class pCalculateTransitions;
 private:
-	int updateType;
+	UpdateType updateType;
 	int affinity;
 	double temperature;
 	int numberOfIterations;
@@ -54,17 +53,17 @@ private:
 public:
 	SimulationAttractorsAndBasinsOfAttraction2();
 	SimulationAttractorsAndBasinsOfAttraction2(Computer * computer);
-	~SimulationAttractorsAndBasinsOfAttraction2() override;
+	virtual ~SimulationAttractorsAndBasinsOfAttraction2();
 
-	void run() override;
+	void run();
 
 	void setAffinity(int affinity);
 	int getAffinity() const;
 
 	Computer * getComputer() const;
 
-	void setUpdateType(int updateType);
-	int getUpdateType() const;
+	void setUpdateType(UpdateType updateType);
+	UpdateType getUpdateType() const;
 
 	NetworkStatesSet * getAllCombinations() const;
 	NetworkState *getNbStates() const;
@@ -96,9 +95,7 @@ public:
 	NetworkState * getANonVisitedNetworkState();
 
 public slots:
-	void tick() override;
+	void tick();
 signals:
 	void startThreads(QThread::Priority);
 };
-
-#endif /* SIMULATIONATTRACTORSANDBASINSOFATTRACTION2_H_ */

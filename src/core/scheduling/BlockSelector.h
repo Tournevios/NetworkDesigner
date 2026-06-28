@@ -1,9 +1,9 @@
-#ifndef BLOCKSELECTOR_H_
-#define BLOCKSELECTOR_H_
+#pragma once
 
 #include "Network.h"
 #include "UpdateBlock.h"
 #include<QtWidgets/QWidget>
+#include <memory>
 
 class BlockSelector : public QObject
 {
@@ -23,7 +23,7 @@ public:
 	BlockSelector& operator=(const BlockSelector& blockSelector);
 private:
 	Network * network;
-	UpdateBlock * updateBlock;
+	std::unique_ptr<UpdateBlock> updateBlock;
 	int l1_distance;
 	BlockSelector();
 
@@ -33,5 +33,3 @@ public slots:
 signals:
 	void repaintPlease();
 };
-
-#endif /*BLOCKSELECTOR_H_*/

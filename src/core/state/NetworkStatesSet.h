@@ -1,8 +1,6 @@
-#ifndef NETWORKSTATESSET_H_
-#define NETWORKSTATESSET_H_
+#pragma once
 
 #include "NetworkState.h"
-#include <memory>
 #include <vector>
 #include <iostream>
  
@@ -57,10 +55,10 @@ public:
 	friend int operator==(const NetworkState& lv, const NetworkStatesSet& rv);
 		
 private:
-	std::vector<std::unique_ptr<NetworkState>> set;
+	std::vector<NetworkState*> set;
+	int cardinal;
 	int maxCardinal;
 	bool filled;
 
 };
 const NetworkStatesSet operator-(const NetworkState& lv, const NetworkState& rv);
-#endif /*NETWORKSTATESSET_H_*/

@@ -4,8 +4,7 @@
 /*																			 */
 /* 																			 */
 /*****************************************************************************/
-#ifndef DESINGPLAN_H_
-#define DESINGPLAN_H_
+#pragma once
 #include <QtGui/QFrame>
 #include<QtGui/QMouseEvent>
 #include<QtGui/QWidget>
@@ -46,19 +45,12 @@ public:
 
 	void setCurrentUpdateBlock(int currentUpdateBlock);
 
-	double getScale() const    { return scale; }
-	void   setScale(double s)  { scale = s; repaint(); }
-
-public slots:
-	void resetView() { scale = 1.0; transX = transY = 0; repaint(); }
-
 signals:
 	void neuronSelectedChanged(Neuron* neuron);
 	void synapseSelectedChanged(Synapse* synapse);
 	void blockModeInvoked(int index);
 	void updateCalled();
 	void networkIsModified();
-	void canvasMouseMoved(int worldX, int worldY);
 
 protected:
 
@@ -95,5 +87,3 @@ private:
 	UpdateSchedulingPlan * updateSchedulingPlan;
 };
 
-
-#endif /*DESINGPLAN_H_*/

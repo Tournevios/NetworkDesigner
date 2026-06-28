@@ -1,9 +1,6 @@
-#ifndef NEURONSYNAPSE_H_
-#define NEURONSYNAPSE_H_
+#pragma once
 
 #include <cmath>
-#include <memory>
-#include <string>
 #include <vector>
 #include <queue>
 #include <QtGui/QPainter>
@@ -95,6 +92,7 @@ public:
 	void setThreshold(int stateIndex, double threshold);
 
 	int getNb_neighbors() const;
+	void setNb_neighbors(int nb_neighbors);
 
 /*	void setColor(int red, int green, int blue);
 	int* getColor();
@@ -137,8 +135,8 @@ public:
 	int getSynapseDelay(int synapseIndex) const;
 	void refreshSynapses();
 
-	void setNodeID(const std::string& nodeID);
-	const std::string& getNodeID() const;
+	void setNodeID(char * nodeID);
+	const char * getNodeID() const;
 
 	Neuron * getNeighbor(int synapseIndex) const;
 
@@ -151,10 +149,11 @@ private:
 	int nbStates;
 	std::vector<double> threshold;
 	double temperature;
-	std::string nodeID;
+	char nodeID[255];
 
 	// Synapses
-	std::vector<std::unique_ptr<Synapse>> synapses;
+	int nb_neighbors;
+	std::vector<Synapse*> synapses;
 
 	bool hasANewState;							// Set to true if a computation was done
 	int theNewState;							// The new state of the neuron
@@ -169,5 +168,3 @@ private:
 };
 
 
-
-#endif /*NEURONSYNAPSE_H_*/

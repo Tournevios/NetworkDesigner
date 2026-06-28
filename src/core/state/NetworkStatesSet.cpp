@@ -1,6 +1,4 @@
 #include "NetworkStatesSet.h"
-#include <memory>
-using namespace std;
 
 /*
  * A network NetworkStatesSet is a set of NetworkStates
@@ -8,34 +6,41 @@ using namespace std;
 
 NetworkStatesSet::NetworkStatesSet()
 {
+	cardinal = 0;
 	maxCardinal = -1;
 	set.clear();
 	filled = false;
 }
 
 NetworkStatesSet::NetworkStatesSet(const NetworkStatesSet& cp){
-	maxCardinal = -1;
+	maxCardinal = -1;//cp.getMaxCardinal();
 	for(int i=0; i<cp.getCardinal(); i++){
-		set.push_back(std::make_unique<NetworkState>(*(cp.getNetworkState(i))));
+		set.push_back(new NetworkState(*(cp.getNetworkState(i))));
 	}
+	cardinal = cp.getCardinal();
 	filled = cp.getFilled();
 }
 
 
 NetworkStatesSet::NetworkStatesSet(int maxCardinal){
 	this->maxCardinal = maxCardinal;
+	cardinal = 0;
 	set.clear();
 	filled = false;
 }
 
 NetworkStatesSet::~NetworkStatesSet()
-{
-	set.clear();
+{	
+	while(cardinal > 0)	removeNetworkState(0);
+
 }
 
 void NetworkStatesSet::deleteOneElement(int index){
-	if(index < (int)set.size()){
+	
+	if(index < cardinal){
+		delete set[index];
 		set.erase(set.begin() + index);
+		cardinal--;
 	}
 }
 
@@ -50,29 +55,30 @@ void NetworkStatesSet::addNetworkStatesSet(const NetworkStatesSet& networkStates
  */
 void NetworkStatesSet::addNetworkState(const NetworkState& networkState){
 
-	if(((int)set.size() >= maxCardinal) and (maxCardinal>0)){
+	if((cardinal >= maxCardinal) and (maxCardinal>0)){
 		deleteOneElement(0);
 	}
 
-	set.push_back(std::make_unique<NetworkState>(networkState));
+	set.push_back(new NetworkState(networkState));
+	cardinal++;
 }
 
 void NetworkStatesSet::removeNetworkState(int index){
-	if(index<(int)set.size()){
+	if(index<cardinal){
 		deleteOneElement(index);
 	}
 }
 
 
 NetworkState* NetworkStatesSet::getNetworkState(int index) const{
-	if(index < (int)set.size()){
-		return set[index].get();
+	if(index < cardinal){
+		return set[index];
 	}
-	return nullptr;
+	return NULL;
 }
 
 int NetworkStatesSet::getCardinal() const{
-	return (int)set.size();
+	return cardinal;
 }
 
 void NetworkStatesSet::setFilled(bool filled){
@@ -88,16 +94,17 @@ int NetworkStatesSet::getMaxCardinal() const{
 }
 
 void NetworkStatesSet::printMe() const{
-	std::cout<< "My states are: " << std::endl;
-	for(int i=0; i<(int)set.size(); i++){
+	std::cout<< "My states are: " << '\n';
+	for(int i=0; i<cardinal; i++){
 		set[i]->printMe();
 	}
-	std::cout << std::endl; 
+	std::cout << '\n'; 
 }
 
 void NetworkStatesSet::setMaxCardinal(int maxCardinal){
-	if((maxCardinal < (int)set.size()) and (maxCardinal>=0)){
-		while((int)set.size() > maxCardinal) deleteOneElement((int)set.size()-1);
+	if((maxCardinal < cardinal) and (maxCardinal>=0)){
+		while(cardinal > maxCardinal) deleteOneElement(cardinal-1);		
+		cardinal = maxCardinal; 
 	}
 	this->maxCardinal = maxCardinal;
 }
@@ -164,7 +171,7 @@ void NetworkStatesSet::compress(){
  */
 int NetworkStatesSet::getNbOfAllPossibleStates() const{
 	int sum = 0;
-	for(int i=0; i < (int)set.size(); i++){
+	for(int i=0; i < cardinal; i++){
 		sum += set[i]->getNbOfAllPossibleStates();
 	}
 	return sum;
@@ -433,7 +440,7 @@ void NetworkStatesSet::operator-=(const NetworkStatesSet& rv){
 
 NetworkStatesSet& NetworkStatesSet::operator=(const NetworkStatesSet& rv){
 	if(this != &rv){
-		set.clear();
+		while(cardinal > 0) this->removeNetworkState(0);
 		maxCardinal = rv.getMaxCardinal();
 		filled = rv.getFilled();
 		this->addNetworkStatesSet(rv);

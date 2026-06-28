@@ -1,9 +1,8 @@
-#ifndef NETWORK_H_
-#define NETWORK_H_
+#pragma once
 
 #include "NeuronSynapse.h"
-#include <memory>
 //#include "UpdateSchedulingPlan.h"
+#include <memory>
 
 class Network
 {
@@ -43,10 +42,9 @@ public:
 	void deselectAll();
 
 private:
+	int nb_neurons;
 	std::vector<std::unique_ptr<Neuron>> neurons;
 	double temperature;
 	bool uniformalTemperature;
 	
 };
-
-#endif /*NETWORK_H_*/

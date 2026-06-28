@@ -6,6 +6,7 @@
 #include <QtGui/QMessageBox>
 #include <QFile>
 #include <iostream>
+#include <memory>
 #include <string>
 
 /*
@@ -13,8 +14,8 @@
  */
 NetworkDesignerParser::NetworkDesignerParser()
 {
-	network = nullptr;
-	updateSchedulingPlan = nullptr;
+	network = NULL;
+	updateSchedulingPlan = NULL;
 }
 
 /*
@@ -324,7 +325,7 @@ void NetworkDesignerParser::save(QString fileName){
 
 	pNetwork = doc.createElement("Network");
 
-	if(network != nullptr){
+	if(network != NULL){
 		pNetwork.setAttribute("Nb_Neurons", network->getNbNeurons());
 		pNetwork.setAttribute("Temperature", network->getTemperature());
 		pNetwork.setAttribute("UniformalTemperature", network->getUniformalTemperature());
@@ -339,7 +340,7 @@ void NetworkDesignerParser::save(QString fileName){
 
 	pUpdateSchedulingPlan = doc.createElement("UpdateSchedulingPlan");
 
-	if(updateSchedulingPlan!=nullptr)
+	if(updateSchedulingPlan!=NULL)
 		pUpdateSchedulingPlan.setAttribute("Nb_UpdateBlocks", updateSchedulingPlan->getNb_blocks());
 	else
 		pUpdateSchedulingPlan.setAttribute("Nb_UpdateBlocks", 0);
@@ -349,7 +350,7 @@ void NetworkDesignerParser::save(QString fileName){
 	if(!file.open(QIODevice::WriteOnly)) return;
 	out.setDevice(&file);
 
-	if(network!=nullptr){
+	if(network!=NULL){
 		for(int i=0; i< network->getNbNeurons(); i++){
 			neuron = network->getNeuron(i);
 			pNeuron = doc.createElement("Neuron");
@@ -382,7 +383,7 @@ void NetworkDesignerParser::save(QString fileName){
 			pNetwork.appendChild(pNeuron);
 		}
 	}
-	if(updateSchedulingPlan!=nullptr){
+	if(updateSchedulingPlan!=NULL){
 		for(int i=0; i < updateSchedulingPlan->getNb_blocks(); i++){
 			pUpdateBlock = doc.createElement("Block");
 			pUpdateBlock.setAttribute("Size", updateSchedulingPlan->getUpdateBlock(i)->getSize());
@@ -429,7 +430,7 @@ void NetworkDesignerParser::load(QString fileName){
 	int block_size;
 	int calculus;
 
-	UpdateBlock* updateBlock;
+	std::unique_ptr<UpdateBlock> updateBlock;
 
 	bool * okki = (bool *) malloc(sizeof(bool));
 
@@ -456,7 +457,7 @@ void NetworkDesignerParser::load(QString fileName){
 			network->getNeuron(i)->setTemperature(child.toElement().attribute("Temperature").toDouble(okki));
 			network->getNeuron(i)->setX(child.toElement().attribute("x").toDouble(okki));
 			network->getNeuron(i)->setY(child.toElement().attribute("y").toDouble(okki));
-			network->getNeuron(i)->setNodeID(child.toElement().attribute("NodeID", "noname").toStdString());
+			network->getNeuron(i)->setNodeID((char*)(child.toElement().attribute("NodeID", "noname").toStdString().c_str()));
 			Nb_Neighbors = child.toElement().attribute("Nb_Neighbors").toInt(okki);
 
 			if(network->getNeuron(i)->getNbStates() >= 2){
@@ -503,7 +504,7 @@ void NetworkDesignerParser::load(QString fileName){
 			block_size = 0;
 			block_size = child.toElement().attribute("Size").toInt(okki);
 			calculus = child.toElement().attribute("Calculus").toInt(okki);
-			updateBlock = new UpdateBlock();
+			updateBlock = std::make_unique<UpdateBlock>();
 			updateBlock->setUpdateMethods(calculus);
 			if(block_size>0){
 				grandChild = child.firstChild();
@@ -512,7 +513,7 @@ void NetworkDesignerParser::load(QString fileName){
 					if(j+1 < block_size) grandChild = grandChild.nextSibling();
 				}
 			}
-			updateSchedulingPlan->addUpdateBlock(updateBlock);
+			updateSchedulingPlan->addUpdateBlock(std::move(updateBlock));
 			if(i+1 < Nb_UpdateBlocks) child = child.nextSibling();
 		}
 	}

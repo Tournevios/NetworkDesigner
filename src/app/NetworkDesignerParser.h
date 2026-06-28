@@ -1,5 +1,4 @@
-#ifndef NETWORKDESIGNERPARSER_H_
-#define NETWORKDESIGNERPARSER_H_
+#pragma once
 
 #include <QObject>
 #include "Network.h"
@@ -29,5 +28,3 @@ private:
 	UpdateSchedulingPlan * updateSchedulingPlan;
 
 };
-
-#endif /*NETWORKDESIGNERPARSER_H_*/

@@ -1,5 +1,4 @@
 #include "SimulationActivity.h"
-using namespace std;
 
 SimulationActivity::SimulationActivity(Computer * computer):Simulation(computer)
 {
@@ -48,8 +47,8 @@ void SimulationActivity::run(){
 		delete computer->getNetwork();
 	}
 	*/
-	if(updateType == BS) computer->computeBS();
-	ofstream outMe("simulation.gp");
+	if(updateType == UpdateType::BS) computer->computeBS();
+	std::ofstream outMe("simulation.gp");
 	outMe << "set title \"Histogramme\"\n";
 	outMe << "set xlabel \"Iteration\"\n";
 	outMe << "set ylabel \"State\"\n";
@@ -83,14 +82,14 @@ inline int SimulationActivity::getAffinity() const{
 /*
  * UpdateType's setter
  */
-void SimulationActivity::setUpdateType(int updateType){
+void SimulationActivity::setUpdateType(UpdateType updateType){
 	this->updateType = updateType;
 }
 
 /*
  * UpdateType's getter
  */
-inline int SimulationActivity::getUpdateType() const{
+inline UpdateType SimulationActivity::getUpdateType() const{
 	return updateType;
 }
 
@@ -108,6 +107,6 @@ void SimulationActivity::tick(){
 	totalNumberOfZero += numberOfZero;
 	oneRating += ((double)numberOfOne / view->getSize());
 	zeroRating += ((double)numberOfZero / view->getSize());*/
-	*out << countIter << " " << (int)(computer->getNetwork()->getNeuron(0)->getState() * 2) << " " << computer->getNetwork()->getNeuron(2)->getState()<< "\n";
+	*out << countIter << " " << static_cast<int>(computer->getNetwork()->getNeuron(0)->getState() * 2) << " " << computer->getNetwork()->getNeuron(2)->getState()<< "\n";
 	countIter++;
 }

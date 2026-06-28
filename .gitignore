@@ -43,3 +43,6 @@ transitionsForArabidopsis.txt
 *.swp
 *.swo
 .DS_Store
+
+# Claude Code session artifacts
+.claude/

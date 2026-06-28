@@ -1,5 +1,4 @@
 #include "SimulationChangement.h"
-using namespace std;
 
 SimulationChangement::SimulationChangement(Computer * computer):Simulation(computer)
 {
@@ -30,11 +29,11 @@ void SimulationChangement::run(){
 	double temperature = initialNetwork->getTemperature();
 	numberOfIterations = computer->getNbIterations();
 
-	string datfile = getFilepath() +".dat";
-	ofstream out("simulation.dat");
+	std::string datfile = getFilepath() +".dat";
+	std::ofstream out("simulation.dat");
 
 	for(int i=0; i < affinity; i++){
-		if(i!=affinity-1) temperature -= (double)(initialNetwork->getTemperature()/affinity);
+		if(i!=affinity-1) temperature -= static_cast<double>(initialNetwork->getTemperature()/affinity);
 		else temperature = 0;
 		computer->setNetwork(new Network(*initialNetwork));
 		computer->getNetwork()->setTemperature(temperature);
@@ -44,11 +43,11 @@ void SimulationChangement::run(){
 			oldNetworkState.push_back(network->getNeuron(view->getNeuronIndex(j))->getState());
 		}
 
-		if(updateType == P)		computer->computeP();
-		else if(updateType == BS) computer->computeBS();
-		else if(updateType == S) computer->computeS();
-		else if(updateType == BP) computer->computeBP();
-		out << temperature << " " << ((double)changeToOneRating/numberOfIterations)*100 << "\n";
+		if(updateType == UpdateType::P)		computer->computeP();
+		else if(updateType == UpdateType::BS) computer->computeBS();
+		else if(updateType == UpdateType::S) computer->computeS();
+		else if(updateType == UpdateType::BP) computer->computeBP();
+		out << temperature << " " << (static_cast<double>(changeToOneRating)/numberOfIterations)*100 << "\n";
 
 		/*
 		totalNumberOfChangeToOne = 0;
@@ -65,10 +64,10 @@ void SimulationChangement::run(){
 		changeRating = 0;
 		holdingInOneRating = 0;
 		holdingInTwoRating = 0;
-		computer->setProgressBarValue((int)((i+1)*100/(double)affinity));
+		computer->setProgressBarValue(static_cast<int>((i+1)*100/static_cast<double>(affinity)));
 		delete computer->getNetwork();
 	}
-	ofstream outMe("simulation.gp");
+	std::ofstream outMe("simulation.gp");
 	outMe << "set title \"Activity variation of the network\"\n";
 	outMe << "set xlabel \"Temperature\"\n";
 	outMe << "set ylabel \"Percentage %\"\n";
@@ -96,14 +95,14 @@ inline int SimulationChangement::getAffinity() const{
 /*
  * UpdateType's setter
  */
-void SimulationChangement::setUpdateType(int updateType){
+void SimulationChangement::setUpdateType(UpdateType updateType){
 	this->updateType = updateType;
 }
 
 /*
  * UpdateType's getter
  */
-inline int SimulationChangement::getUpdateType() const{
+inline UpdateType SimulationChangement::getUpdateType() const{
 	return updateType;
 }
 
@@ -127,11 +126,11 @@ void SimulationChangement::tick(){
 		oldNetworkState[i] = computer->getNetwork()->getNeuron(view->getNeuronIndex(i))->getState();
 	}
 
-	changeToOneRating += ((double)numberOfChangeToOne / view->getSize());
-	changeToZeroRating += ((double)numberOfChangeToZero / view->getSize());
+	changeToOneRating += (static_cast<double>(numberOfChangeToOne) / view->getSize());
+	changeToZeroRating += (static_cast<double>(numberOfChangeToZero) / view->getSize());
 	changeRating += changeToZeroRating + changeToOneRating;
-	holdingInOneRating += ((double)numberOfOneHolding / view->getSize());
-	holdingInTwoRating += ((double)numberOfZeroHolding / view->getSize());
+	holdingInOneRating += (static_cast<double>(numberOfOneHolding) / view->getSize());
+	holdingInTwoRating += (static_cast<double>(numberOfZeroHolding) / view->getSize());
 
 
 }

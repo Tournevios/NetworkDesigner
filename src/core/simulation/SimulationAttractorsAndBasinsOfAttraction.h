@@ -1,5 +1,4 @@
-#ifndef SIMULATIONATTRACTORSANDBASINSOFATTRACTION_H_
-#define SIMULATIONATTRACTORSANDBASINSOFATTRACTION_H_
+#pragma once
 
 #include "Simulation.h"
 #include "SetOfNetworkStatesSet.h"
@@ -8,7 +7,7 @@
 class SimulationAttractorsAndBasinsOfAttraction : public Simulation
 {
 private:
-	int updateType;
+	UpdateType updateType;
 	int affinity;
 	static const double temperature = 0.0;
 	int numberOfIterations;
@@ -26,14 +25,14 @@ private:
 
 public:
 	SimulationAttractorsAndBasinsOfAttraction(Computer * computer);
-	~SimulationAttractorsAndBasinsOfAttraction() override;
-	void run() override;
+	virtual ~SimulationAttractorsAndBasinsOfAttraction();
+	void run();
 
 	void setAffinity(int affinity);
 	int getAffinity() const;
 
-	void setUpdateType(int updateType);
-	int getUpdateType() const;
+	void setUpdateType(UpdateType updateType);
+	UpdateType getUpdateType() const;
 
 	NetworkStatesSet * pPredecessorOf(NetworkState* x);
 	NetworkStatesSet * bpPredecessorOf(NetworkState* x);
@@ -50,7 +49,5 @@ public:
 	void solveAndStore(int neuronIndex);
 
 public slots:
-	void tick() override;
+	void tick();
 };
-
-#endif /*SIMULATIONATTRACTORSANDBASINSOFATTRACTION_H_*/

@@ -1,5 +1,4 @@
-#ifndef SIGNALSSLOTSCONNECTOR_H_
-#define SIGNALSSLOTSCONNECTOR_H_
+#pragma once
 #include "ui_mainWindow.h"
 #include "EvenementHandler.h"
 
@@ -9,5 +8,3 @@ public:
 	SignalsSlotsConnector(EvenementHandler * evenementHandler, Ui::MainWindow * ui, QMainWindow * theWindow);
 	virtual ~SignalsSlotsConnector();
 };
-
-#endif /*SIGNLASSLOTSCONNECTOR_H_*/

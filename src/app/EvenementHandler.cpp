@@ -4,6 +4,7 @@
 
 #include "EvenementHandler.h"
 #include <iostream>
+#include <memory>
 #include <vector>
 #include <stack>
 #include "SimulationActivity.h"
@@ -16,7 +17,6 @@
 #include <stdlib.h>
 //#include <QtGui/QAction>
 
-using namespace std;
 
 EvenementHandler::EvenementHandler(Ui::MainWindow *parent, Network *network, UpdateSchedulingPlan * updateSchedulingPlan)
 {
@@ -25,15 +25,15 @@ EvenementHandler::EvenementHandler(Ui::MainWindow *parent, Network *network, Upd
 	this->updateSchedulingPlan = updateSchedulingPlan;
 	scale = 1.0f;
 	transX = transY = 0;
-	currentNeuron = nullptr;
-	synapseBaseNeuron = nullptr;
+	currentNeuron = NULL;
+	synapseBaseNeuron = NULL;
 	mouseX = mouseY = 0;
 	midX = midY = -1;
 	fileName = "";
 	fileUpdated();
 	aSimpleCopy = new Network();
 	networkLayersMenu = parent->menuEdit->addMenu("Select layer");
-	connect(networkLayersMenu, SIGNAL(aboutToShow()), this, SLOT(networkLayersMenu_aboutToShow()));
+	connect(networkLayersMenu, &QMenu::aboutToShow, this, &EvenementHandler::networkLayersMenu_aboutToShow);
 
 	//this->networkDesigner = networkDesigner;
 	//QAction * hahi = new QAction("hahi", parent->menuSelect_layer);
@@ -74,8 +74,12 @@ void EvenementHandler::updateMe(){
 	while(parent->cmbUpdateBlock->count()>0) parent->cmbUpdateBlock->removeItem(0);
 
 	parent->cmbUpdateBlock->addItem("Add a new block...");
-	for(int i=0; i < updateSchedulingPlan->getNb_blocks(); i++)
-		parent->cmbUpdateBlock->addItem("Block " + QString::number(i));
+	char blockName[20];
+
+	for(int i=0; i < updateSchedulingPlan->getNb_blocks(); i++) {
+		sprintf(blockName, "Block %d",i);
+		parent->cmbUpdateBlock->addItem(blockName);
+	}
 }
 
 /*
@@ -294,21 +298,21 @@ void EvenementHandler::pbStart_click(bool checked){
 		}
 		simulationActivity->setView(myView);
 		if(parent->cmbScheduleType->currentText() == "Parallel"){
-			simulationActivity->setUpdateType(P);
+			simulationActivity->setUpdateType(UpdateType::P);
 			simulationActivity->run();
 		}
 
 		else if(parent->cmbScheduleType->currentText() == "Block Parallel"){
-			simulationActivity->setUpdateType(BP);
+			simulationActivity->setUpdateType(UpdateType::BP);
 			simulationActivity->run();
 		}
 
 		else if(parent->cmbScheduleType->currentText() == "Block Sequential"){
-			simulationActivity->setUpdateType(BS);
+			simulationActivity->setUpdateType(UpdateType::BS);
 			simulationActivity->run();
 		}
 		else if(parent->cmbScheduleType->currentText() == "Sequential"){
-			simulationActivity->setUpdateType(S);
+			simulationActivity->setUpdateType(UpdateType::S);
 			simulationActivity->run();
 		}
 		delete simulationActivity;
@@ -323,21 +327,21 @@ void EvenementHandler::pbStart_click(bool checked){
 		}
 		simulationChangement->setView(myView);
 		if(parent->cmbScheduleType->currentText() == "Parallel"){
-			simulationChangement->setUpdateType(P);
+			simulationChangement->setUpdateType(UpdateType::P);
 			simulationChangement->run();
 		}
 
 		else if(parent->cmbScheduleType->currentText() == "Block Parallel"){
-			simulationChangement->setUpdateType(BP);
+			simulationChangement->setUpdateType(UpdateType::BP);
 			simulationChangement->run();
 		}
 
 		else if(parent->cmbScheduleType->currentText() == "Block Sequential"){
-			simulationChangement->setUpdateType(BS);
+			simulationChangement->setUpdateType(UpdateType::BS);
 			simulationChangement->run();
 		}
 		else if(parent->cmbScheduleType->currentText() == "Sequential"){
-			simulationChangement->setUpdateType(S);
+			simulationChangement->setUpdateType(UpdateType::S);
 			simulationChangement->run();
 		}
 		delete simulationChangement;
@@ -352,20 +356,20 @@ void EvenementHandler::pbStart_click(bool checked){
 		}
 		simulationAttractorsAndBasinsOfAttraction->setView(myView);
 		if(parent->cmbScheduleType->currentText() == "Parallel"){
-			simulationAttractorsAndBasinsOfAttraction->setUpdateType(P);
+			simulationAttractorsAndBasinsOfAttraction->setUpdateType(UpdateType::P);
 			simulationAttractorsAndBasinsOfAttraction->run();
 		}
 		else if(parent->cmbScheduleType->currentText() == "Block Parallel"){
-			simulationAttractorsAndBasinsOfAttraction->setUpdateType(BP);
+			simulationAttractorsAndBasinsOfAttraction->setUpdateType(UpdateType::BP);
 			simulationAttractorsAndBasinsOfAttraction->run();
 		}
 
 		else if(parent->cmbScheduleType->currentText() == "Block Sequential"){
-			simulationAttractorsAndBasinsOfAttraction->setUpdateType(BS);
+			simulationAttractorsAndBasinsOfAttraction->setUpdateType(UpdateType::BS);
 			simulationAttractorsAndBasinsOfAttraction->run();
 		}
 		else if(parent->cmbScheduleType->currentText() == "Sequential"){
-			simulationAttractorsAndBasinsOfAttraction->setUpdateType(S);
+			simulationAttractorsAndBasinsOfAttraction->setUpdateType(UpdateType::S);
 			simulationAttractorsAndBasinsOfAttraction->run();
 		}
 		delete simulationAttractorsAndBasinsOfAttraction;
@@ -379,20 +383,20 @@ void EvenementHandler::pbStart_click(bool checked){
 			}
 			simulationAttractorsAndBasinsOfAttraction2->setView(myView);
 			if(parent->cmbScheduleType->currentText() == "Parallel"){
-				simulationAttractorsAndBasinsOfAttraction2->setUpdateType(P);
+				simulationAttractorsAndBasinsOfAttraction2->setUpdateType(UpdateType::P);
 				simulationAttractorsAndBasinsOfAttraction2->run();
 			}
 			else if(parent->cmbScheduleType->currentText() == "Block Parallel"){
-				simulationAttractorsAndBasinsOfAttraction2->setUpdateType(BP);
+				simulationAttractorsAndBasinsOfAttraction2->setUpdateType(UpdateType::BP);
 				simulationAttractorsAndBasinsOfAttraction2->run();
 			}
 
 			else if(parent->cmbScheduleType->currentText() == "Block Sequential"){
-				simulationAttractorsAndBasinsOfAttraction2->setUpdateType(BS);
+				simulationAttractorsAndBasinsOfAttraction2->setUpdateType(UpdateType::BS);
 				simulationAttractorsAndBasinsOfAttraction2->run();
 			}
 			else if(parent->cmbScheduleType->currentText() == "Sequential"){
-				simulationAttractorsAndBasinsOfAttraction2->setUpdateType(S);
+				simulationAttractorsAndBasinsOfAttraction2->setUpdateType(UpdateType::S);
 				simulationAttractorsAndBasinsOfAttraction2->run();
 			}
 			delete simulationAttractorsAndBasinsOfAttraction2;
@@ -405,7 +409,7 @@ void EvenementHandler::pbStart_click(bool checked){
 			myView->addNeuronIndex(network->getNeuron(i)->getIndex());
 		}
 		simulationDiffusion->setView(myView);
-		simulationDiffusion->setUpdateType(P);
+		simulationDiffusion->setUpdateType(UpdateType::P);
 		simulationDiffusion->run();
 		delete simulationDiffusion;
 		delete myView;
@@ -438,9 +442,12 @@ void EvenementHandler::neuronSelected(Neuron* neuron){
 	emit stateChanged(neuron->getState());
 
 	// April 12th 2010
-	QString tmpQStr1(QString::fromStdString(neuron->getNodeID()));
+	QString tmpQStr1(neuron->getNodeID());
 	emit nodeIDChanged(tmpQStr1);
-	emit nodeIndexChanged(QString::number(neuron->getIndex()));
+	char tmpStr[10];
+	sprintf(tmpStr,"%d", neuron->getIndex());
+	QString tmpQStr2(tmpStr);
+	emit nodeIndexChanged(tmpQStr2);
 	//
 
 
@@ -472,13 +479,12 @@ void EvenementHandler::synapseSelected(Synapse* synapse){
  */
 void EvenementHandler::cmbUpdateBlock_Changed(int index){
 	 int blockNum;
-	 UpdateBlock * currentUpdateBlock = nullptr;
-
+	 char blockName[20] = "Block 0";
 	 if(index == 0){
 		blockNum = parent->cmbUpdateBlock->count();
-	 	parent->cmbUpdateBlock->addItem("Block " + QString::number(blockNum));
-	 	currentUpdateBlock = new UpdateBlock();
-	 	updateSchedulingPlan->addUpdateBlock(currentUpdateBlock);
+		sprintf(blockName, "Block %d",blockNum);
+	 	parent->cmbUpdateBlock->addItem(blockName);
+	 	updateSchedulingPlan->addUpdateBlock(std::make_unique<UpdateBlock>());
 	 	parent->frmDesign->setCurrentUpdateBlock(blockNum - 1);
 	 	emit currentBlockChanged(blockNum);
 	 	emit currentUpdateMethodsChanged(COMPUTE);
@@ -565,6 +571,7 @@ void EvenementHandler::actionCut_Clicked(bool checked){
 
 void EvenementHandler::actionCopy_Clicked(bool checked){
 	delete aSimpleCopy;
+	bool okki;
 	int v=0, w=0;
 	aSimpleCopy = new Network();
 	for(int i=0; i<network->getNbNeurons(); i++){
@@ -582,7 +589,7 @@ void EvenementHandler::actionCopy_Clicked(bool checked){
 					for(int l=0; l<network->getNeuron(i)->getSynapse(j)->getFinalNeuron()->getIndex();l++){
 						if(network->getNeuron(l)->getSelected()) w++;
 					}
-					aSimpleCopy->getNeuron(v)->addSynapse(aSimpleCopy->getNeuron(w), network->getNeuron(i)->getSynapse(j)->getWeight(), network->getNeuron(i)->getSynapse(j)->getDelay());
+					okki = aSimpleCopy->getNeuron(v)->addSynapse(aSimpleCopy->getNeuron(w), network->getNeuron(i)->getSynapse(j)->getWeight(), network->getNeuron(i)->getSynapse(j)->getDelay());
 					aSimpleCopy->getNeuron(v)->getSynapse(aSimpleCopy->getNeuron(v)->getNb_neighbors()-1)->setCX(network->getNeuron(i)->getSynapse(j)->getCX());
 					aSimpleCopy->getNeuron(v)->getSynapse(aSimpleCopy->getNeuron(v)->getNb_neighbors()-1)->setCY(network->getNeuron(i)->getSynapse(j)->getCY());
 				}
@@ -593,7 +600,7 @@ void EvenementHandler::actionCopy_Clicked(bool checked){
 }
 
 void EvenementHandler::actionPaste_Clicked(bool checked){
-	if(aSimpleCopy != nullptr){
+	if(aSimpleCopy != NULL){
 		if(aSimpleCopy->getNbNeurons()!=0){
 			network->addNetwork(aSimpleCopy);
 		}
@@ -768,22 +775,25 @@ void EvenementHandler::networkLayersMenu_aboutToShow(){
 
 	// Connecting Slots
 
-	layerActions.push_back(new QAction(
-		"Centers -- Excentricity = " + QString::number(layers[0].getL1_distance()), networkLayersMenu));
-	connect(layerActions[0], SIGNAL(triggered(bool)), &layers[0], SLOT(select(bool)));
-	connect(&layers[0], SIGNAL(repaintPlease()), this, SLOT(repaintPlease()));
+	char centerText[30];
+	sprintf(centerText, "Centers -- Excentricity = %d", layers[0].getL1_distance());
+
+	layerActions.push_back(new QAction(centerText, networkLayersMenu));
+	connect(layerActions[0], &QAction::triggered, &layers[0], &BlockSelector::select);
+	connect(&layers[0], &BlockSelector::repaintPlease, this, &EvenementHandler::repaintPlease);
 	for(int i=1; i < (int)layers.size() - 1;i++){
-		layerActions.push_back(new QAction(
-			"Layer " + QString::number(i) + " -- Excentricity = " + QString::number(layers[i].getL1_distance()),
-			networkLayersMenu));
-		connect(layerActions[i], SIGNAL(triggered(bool)), &layers[i], SLOT(select(bool)));
-		connect(&layers[i], SIGNAL(repaintPlease()), this, SLOT(repaintPlease()));
+		char layerText[30];
+		sprintf(layerText, "Layer %d -- Excentricity = %d", i, layers[i].getL1_distance());
+		layerActions.push_back(new QAction(layerText, networkLayersMenu));
+		connect(layerActions[i], &QAction::triggered, &layers[i], &BlockSelector::select);
+		connect(&layers[i], &BlockSelector::repaintPlease, this, &EvenementHandler::repaintPlease);
 	}
 
-	layerActions.push_back(new QAction(
-		"Borders -- Excentricity = " + QString::number(layers[(int)layers.size()-1].getL1_distance()), networkLayersMenu));
-	connect(layerActions[layerActions.size() - 1], SIGNAL(triggered(bool)), &layers[layers.size() - 1], SLOT(select(bool)));
-	connect(&layers[layers.size() - 1], SIGNAL(repaintPlease()), this, SLOT(repaintPlease()));
+	char borderText[30];
+	sprintf(borderText, "Borders -- Excentricity = %d", layers[(int)layers.size()-1].getL1_distance());
+	layerActions.push_back(new QAction(borderText, networkLayersMenu));
+	connect(layerActions[layerActions.size() - 1], &QAction::triggered, &layers[layers.size() - 1], &BlockSelector::select);
+	connect(&layers[layers.size() - 1], &BlockSelector::repaintPlease, this, &EvenementHandler::repaintPlease);
 
 	for(int i=0; i<(int)layerActions.size(); i++) networkLayersMenu->addAction(layerActions[i]);
 }
@@ -853,10 +863,13 @@ void EvenementHandler::sbNbStates_Changed(int nbStates){
 */
 
 void EvenementHandler::cmbState_Updating(int nbStates){
+	char layerText[30];
 	QStringList qslStates;
+	std::string stateStr;
 	if(nbStates > 0){
 		for(int i=0; i<nbStates; i++){
-			qslStates << "State " + QString::number(i);
+			sprintf(layerText, "State %d", i);
+			qslStates << layerText;
 		}
 		while(parent->cmbState->count() != 0) parent->cmbState->removeItem(0);
 		parent->cmbState->insertItems((int)-1, qslStates);
@@ -898,7 +911,7 @@ void EvenementHandler::txtNodeID_Changed(QString nodeID){
 	if(parent->txtNodeID->hasFocus()){
 		for(int i=0; i<network->getNbNeurons();i++){
 			if(network->getNeuron(i)->getSelected()){
-				network->getNeuron(i)->setNodeID(nodeID.toStdString());
+				network->getNeuron(i)->setNodeID((char*)(nodeID.toStdString().c_str()));
 			}
 		}
 		parent->frmDesign->repaint();
