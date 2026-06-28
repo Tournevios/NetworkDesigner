@@ -7,7 +7,7 @@ NetworkState::NetworkState(void){
 }
 NetworkState::~NetworkState(void){
 	states.clear();
-	nbStates = NULL;
+	nbStates = nullptr;
 }
 
 NetworkState::NetworkState(const NetworkState& networkState){
@@ -42,16 +42,16 @@ NetworkState::NetworkState(Network* network, NetworkState * nbStates){
 
 
 int NetworkState::getSize(void) const{
-	return (int)states.size();
+	return static_cast<int>(states.size());
 }
 
 long int NetworkState::getState(int neuronIndex) const{
-	if(neuronIndex < (int)states.size()) return states[neuronIndex];
+	if(neuronIndex < static_cast<int>(states.size())) return states[neuronIndex];
 	else return -1;
 }
 
 void NetworkState::setState(int neuronIndex, long int neuronState){
-	if(neuronIndex < (int)states.size()) states[neuronIndex] = (long int)neuronState;
+	if(neuronIndex < static_cast<int>(states.size())) states[neuronIndex] = (long int)neuronState;
 }
 
 int NetworkState::getNbStates(int neuronIndex) const{
@@ -67,7 +67,7 @@ NetworkState operator+(const NetworkState& lv, const NetworkState& rv){
 	long int myState, rState;
 	bool modified = false;
 	NetworkState result(lv.getSize(), lv.getNbStatesNS());
-	//if(this->getSize() != rv.getSize()) return NULL;;
+	//if(this->getSize() != rv.getSize()) return nullptr;;
 
 	for(int i=0; i<lv.getSize(); i++){
 		myState = lv.getState(i);
@@ -82,7 +82,7 @@ NetworkState operator+(const NetworkState& lv, const NetworkState& rv){
 		}
 		else {
 			//delete result;
-			//return NULL;
+			//return nullptr;
 			for(int j=i; j<lv.getSize(); j++) result.setState(j, -1);
 			return result;
 		}
@@ -99,7 +99,7 @@ NetworkState operator*(const NetworkState& lv, const NetworkState& rv){
 	NetworkState result(lv.getSize(), lv.getNbStatesNS());
 	long int myState, rState;
 
-	//if(this->getSize() != rv.getSize()) return NULL;
+	//if(this->getSize() != rv.getSize()) return nullptr;
 
 	for(int i=0; i<lv.getSize(); i++){
 		myState = lv.getState(i);
@@ -203,17 +203,17 @@ NetworkState& NetworkState::operator=(const NetworkState& rv){
  * If a prohibited state is in the NetworkState then its considered as incoherent
  */
 int NetworkState::coherent() const{
-	for(int i=0; i<(int)states.size(); i++){
+	for(int i=0; i<static_cast<int>(states.size()); i++){
 		if(states[i] == -1) return false;
 	}
 	return true;
 }
 
 void NetworkState::printMe() const{
-	for(int i=0; i<(int)states.size() - 1; i++){
+	for(int i=0; i<static_cast<int>(states.size()) - 1; i++){
 		std::cout<< states[i] << " ** ";
 	}
-	std::cout << states[(int)states.size() - 1] << '\n';
+	std::cout << states[static_cast<int>(states.size()) - 1] << '\n';
 }
 
 void NetworkState::setDuplicated(bool duplicated){
@@ -228,8 +228,8 @@ bool NetworkState::getDuplicated(){
  * Return if a state is **....*...* or no.
  */
 int NetworkState::isAllPossibleStates() const{
-	for(int i=0; i < (int)states.size(); i++){
-		if(states[i] != -((int)pow(2.0, nbStates->getState(i)) - 1)) return false;
+	for(int i=0; i < static_cast<int>(states.size()); i++){
+		if(states[i] != -(static_cast<int>(pow(2.0, nbStates->getState(i))) - 1)) return false;
 	}
 	return true;
 }
@@ -253,7 +253,7 @@ int NetworkState::getNbOfAllPossibleStates() const{
 			possibleNeuronStates = 0;
 			if(this->getState(i) == -1)	return 0;
 			for(int j=0; j < this->getNbStates(i);j++){
-				if(((int)pow(2.0, (double)j)) & (-this->getState(i))){
+				if((static_cast<int>(pow(2.0, static_cast<double>(j)))) & (-this->getState(i))){
 					possibleNeuronStates++;
 				}
 			}

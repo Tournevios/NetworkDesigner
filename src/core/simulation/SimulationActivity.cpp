@@ -43,7 +43,7 @@ void SimulationActivity::run(){
 		totalNumberOfZero = 0;
 		zeroRating = 0;
 		oneRating = 0;
-		computer->setProgressBarValue((int)((i+1)*100/(double)affinity));
+		computer->setProgressBarValue(static_cast<int>((i+1)*100/(double)affinity));
 		delete computer->getNetwork();
 	}
 	*/

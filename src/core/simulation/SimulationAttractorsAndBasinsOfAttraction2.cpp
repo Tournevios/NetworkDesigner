@@ -31,7 +31,7 @@ void SimulationAttractorsAndBasinsOfAttraction2::generateAllStates(){
 	// Generation de tout les états possibles du réseau.
 	int numberOfStates;
 	totalNumberOfStates = 1;
-	nbStates = new NetworkState(computer->getNetwork()->getNbNeurons(), NULL);
+	nbStates = new NetworkState(computer->getNetwork()->getNbNeurons(), nullptr);
 	for(int i=0; i< computer->getNetwork()->getNbNeurons(); i++){
 		totalNumberOfStates = totalNumberOfStates * computer->getNetwork()->getNeuron(i)->getNbStates();
 		nbStates->setState(i, computer->getNetwork()->getNeuron(i)->getNbStates());
@@ -86,13 +86,13 @@ void SimulationAttractorsAndBasinsOfAttraction2::calculateTransitions(int number
 		mutexProg.lock();
 			if(numberOfVisitedStates >= totalNumberOfStates) doit = false;
 			else
-				computer->setProgressBarValue((int)(100*((double)numberOfVisitedStates/(totalNumberOfStates))));
+				computer->setProgressBarValue(static_cast<int>(100*((double)numberOfVisitedStates/(totalNumberOfStates))));
 		mutexProg.unlock();
 	}*/
 	for(int i=0; i < numberOfThreads; i++){
 		myThreads[i]->wait();
 		myThreads[i]->quit();
-		//computer->setProgressBarValue((int)(100*((double)i/numberOfThreads)));
+		//computer->setProgressBarValue(static_cast<int>(100*((double)i/numberOfThreads)));
 	}
 	computer->setProgressBarValue(100);
 }
@@ -116,7 +116,7 @@ void SimulationAttractorsAndBasinsOfAttraction2::calculateTransitions(){
 			nextAttractor = allCombinations->getNetworkState(nextOne)->getAttractorNumber();
 			mTransitions[currentAttractor][nextAttractor] += 1 / (double)(affinity * sizeOfBasins[currentAttractor]);
 		}
-		computer->setProgressBarValue((int)(100*((double)i/(totalNumberOfStates))));
+		computer->setProgressBarValue(static_cast<int>(100*((double)i/(totalNumberOfStates))));
 	}
 	computer->setProgressBarValue(100);
 }
@@ -148,13 +148,13 @@ void SimulationAttractorsAndBasinsOfAttraction2::run(){
 	/*for(int i=0; i < 10; i++){
 		parts[i][0] = i * (totalNumberOfStates/10);
 		parts[i][1] = (i+1) * (totalNumberOfStates/10) - 1;
-		if((rc1=pthread_create( &threads[i], NULL, &pcalculateTransitions, (void*)parts[i])) )
+		if((rc1=pthread_create( &threads[i], nullptr, &pcalculateTransitions, (void*)parts[i])) )
 		 {
 		     printf("Thread creation failed: %d\n", rc1);
 		 }
 	}
 	for(int i=0; i < 10; i++){
-		pthread_join( threads[i], NULL);
+		pthread_join( threads[i], nullptr);
 	}*/
 	//calculateTransitions();
 	computer->setProgressBarValue(0);
@@ -180,7 +180,7 @@ void SimulationAttractorsAndBasinsOfAttraction2::run(){
 int SimulationAttractorsAndBasinsOfAttraction2::indexOf(NetworkState* networkState){
 	int i=0;
 	for(int j=0; j<networkState->getSize();j++){
-		if(networkState->getState(j)==1) i = i + (int)pow(2.0, j);
+		if(networkState->getState(j)==1) i = i + static_cast<int>(pow(2.0, j));
 	}
 	/*while(i < allCombinations->getCardinal()){
 			if(*allCombinations->getNetworkState(i) == *networkState) break;
@@ -236,7 +236,7 @@ void SimulationAttractorsAndBasinsOfAttraction2::linkThem(int startingIndex){
 		tmpNetworkState = NetworkState(computer->getNetwork(), nbStates);
 		nextState = allCombinations->getNetworkState(indexOf(&tmpNetworkState));
 		numberOfVisitedStates++;
-		computer->setProgressBarValue((int)(100*((double)numberOfVisitedStates/(double)totalNumberOfStates)));
+		computer->setProgressBarValue(static_cast<int>(100*((double)numberOfVisitedStates/(double)totalNumberOfStates)));
 		currentState->setNextOne(indexOf(nextState));
 
 		if((nextState->isVisited()) and !(nextState->isIsAttractor()) and (nextState->getAttractorNumber()==-1)){

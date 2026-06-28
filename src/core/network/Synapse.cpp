@@ -5,7 +5,7 @@ Synapse::Synapse(){
 }
 
 Synapse::~Synapse(){
-	while((int)states.size() > 0) states.pop();
+	while(static_cast<int>(states.size()) > 0) states.pop();
 }
 
 Synapse::Synapse(Neuron * baseNeuron, Neuron * finalNeuron, double weight, int delay){
@@ -187,7 +187,7 @@ void Synapse::refreshMe(){
 int Synapse::getStateOfTheFinalNeuron(){
 	int theState = 0;
 	states.push(finalNeuron->getState());
-	if((int)states.size() > delay) {
+	if(static_cast<int>(states.size()) > delay) {
 		theState = states.front();
 		states.pop();
 	}

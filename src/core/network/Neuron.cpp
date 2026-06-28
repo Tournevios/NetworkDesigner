@@ -164,7 +164,7 @@ int* Neuron::getColor(){
 Neuron * Neuron::getNeighbor(int synapseIndex) const{
 	if(synapseIndex < nb_neighbors)
 		return synapses[synapseIndex]->getFinalNeuron();
-	return NULL;
+	return nullptr;
 }
 
 /*
@@ -343,7 +343,7 @@ void Neuron::compute(double temperature){
 
 		}
 		else{
-			while((int)transitionProbabilities.size() < state + 1) transitionProbabilities.push_back(1.00);
+			while(static_cast<int>(transitionProbabilities.size()) < state + 1) transitionProbabilities.push_back(1.00);
 			transitionProbabilities[state] = boltzmannTerm[state];
 			for(int i = state - 1; i >= 0; i--){
 				if(boltzmannTerm[i + 1] == 0){
@@ -424,7 +424,7 @@ int* Neuron::getSynapseColor(int synapseIndex){
 	if(synapseIndex < nb_neighbors) {
 			return synapsesColor[synapseIndex];
 	}
-	return NULL;
+	return nullptr;
 }
 */
 
@@ -494,7 +494,7 @@ Synapse * Neuron::getSelfSynapse() const{
 		if((*iter)->getBaseNeuron()==(*iter)->getFinalNeuron()) return *iter;
 		iter++;
 	}
-	return NULL;
+	return nullptr;
 }
 
 /*
@@ -515,7 +515,7 @@ Synapse * Neuron::getSynapse(int synapseIndex) const{
 	if(synapseIndex < nb_neighbors) {
 		return synapses[synapseIndex];
 	}
-	return NULL;
+	return nullptr;
 }
 
 /*
@@ -598,13 +598,13 @@ void Neuron::refreshSynapses(){
  * NbStates'setter
  */
 void Neuron::setNbStates(int nbStates){
-	if((int)threshold.size() > nbStates - 1){
-		while((int)threshold.size() > nbStates - 1) threshold.pop_back();
+	if(static_cast<int>(threshold.size()) > nbStates - 1){
+		while(static_cast<int>(threshold.size()) > nbStates - 1) threshold.pop_back();
 	}
 	else {
-		if((int) threshold.size() < nbStates - 1){
-			while((int)threshold.size() < nbStates - 1) {
-				if((int)threshold.size() == 0) threshold.push_back(0);
+		if(static_cast<int>(threshold.size()) < nbStates - 1){
+			while(static_cast<int>(threshold.size()) < nbStates - 1) {
+				if(static_cast<int>(threshold.size()) == 0) threshold.push_back(0);
 				else	threshold.push_back(threshold[threshold.size() - 1]);
 			}
 		}

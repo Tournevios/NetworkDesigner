@@ -12,13 +12,13 @@ SimulationAttractorsAndBasinsOfAttraction::SimulationAttractorsAndBasinsOfAttrac
 
 SimulationAttractorsAndBasinsOfAttraction::~SimulationAttractorsAndBasinsOfAttraction()
 {
-	for(int i=0; i<(int)basinsOfAttraction.size(); i++){
+	for(int i=0; i<static_cast<int>(basinsOfAttraction.size()); i++){
 		delete basinsOfAttraction[i];
 	}
-	for(int i=0; i<(int)solutions.size(); i++){
+	for(int i=0; i<static_cast<int>(solutions.size()); i++){
 		delete solutions[i];
 	}
-	for(int i=0; i<(int)attractors.size(); i++){
+	for(int i=0; i<static_cast<int>(attractors.size()); i++){
 		delete attractors[i];
 	}
 	delete nbStates;
@@ -39,7 +39,7 @@ void SimulationAttractorsAndBasinsOfAttraction::run(){
 	NetworkState * initialAllStates;
 	nonExploredSpace = new NetworkStatesSet(-1);
 
-	nbStates = new NetworkState(computer->getNetwork()->getNbNeurons(), NULL);
+	nbStates = new NetworkState(computer->getNetwork()->getNbNeurons(), nullptr);
 
 	for(int i=0; i< computer->getNetwork()->getNbNeurons(); i++){
 		totalNumberOfStates = totalNumberOfStates * computer->getNetwork()->getNeuron(i)->getNbStates();
@@ -49,7 +49,7 @@ void SimulationAttractorsAndBasinsOfAttraction::run(){
 
 	initialAllStates = new NetworkState(computer->getNetwork()->getNbNeurons(), nbStates);
 	for(int i=0; i < initialAllStates->getSize(); i++){
-		initialAllStates->setState(i, -((int)pow(2.0, (double)initialAllStates->getNbStates(i))-1));
+		initialAllStates->setState(i, -(static_cast<int>(pow(2.0, static_cast<double>(initialAllStates->getNbStates(i))))-1));
 	}
 	nonExploredSpace->addNetworkState(*initialAllStates);
 
@@ -166,7 +166,7 @@ void SimulationAttractorsAndBasinsOfAttraction::run(){
 		//printf("total = %f", (100*((double)numberOfVisitedStates/(double)totalNumberOfStates)));
 
 		exist = false;
-		for(int i=0; i<(int)basinsOfAttraction.size(); i++){
+		for(int i=0; i<static_cast<int>(basinsOfAttraction.size()); i++){
 			if(*rndNetworkState == *basinsOfAttraction[i]){
 				exist = true;
 				break;
@@ -196,7 +196,7 @@ void SimulationAttractorsAndBasinsOfAttraction::run(){
 
 		//printf("condition %d < %d\n", numberOfVisitedStates, totalNumberOfStates);
 	}
-	/*for(int i=0; i<(int)basinsOfAttraction.size(); i++){
+	/*for(int i=0; i<static_cast<int>(basinsOfAttraction.size()); i++){
 		printf("----------------attractor of cycle %d------------------------------------\n", attractors[i]->getCardinal());
 		attractors[i]->printMe();
 		printf("++++++++++++++++basins length %d+++++++++++++++++++++++++++++++++++++++++\n", basinsOfAttraction[i]->getCardinal());
@@ -229,7 +229,7 @@ NetworkState * SimulationAttractorsAndBasinsOfAttraction::getRandomNetworkState(
 
 NetworkState * SimulationAttractorsAndBasinsOfAttraction::getANonVisitedNetworkState(){
 
-	if(nonExploredSpace->getCardinal() == 0) return NULL;
+	if(nonExploredSpace->getCardinal() == 0) return nullptr;
 	NetworkState * nonVisited = new NetworkState(*(nonExploredSpace->getNetworkState(0)));
 
 	for(int i=0; i < nonVisited->getSize(); i++){
@@ -289,23 +289,23 @@ void SimulationAttractorsAndBasinsOfAttraction::tick(){
 			basinsOfAttraction.push_back(pBackward(attractor));
 			//printf("evaluating the nonExploredSpace\n");
 
-			//*nonExploredSpace -= *(basinsOfAttraction[(int)basinsOfAttraction.size()-1]);
+			//*nonExploredSpace -= *(basinsOfAttraction[static_cast<int>(basinsOfAttraction.size())-1]);
 			//nonExploredSpace->compress();
 			printf("*********************************************\n");
-			//basinsOfAttraction[(int)basinsOfAttraction.size() - 1]->printMe();
-			printf("++++++++++++++++basins length %d+++++++++++++++++++++++++++++++++++++++++\n", basinsOfAttraction[(int)basinsOfAttraction.size()-1]->getNbOfAllPossibleStates());
-			//basinsOfAttraction[(int)basinsOfAttraction.size()-1]->printMe();
+			//basinsOfAttraction[static_cast<int>(basinsOfAttraction.size()) - 1]->printMe();
+			printf("++++++++++++++++basins length %d+++++++++++++++++++++++++++++++++++++++++\n", basinsOfAttraction[static_cast<int>(basinsOfAttraction.size())-1]->getNbOfAllPossibleStates());
+			//basinsOfAttraction[static_cast<int>(basinsOfAttraction.size())-1]->printMe();
 			//printf("the inexplored is\n");
 			//nonExploredSpace->printMe();
 			/*
 			 * Garbage Collecting
 			 */
 			/*
-			while(basinsOfAttraction[(int)basinsOfAttraction.size()-1]->getCardinal() > 0){
-				//delete basinsOfAttraction[(int)basinsOfAttraction.size()-1]->getNetworkState(0);
-				basinsOfAttraction[(int)basinsOfAttraction.size()-1]->removeNetworkState(0);
+			while(basinsOfAttraction[static_cast<int>(basinsOfAttraction.size())-1]->getCardinal() > 0){
+				//delete basinsOfAttraction[static_cast<int>(basinsOfAttraction.size())-1]->getNetworkState(0);
+				basinsOfAttraction[static_cast<int>(basinsOfAttraction.size())-1]->removeNetworkState(0);
 			}
-			delete basinsOfAttraction[(int)basinsOfAttraction.size()-1];
+			delete basinsOfAttraction[static_cast<int>(basinsOfAttraction.size())-1];
 			basinsOfAttraction.clear();
 			*/
 			return;
@@ -315,7 +315,7 @@ void SimulationAttractorsAndBasinsOfAttraction::tick(){
 		delete stateBuffer->getNetworkState(0);
 	} */
 	stateBuffer->addNetworkState(networkState);
-	//basinsOfAttraction[(int)basinsOfAttraction.size()-1]->addNetworkState(networkState);
+	//basinsOfAttraction[static_cast<int>(basinsOfAttraction.size())-1]->addNetworkState(networkState);
 	//visitedStates->addNetworkState(networkState);
 
 }
@@ -324,7 +324,7 @@ void SimulationAttractorsAndBasinsOfAttraction::tick(){
  * This function return a set of the predecessors of X according to the update schedule
  */
 NetworkStatesSet * SimulationAttractorsAndBasinsOfAttraction::predecessorOf(NetworkState* x){
-	NetworkStatesSet * result = NULL;
+	NetworkStatesSet * result = nullptr;
 
 	if(updateType == UpdateType::BS){
 	}
@@ -345,7 +345,7 @@ NetworkStatesSet * SimulationAttractorsAndBasinsOfAttraction::predecessorOf(Netw
  */
 NetworkStatesSet * SimulationAttractorsAndBasinsOfAttraction::pPredecessorOf(NetworkState* x){
 
-	NetworkStatesSet * result = NULL;
+	NetworkStatesSet * result = nullptr;
 	if(!(x->coherent())) return new NetworkStatesSet(-1);
 
 	for(int i=0; i < computer->getNetwork()->getNbNeurons(); i++){
@@ -353,7 +353,7 @@ NetworkStatesSet * SimulationAttractorsAndBasinsOfAttraction::pPredecessorOf(Net
 			if(!(solutions[i]->getNetworkStatesSet(x->getState(i))->getFilled())){
 				solveAndStore(i);
 			}
-			if(result==NULL){
+			if(result==nullptr){
 				result = new NetworkStatesSet(*(solutions[i]->getNetworkStatesSet(x->getState(i))));
 				if(!(result->coherent())){
 					*result -= *result;
@@ -438,7 +438,7 @@ void SimulationAttractorsAndBasinsOfAttraction::solveAndStore(int neuronIndex){
 		for(int i=0; i<computer->getNetwork()->getNbNeurons(); i++){
 			bool inNeighbors = false;
 			int j=0;
-			while(j<(int)neighbors.size()) {
+			while(j<static_cast<int>(neighbors.size())) {
 				if(i == neighbors[j]->getIndex()){
 					 inNeighbors = true;
 					 break;
@@ -446,7 +446,7 @@ void SimulationAttractorsAndBasinsOfAttraction::solveAndStore(int neuronIndex){
 				j++;
 			}
 			if(!inNeighbors)
-				tmpNetworkState.setState(i, -((pow(2.0, (int)computer->getNetwork()->getNeuron(i)->getNbStates()))-1));
+				tmpNetworkState.setState(i, -((pow(2.0, static_cast<int>(computer->getNetwork()->getNeuron(i)->getNbStates()))-1));
 			else
 				tmpNetworkState.setState(i, 0);
 		}
@@ -456,7 +456,7 @@ void SimulationAttractorsAndBasinsOfAttraction::solveAndStore(int neuronIndex){
 		// Resoudre l'equation en generant toutes les possibilités.
 		int numberOfStates;
 		int l;
-		for(int i=0; i<(int)neighbors.size(); i++) {
+		for(int i=0; i<static_cast<int>(neighbors.size()); i++) {
 			numberOfStates = neighbors[i]->getNbStates();
 			l = neighbors[i]->getIndex();
 			NetworkStatesSet tmpComb(*allCombinations);
@@ -475,8 +475,8 @@ void SimulationAttractorsAndBasinsOfAttraction::solveAndStore(int neuronIndex){
 
 
 		// Effectuer les test sur les etats generer
-		for(int i=0; i<(int)allCombinations->getCardinal(); i++){
-			for(int j=0; j< (int)neighbors.size(); j++){
+		for(int i=0; i<static_cast<int>(allCombinations->getCardinal()); i++){
+			for(int j=0; j< static_cast<int>(neighbors.size()); j++){
 				neighbors[j]->setState(allCombinations->getNetworkState(i)->getState(neighbors[j]->getIndex()));
 			}
 			tmpNeuron->setState(allCombinations->getNetworkState(i)->getState(neuronIndex));
@@ -490,7 +490,7 @@ void SimulationAttractorsAndBasinsOfAttraction::solveAndStore(int neuronIndex){
 						solutions[neuronIndex]->getNetworkStatesSet(tmpNeuron->getState())->removeDuplications();
 		}
 		delete tmpNeuron;
-		for(int i=0; i < (int)neighbors.size(); i++) delete neighbors[i];
+		for(int i=0; i < static_cast<int>(neighbors.size()); i++) delete neighbors[i];
 		neighbors.clear();
 	}
 }
@@ -509,7 +509,7 @@ NetworkStatesSet * SimulationAttractorsAndBasinsOfAttraction::pBackward(NetworkS
 	if(numberOfVisitedStates < totalNumberOfStates)
 			computer->setProgressBarValue(100*((double)numberOfVisitedStates/(double)totalNumberOfStates));
 	else computer->setProgressBarValue(100.0);*/
-	NetworkStatesSet * tmpResult = NULL;
+	NetworkStatesSet * tmpResult = nullptr;
 
 	int initNumber = numberOfVisitedStates;
 	if(numberOfVisitedStates < totalNumberOfStates)
@@ -527,7 +527,7 @@ NetworkStatesSet * SimulationAttractorsAndBasinsOfAttraction::pBackward(NetworkS
 
 	while(a_traiter->getCardinal()>0){
 		currentNetworkState = a_traiter->getNetworkState(0);
-		if(a_traiter->getCardinal() != (int)distances.size()) printf("not equal\n");
+		if(a_traiter->getCardinal() != static_cast<int>(distances.size())) printf("not equal\n");
 		currentDistance = distances[0];
 		if(currentDistance > maxDistance) maxDistance = currentDistance;
 		sumOfDistance += (currentDistance * currentNetworkState->getNbOfAllPossibleStates());
