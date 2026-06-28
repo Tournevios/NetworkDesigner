@@ -72,4 +72,6 @@ set_target_properties(NetworkDesigner PROPERTIES
     MACOSX_BUNDLE TRUE
 )
 
-install(TARGETS NetworkDesigner RUNTIME DESTINATION bin)
+if(NOT ANDROID)
+    install(TARGETS NetworkDesigner RUNTIME DESTINATION bin)
+endif()
