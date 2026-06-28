@@ -14,23 +14,23 @@ on:
 
 jobs:
   build-windows:
-    name: Build (Windows, Qt6 MSVC)
+    name: Build (Windows, Qt5 MSVC)
     runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Qt 6
+      - name: Install Qt 5.15
         uses: jurplel/install-qt-action@v4
         with:
-          version: '6.7.3'
+          version: '5.15.2'
           host: 'windows'
           target: 'desktop'
           arch: 'win64_msvc2019_64'
           cache: true
 
-      - name: Configure (MSVC)
-        run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Configure
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=OFF
 
       - name: Build
         run: cmake --build build --config Release --parallel
@@ -43,7 +43,6 @@ jobs:
           Copy-Item build\src\Release\NetworkDesigner.exe staging\
           windeployqt --release staging\NetworkDesigner.exe
 
-      # Build an NSIS installer (.exe) from the staged files
       - name: Install NSIS
         run: choco install nsis --no-progress -y
 
