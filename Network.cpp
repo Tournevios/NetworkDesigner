@@ -1,193 +1,142 @@
 #include "Network.h"
 #include "constFile.h"
 #include "random-singleton.h"
+#include <algorithm>
 #include <cmath>
 #include <iostream>
-using namespace std;
-
 
 Network::Network(double temperature)
+    : temperature(temperature)
+    , uniformalTemperature(true)
 {
-	
-	uniformalTemperature = true;
-	this->temperature = temperature;
-	Random::Uniform<double>(0.0,1.0);
+    Random::Uniform<double>(0.0, 1.0);
 }
 
-Network::Network(){
-	
-	temperature = 0.001;
-	uniformalTemperature = true;
-	Random::Uniform<double>(0.0,1.0);
-}
-
-Network::Network(const Network& network){
-	temperature = network.getTemperature();
-	uniformalTemperature = network.getUniformalTemperature();
-	Random::Uniform<double>(0.0,1.0);
-	
-	for(int i=0; i<network.getNbNeurons(); i++){
-		addNeuron(new Neuron(*network.getNeuron(i)));	
-	}
-	
-	for(int i=0; i<(int)neurons.size(); i++){
-		for(int j=0; j<network.getNeuron(i)->getNb_neighbors();j++){
-				getNeuron(i)->addSynapse(getNeuron(network.getNeuron(i)->getSynapse(j)->getFinalNeuron()->getIndex()), network.getNeuron(i)->getSynapseWeight(j), network.getNeuron(i)->getSynapseDelay(j));
-			getNeuron(i)->getSynapse(j)->setCX(network.getNeuron(i)->getSynapse(j)->getCX());
-			getNeuron(i)->getSynapse(j)->setCY(network.getNeuron(i)->getSynapse(j)->getCY());
-		}
-	}
-}
-
-void Network::addNetwork(Network * network){
-	int initial_nb_neurons = (int)neurons.size();
-	deselectAll();
-	for(int i=0; i<network->getNbNeurons(); i++){
-		addNeuron(new Neuron(*(network->getNeuron(i))));
-		getNeuron(initial_nb_neurons + i)->setSelected(true);
-	}
-	
-	for(int i=0; i<network->getNbNeurons(); i++){
-		for(int j=0; j<network->getNeuron(i)->getNb_neighbors();j++){
-				getNeuron(i+initial_nb_neurons)->addSynapse(getNeuron(network->getNeuron(i)->getSynapse(j)->getFinalNeuron()->getIndex()+initial_nb_neurons), network->getNeuron(i)->getSynapseWeight(j), network->getNeuron(i)->getSynapseDelay(j));
-				getNeuron(i+initial_nb_neurons)->getSynapse(j)->setCX(network->getNeuron(i)->getSynapse(j)->getCX());
-				getNeuron(i+initial_nb_neurons)->getSynapse(j)->setCY(network->getNeuron(i)->getSynapse(j)->getCY());
-		}
-	}
-}
-
-Network::~Network()
+Network::Network()
+    : temperature(0.001)
+    , uniformalTemperature(true)
 {
-	neurons.clear();
+    Random::Uniform<double>(0.0, 1.0);
 }
 
-/*
- * Nb_Neurons's getter
- */
-int Network::getNbNeurons() const{
-	return (int)neurons.size();
+Network::Network(const Network& other)
+    : temperature(other.temperature)
+    , uniformalTemperature(other.uniformalTemperature)
+{
+    Random::Uniform<double>(0.0, 1.0);
+
+    for (int i = 0; i < other.getNbNeurons(); ++i)
+        addNeuron(new Neuron(*other.getNeuron(i)));
+
+    for (int i = 0; i < getNbNeurons(); ++i) {
+        for (int j = 0; j < other.getNeuron(i)->getNb_neighbors(); ++j) {
+            auto* syn = other.getNeuron(i)->getSynapse(j);
+            getNeuron(i)->addSynapse(
+                getNeuron(syn->getFinalNeuron()->getIndex()),
+                other.getNeuron(i)->getSynapseWeight(j),
+                other.getNeuron(i)->getSynapseDelay(j));
+            getNeuron(i)->getSynapse(j)->setCX(syn->getCX());
+            getNeuron(i)->getSynapse(j)->setCY(syn->getCY());
+        }
+    }
 }
 
-/*
- * Uniformal Temperature's setter
- */
-void Network::setUniformalTemperature(bool uniformalTemperature){
-	this->uniformalTemperature = uniformalTemperature;
+Network::~Network() = default;
+
+void Network::addNetwork(Network* other) {
+    const int offset = getNbNeurons();
+    deselectAll();
+
+    for (int i = 0; i < other->getNbNeurons(); ++i) {
+        addNeuron(new Neuron(*other->getNeuron(i)));
+        getNeuron(offset + i)->setSelected(true);
+    }
+
+    for (int i = 0; i < other->getNbNeurons(); ++i) {
+        for (int j = 0; j < other->getNeuron(i)->getNb_neighbors(); ++j) {
+            auto* syn = other->getNeuron(i)->getSynapse(j);
+            getNeuron(offset + i)->addSynapse(
+                getNeuron(syn->getFinalNeuron()->getIndex() + offset),
+                other->getNeuron(i)->getSynapseWeight(j),
+                other->getNeuron(i)->getSynapseDelay(j));
+            getNeuron(offset + i)->getSynapse(j)->setCX(syn->getCX());
+            getNeuron(offset + i)->getSynapse(j)->setCY(syn->getCY());
+        }
+    }
 }
 
-/*
- * Uniformal Temperature's getter
- */
-bool Network::getUniformalTemperature() const{
-	return uniformalTemperature;
+// ── Getters / setters ─────────────────────────────────────────────────────────
+
+int  Network::getNbNeurons() const                       { return static_cast<int>(neurons.size()); }
+void Network::setTemperature(double t)                   { temperature = t; }
+double Network::getTemperature() const                   { return temperature; }
+void Network::setUniformalTemperature(bool u)            { uniformalTemperature = u; }
+bool Network::getUniformalTemperature() const            { return uniformalTemperature; }
+
+// ── Neuron access ─────────────────────────────────────────────────────────────
+
+Neuron* Network::getNeuron(int index) const {
+    if (index >= 0 && index < getNbNeurons())
+        return neurons[index].get();
+    return nullptr;
 }
 
-
-/*
- * Temperature's setter
- */
-void Network::setTemperature(double temperature){
-	this->temperature = temperature;
+Neuron* Network::getNeuron(int x, int y, int radius) const {
+    auto it = std::find_if(neurons.begin(), neurons.end(), [=](const auto& n) {
+        return std::abs(n->getX() - x) <= radius && std::abs(n->getY() - y) <= radius;
+    });
+    return it != neurons.end() ? it->get() : nullptr;
 }
 
-/*
- * Temperature's getter
- */
-double Network::getTemperature() const{
-	return temperature;
+Synapse* Network::getSynapse(int x, int y) const {
+    for (const auto& n : neurons)
+        for (int j = 0; j < n->getNb_neighbors(); ++j)
+            if (n->getSynapse(j)->selectable(x, y))
+                return n->getSynapse(j);
+    return nullptr;
 }
 
-/*
- * Deselect all the neurons
- */
-void Network::deselectAll(){
-	for (const auto& n : neurons) {
-		n->setSelected(false);
-		for (int j = 0; j < n->getNb_neighbors(); ++j)
-			n->getSynapse(j)->setSelected(false);
-	}
+void Network::addNeuron(Neuron* neuron) {
+    neuron->setIndex(getNbNeurons());
+    neurons.push_back(std::unique_ptr<Neuron>(neuron));
 }
 
-/*
- * Return a neuron base on its x and y and the radius
- */
-Neuron* Network::getNeuron(int x, int y, int radius) const{
-	for(int i=0; i< (int)neurons.size(); i++){
-		if((abs(neurons[i]->getX()-x) <= radius) and (abs(neurons[i]->getY()-y)<= radius)){
-			return neurons[i].get();
-		}
-	}
-	return nullptr;
+void Network::delNeuron(int index) {
+    if (!getNeuron(index)) return;
+
+    // Remove all synapses pointing to this neuron
+    for (int i = 0; i < getNbNeurons(); ++i) {
+        int si = getNeuron(i)->getSynapseByNeighborIndex(index);
+        if (si < getNeuron(i)->getNb_neighbors()) {
+            getNeuron(i)->delSynapseBySynapseIndex(si);
+            --i;
+        }
+    }
+
+    // Shift indices of neurons that come after
+    for (int i = index + 1; i < getNbNeurons(); ++i)
+        getNeuron(i)->setIndex(i - 1);
+
+    neurons.erase(neurons.begin() + index);
 }
 
-/*
- * Return a synapse based on the mouse x and y
- */
-Synapse * Network::getSynapse(int x, int y) const{
-	for(int i=0; i< (int)neurons.size(); i++){
-		for(int j=0; j < neurons[i]->getNb_neighbors();j++){
-			if(neurons[i]->getSynapse(j)->selectable(x,y)){
-				return neurons[i]->getSynapse(j);			
-			}
-		}
-	}
-	return nullptr;
-}
-/*
- * This function return a neuron based on its index
- */
-Neuron* Network::getNeuron(int index) const{
-	if((index>=0) and (index<(int)neurons.size()))
-		return neurons[index].get();
-	return nullptr;
+// ── State / draw ──────────────────────────────────────────────────────────────
+
+void Network::deselectAll() {
+    for (const auto& n : neurons) {
+        n->setSelected(false);
+        for (int j = 0; j < n->getNb_neighbors(); ++j)
+            n->getSynapse(j)->setSelected(false);
+    }
 }
 
-/*
- * The neuron is added to the network and indexed by its creation date
- */
-void Network::addNeuron(Neuron* neuron){
-	neuron->setIndex((int)neurons.size());
-	neurons.push_back(std::unique_ptr<Neuron>(neuron));
+int Network::getState(bool* states) const {
+    int i = 0;
+    for (const auto& n : neurons) states[i++] = n->getState();
+    return i;
 }
 
-/*
- * Routine for suppression of a neuron from the network
- */
-void Network::delNeuron(int index){
-	if(getNeuron(index) == nullptr) return;
-
-	// Delete all synapses pointing to this neuron
-	for(int i = 0; i<(int)neurons.size(); i++){
-		if(getNeuron(i)->getSynapseByNeighborIndex(index) < getNeuron(i)->getNb_neighbors()){
-			getNeuron(i)->delSynapseBySynapseIndex(getNeuron(i)->getSynapseByNeighborIndex(index));
-			i--;
-		}
-	}
-
-	// Decrement indices of neurons after the deleted one
-	for(int i = index+1; i<(int)neurons.size(); i++){
-		getNeuron(i)->setIndex(i-1);
-	}
-
-	// Erase from vector (unique_ptr destructor frees the Neuron)
-	neurons.erase(neurons.begin() + index);
-}
-
-/*
- * Get the states of all the neurons of the network
- * and return their number
- */
-int Network::getState(bool* states) const{
-	int i = 0;
-	for (const auto& n : neurons) states[i++] = n->getState();
-	return i;
-}
-
-
-/*
- * Draw the synapses then the neurons
- */
-void Network::drawMe(QPainter* painter, float scale, int transX, int transY){
-	for (const auto& n : neurons) n->drawSynapses(painter, scale, transX, transY);
-	for (const auto& n : neurons) n->drawMe(painter, scale, transX, transY);
+void Network::drawMe(QPainter* painter, float scale, int transX, int transY) {
+    for (const auto& n : neurons) n->drawSynapses(painter, scale, transX, transY);
+    for (const auto& n : neurons) n->drawMe(painter, scale, transX, transY);
 }
