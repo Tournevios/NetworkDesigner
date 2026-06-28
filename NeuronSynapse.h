@@ -2,6 +2,7 @@
 #define NEURONSYNAPSE_H_
 
 #include <cmath>
+#include <string>
 #include <vector>
 #include <queue>
 #include <QtGui/QPainter>
@@ -135,8 +136,8 @@ public:
 	int getSynapseDelay(int synapseIndex) const;
 	void refreshSynapses();
 
-	void setNodeID(char * nodeID);
-	const char * getNodeID() const;
+	void setNodeID(const std::string& nodeID);
+	const std::string& getNodeID() const;
 
 	Neuron * getNeighbor(int synapseIndex) const;
 
@@ -149,7 +150,7 @@ private:
 	int nbStates;
 	std::vector<double> threshold;
 	double temperature;
-	char nodeID[255];
+	std::string nodeID;
 
 	// Synapses
 	int nb_neighbors;

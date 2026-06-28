@@ -26,7 +26,7 @@ NetworkState2::NetworkState2(int size, NetworkState * nbStates):NetworkState(siz
 
 NetworkState2::~NetworkState2(){
 	states.clear();
-	nbStates = NULL;
+	nbStates = nullptr;
 }
 
 void NetworkState2::initialize(){
