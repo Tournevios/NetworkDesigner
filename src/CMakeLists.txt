@@ -57,4 +57,10 @@ target_compile_options(NetworkDesigner PRIVATE
     $<$<CXX_COMPILER_ID:GNU,Clang>:-Wall -Wextra -Wpedantic>
 )
 
+# No console window on Windows; bundle on macOS
+set_target_properties(NetworkDesigner PROPERTIES
+    WIN32_EXECUTABLE TRUE
+    MACOSX_BUNDLE TRUE
+)
+
 install(TARGETS NetworkDesigner RUNTIME DESTINATION bin)

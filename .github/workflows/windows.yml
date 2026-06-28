@@ -1,0 +1,105 @@
+name: Windows – Build & Installer
+
+on:
+  push:
+    branches: [master, claude/networkdesigner-windows-mobile-kgdpz3]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+    inputs:
+      create_release:
+        description: 'Create GitHub Release'
+        type: boolean
+        default: false
+
+jobs:
+  build-windows:
+    name: Build (Windows, Qt6 MSVC)
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Qt 6
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.7.3'
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win64_msvc2022_64'
+          cache: true
+
+      - name: Configure (MSVC)
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --config Release --parallel
+
+      # Collect the exe + all Qt DLLs into a staging directory
+      - name: Stage with windeployqt
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force staging
+          Copy-Item build\src\Release\NetworkDesigner.exe staging\
+          windeployqt --release staging\NetworkDesigner.exe
+
+      # Build an NSIS installer (.exe) from the staged files
+      - name: Install NSIS
+        run: choco install nsis --no-progress -y
+
+      - name: Write NSIS script
+        shell: pwsh
+        run: |
+          $script = @'
+          Unicode true
+          !define APP_NAME    "NetworkDesigner"
+          !define APP_VERSION "1.0"
+          !define APP_EXE     "NetworkDesigner.exe"
+
+          Name "${APP_NAME} ${APP_VERSION}"
+          OutFile "NetworkDesigner-Setup.exe"
+          InstallDir "$PROGRAMFILES64\${APP_NAME}"
+          InstallDirRegKey HKLM "Software\${APP_NAME}" "Install_Dir"
+          RequestExecutionLevel admin
+
+          Page directory
+          Page instfiles
+
+          Section "Application"
+            SetOutPath "$INSTDIR"
+            File /r "staging\*.*"
+            WriteRegStr HKLM "Software\${APP_NAME}" "Install_Dir" "$INSTDIR"
+            WriteUninstaller "$INSTDIR\Uninstall.exe"
+            CreateDirectory "$SMPROGRAMS\${APP_NAME}"
+            CreateShortcut "$SMPROGRAMS\${APP_NAME}\${APP_NAME}.lnk" "$INSTDIR\${APP_EXE}"
+            CreateShortcut "$DESKTOP\${APP_NAME}.lnk" "$INSTDIR\${APP_EXE}"
+          SectionEnd
+
+          Section "Uninstall"
+            DeleteRegKey HKLM "Software\${APP_NAME}"
+            RMDir /r "$INSTDIR"
+            Delete "$DESKTOP\${APP_NAME}.lnk"
+            RMDir /r "$SMPROGRAMS\${APP_NAME}"
+          SectionEnd
+          '@
+          $script | Out-File -Encoding UTF8 installer.nsi
+
+      - name: Build installer
+        run: makensis installer.nsi
+
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: NetworkDesigner-Windows-Installer
+          path: NetworkDesigner-Setup.exe
+          retention-days: 30
+
+      - name: Create GitHub Release
+        if: github.event_name == 'workflow_dispatch' && inputs.create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0-windows
+          name: NetworkDesigner 1.0 (Windows)
+          files: NetworkDesigner-Setup.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
