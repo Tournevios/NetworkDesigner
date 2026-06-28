@@ -376,3 +376,41 @@ DesignPlan {
     border: 1px solid #313244;
     border-radius: 4px;
 }
+
+/* ---------- Toolbar ---------- */
+QToolBar {
+    background-color: #181825;
+    border-bottom: 1px solid #313244;
+    padding: 2px 4px;
+    spacing: 4px;
+}
+
+QToolBar::separator {
+    background: #313244;
+    width: 1px;
+    margin: 4px 6px;
+}
+
+QToolButton {
+    background: transparent;
+    color: #a6adc8;
+    border: none;
+    border-radius: 5px;
+    padding: 3px 8px;
+    font-size: 10px;
+}
+
+QToolButton:hover {
+    background: #313244;
+    color: #cdd6f4;
+}
+
+QToolButton:pressed {
+    background: #45475a;
+}
+
+/* ---------- Status bar (override for child labels) ---------- */
+QStatusBar QLabel {
+    font-size: 11px;
+    background: transparent;
+}
