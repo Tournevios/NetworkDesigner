@@ -105,23 +105,30 @@ jobs:
       - name: Build
         run: cmake --build build-android --parallel
 
-      - name: Locate APK
-        id: find-apk
+      - name: Sign APK
         run: |
-          APK=$(find build-android -name "*.apk" | head -1)
-          if [ -z "$APK" ]; then
-            echo "APK not found, listing build-android outputs:"
-            find build-android -name "*.apk" -o -name "*.aab" 2>/dev/null | head -20
-            exit 1
+          UNSIGNED=$(find build-android -name "*unsigned*.apk" | head -1)
+          if [ -z "$UNSIGNED" ]; then
+            UNSIGNED=$(find build-android -name "*.apk" | head -1)
           fi
-          echo "Found APK: $APK"
-          echo "apk_path=$APK" >> $GITHUB_OUTPUT
+          echo "Signing: $UNSIGNED"
+          keytool -genkey -v -keystore debug.keystore -alias androiddebugkey \
+            -keyalg RSA -keysize 2048 -validity 10000 \
+            -storepass android -keypass android \
+            -dname "CN=Android Debug,O=Android,C=US"
+          ALIGNED=NetworkDesigner-aligned.apk
+          SIGNED=NetworkDesigner.apk
+          "$ANDROID_SDK_ROOT/build-tools/34.0.0/zipalign" -v 4 "$UNSIGNED" "$ALIGNED"
+          "$ANDROID_SDK_ROOT/build-tools/34.0.0/apksigner" sign \
+            --ks debug.keystore --ks-pass pass:android --key-pass pass:android \
+            --out "$SIGNED" "$ALIGNED"
+          echo "apk_path=$SIGNED" >> $GITHUB_ENV
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: NetworkDesigner-Android-APK
-          path: ${{ steps.find-apk.outputs.apk_path }}
+          path: NetworkDesigner.apk
           retention-days: 30
 
       - name: Create GitHub Release
@@ -130,6 +137,6 @@ jobs:
         with:
           tag_name: v1.0-android
           name: NetworkDesigner 1.0 (Android)
-          files: ${{ steps.find-apk.outputs.apk_path }}
+          files: NetworkDesigner.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
