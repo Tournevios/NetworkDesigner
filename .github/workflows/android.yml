@@ -55,18 +55,18 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Install NDK and platform 33
+      - name: Install NDK and platform 34
         run: |
-          sdkmanager "ndk;${{ env.ANDROID_NDK_VERSION }}" "platforms;android-33" "build-tools;33.0.2"
+          sdkmanager "ndk;${{ env.ANDROID_NDK_VERSION }}" "platforms;android-34" "build-tools;34.0.0"
           echo "ANDROID_NDK_ROOT=$ANDROID_SDK_ROOT/ndk/${{ env.ANDROID_NDK_VERSION }}" >> $GITHUB_ENV
 
-      - name: Keep only android-33 platform
+      - name: Keep only android-34 platform
         run: |
           # All ext preview platforms (android-35-extXX, android-36-extXX, etc)
           # installed by setup-android have corrupt android.jar — remove everything
-          # except the android-33 we just installed explicitly.
+          # except the android-34 we just installed explicitly.
           find "$ANDROID_SDK_ROOT/platforms" -mindepth 1 -maxdepth 1 \
-            ! -name "android-33" -exec rm -rf {} +
+            ! -name "android-34" -exec rm -rf {} +
           ls "$ANDROID_SDK_ROOT/platforms/"
 
       # Install both Qt variants via aqt for predictable, fixed paths
@@ -117,7 +117,7 @@ jobs:
           "$QT_ANDROID_ROOT/bin/androiddeployqt" \
             --input "$DEPLOY_JSON" \
             --output build-android/android-build \
-            --android-platform android-33 \
+            --android-platform android-34 \
             --jdk "$JAVA_HOME" \
             --apk
 
