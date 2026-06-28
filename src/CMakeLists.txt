@@ -35,12 +35,21 @@ set(APP_FORMS
     app/networkdesigner.ui
 )
 
-add_executable(NetworkDesigner
-    ${CORE_SOURCES}
-    ${APP_SOURCES}
-    ${APP_FORMS}
-    ${CMAKE_SOURCE_DIR}/resources/resources.qrc
-)
+if(QT_VERSION_MAJOR EQUAL 6)
+    qt_add_executable(NetworkDesigner
+        ${CORE_SOURCES}
+        ${APP_SOURCES}
+        ${APP_FORMS}
+        ${CMAKE_SOURCE_DIR}/resources/resources.qrc
+    )
+else()
+    add_executable(NetworkDesigner
+        ${CORE_SOURCES}
+        ${APP_SOURCES}
+        ${APP_FORMS}
+        ${CMAKE_SOURCE_DIR}/resources/resources.qrc
+    )
+endif()
 
 target_include_directories(NetworkDesigner PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/core/network
