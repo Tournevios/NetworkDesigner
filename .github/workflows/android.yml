@@ -62,9 +62,9 @@ jobs:
 
       - name: Remove broken preview Android platforms
         run: |
-          # android-36-ext19 has a corrupt android.jar that breaks aapt2
-          rm -rf "$ANDROID_SDK_ROOT/platforms/android-36-ext19" || true
-          rm -rf "$ANDROID_SDK_ROOT/platforms/android-36" || true
+          # All android-36 variants (ext18, ext19, ...) have corrupt android.jar
+          rm -rf "$ANDROID_SDK_ROOT/platforms"/android-36* || true
+          ls "$ANDROID_SDK_ROOT/platforms/"
 
       # Install both Qt variants via aqt for predictable, fixed paths
       - name: Install aqt
