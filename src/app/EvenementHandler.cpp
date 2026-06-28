@@ -67,7 +67,7 @@ void EvenementHandler::updateMe(){
 	}
 	emit temperatureChanged(network->getTemperature());
 	emit neuronTemperatureChanged(network->getTemperature());
-	parent->frmDesign->parentWidget()->repaint();
+	parent->frmDesign->parentWidget()->update();
 	if(network->getUniformalTemperature())	parent->chkUniformalTemperature->setCheckState(Qt::Checked);
 	else					parent->chkUniformalTemperature->setCheckState(Qt::Unchecked);
 	// Refreshing the cmbUpdateBlock
