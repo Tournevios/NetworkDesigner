@@ -1,13 +1,14 @@
 #include "networkdesigner.h"
 #include "NetworkDesignerParser.h"
-#include <QtGui/QMainWindow>
-#include <QtGui/QToolBar>
-#include <QtGui/QAction>
+#include "designplan.h"
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QToolBar>
+#include <QtWidgets/QAction>
 #include <QtGui/QIcon>
-#include <QtGui/QLabel>
+#include <QtWidgets/QLabel>
 #include <QtGui/QPixmap>
-#include <QtGui/QStatusBar>
-#include <QtGui/QApplication>
+#include <QtWidgets/QStatusBar>
+#include <QtWidgets/QApplication>
 
 // Helper: load an SVG from Qt resources as a fixed-size QIcon.
 static QIcon svgIcon(const QString& path, int size = 20) {
@@ -40,24 +41,20 @@ NetworkDesigner::NetworkDesigner(QWidget *parent) : QMainWindow(parent)
     network = ui.frmDesign->getNetwork();
     updateSchedulingPlan = ui.frmDesign->getUpdateSchedulingPlan();
 
-    evenementHandler = new EvenementHandler(&ui, network, updateSchedulingPlan);
-    ssc = new SignalsSlotsConnector(evenementHandler, &ui, this);
+    evenementHandler = std::make_unique<EvenementHandler>(&ui, network, updateSchedulingPlan);
+    ssc = std::make_unique<SignalsSlotsConnector>(evenementHandler.get(), &ui, this);
     evenementHandler->updateMe();
 
     setupToolBar();
     setupStatusBar();
 
     // Network change → update counters
-    connect(ui.frmDesign, SIGNAL(networkIsModified()), this, SLOT(updateStatusBar()));
-    connect(ui.frmDesign, SIGNAL(updateCalled()),      this, SLOT(updateStatusBar()));
-
-    // Canvas mouse position → coordinates label
-    connect(ui.frmDesign, SIGNAL(canvasMouseMoved(int,int)),
-            this, SLOT(onCanvasMouseMoved(int,int)));
+    connect(ui.frmDesign, &DesignPlan::networkIsModified, this, &NetworkDesigner::updateStatusBar);
+    connect(ui.frmDesign, &DesignPlan::updateCalled,      this, &NetworkDesigner::updateStatusBar);
 
     // Simulation state indicator via Start / Stop buttons
-    connect(ui.pbStart, SIGNAL(clicked(bool)), this, SLOT(onSimulationStarted()));
-    connect(ui.pbStop,  SIGNAL(clicked(bool)), this, SLOT(onSimulationFinished()));
+    connect(ui.pbStart, &QPushButton::clicked, this, &NetworkDesigner::onSimulationStarted);
+    connect(ui.pbStop,  &QPushButton::clicked, this, &NetworkDesigner::onSimulationFinished);
 
     updateStatusBar();
 }
@@ -91,11 +88,11 @@ void NetworkDesigner::setupToolBar() {
     auto* actStart = toolbar->addAction(svgIcon(":/resources/icons/start.svg"), "Start");
     actStart->setToolTip("Run simulation\nCtrl+R");
     actStart->setShortcut(QKeySequence("Ctrl+R"));
-    connect(actStart, SIGNAL(triggered(bool)), ui.pbStart, SIGNAL(clicked(bool)));
+    connect(actStart, &QAction::triggered, ui.pbStart, &QPushButton::clicked);
 
     auto* actStop = toolbar->addAction(svgIcon(":/resources/icons/stop.svg"), "Stop");
     actStop->setToolTip("Stop simulation");
-    connect(actStop, SIGNAL(triggered(bool)), ui.pbStop, SIGNAL(clicked(bool)));
+    connect(actStop, &QAction::triggered, ui.pbStop, &QPushButton::clicked);
 
     toolbar->addSeparator();
 
@@ -232,6 +229,4 @@ void NetworkDesigner::setUpdateSchedulingPlan(UpdateSchedulingPlan* usp) {
 NetworkDesigner::~NetworkDesigner() {
     for (int i = 0; i < network->getNbNeurons(); ++i)
         network->delNeuron(i);
-    delete ssc;
-    delete evenementHandler;
 }

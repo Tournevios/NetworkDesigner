@@ -432,7 +432,7 @@ void NetworkDesignerParser::load(QString fileName){
 
 	std::unique_ptr<UpdateBlock> updateBlock;
 
-	bool * okki = (bool *) malloc(sizeof(bool));
+	bool okki = false;
 
 
 	if (!file.open(QIODevice::ReadOnly)) return;
@@ -445,25 +445,25 @@ void NetworkDesignerParser::load(QString fileName){
 	node = root.firstChild();			// The first node "Network"
 
 
-	Nb_Neurons = node.toElement().attribute("Nb_Neurons").toInt(okki);
-	network = new Network(node.toElement().attribute("Temperature").toDouble(okki));		// Read the Temperature parameter
-	network->setUniformalTemperature((bool)(node.toElement().attribute("UniformalTemperature").toInt(okki))); // Read if the temperature is uniform or note
+	Nb_Neurons = node.toElement().attribute("Nb_Neurons").toInt(&okki);
+	network = new Network(node.toElement().attribute("Temperature").toDouble(&okki));		// Read the Temperature parameter
+	network->setUniformalTemperature(static_cast<bool>(node.toElement().attribute("UniformalTemperature").toInt(&okki))); // Read if the temperature is uniform or note
 	if(Nb_Neurons>0){
 		for(int i=0; i < Nb_Neurons;i++)	network->addNeuron(new Neuron());
 		child = node.firstChild();											// Read neurons
 		for(int i=0; i < Nb_Neurons;i++){
-			network->getNeuron(i)->setNbStates(child.toElement().attribute("NbStates").toInt(okki));
-			network->getNeuron(i)->setState(child.toElement().attribute("State").toInt(okki));
-			network->getNeuron(i)->setTemperature(child.toElement().attribute("Temperature").toDouble(okki));
-			network->getNeuron(i)->setX(child.toElement().attribute("x").toDouble(okki));
-			network->getNeuron(i)->setY(child.toElement().attribute("y").toDouble(okki));
-			network->getNeuron(i)->setNodeID((char*)(child.toElement().attribute("NodeID", "noname").toStdString().c_str()));
-			Nb_Neighbors = child.toElement().attribute("Nb_Neighbors").toInt(okki);
+			network->getNeuron(i)->setNbStates(child.toElement().attribute("NbStates").toInt(&okki));
+			network->getNeuron(i)->setState(child.toElement().attribute("State").toInt(&okki));
+			network->getNeuron(i)->setTemperature(child.toElement().attribute("Temperature").toDouble(&okki));
+			network->getNeuron(i)->setX(child.toElement().attribute("x").toDouble(&okki));
+			network->getNeuron(i)->setY(child.toElement().attribute("y").toDouble(&okki));
+			network->getNeuron(i)->setNodeID(child.toElement().attribute("NodeID", "noname").toStdString().c_str());
+			Nb_Neighbors = child.toElement().attribute("Nb_Neighbors").toInt(&okki);
 
 			if(network->getNeuron(i)->getNbStates() >= 2){
 				grandChild = child.firstChild();
 				for(int  j=1; j < network->getNeuron(i)->getNbStates(); j++){
-					network->getNeuron(i)->setThreshold(j, grandChild.toElement().attribute("Threshold").toDouble(okki));
+					network->getNeuron(i)->setThreshold(j, grandChild.toElement().attribute("Threshold").toDouble(&okki));
 					if(j+1 < network->getNeuron(i)->getNbStates()) grandChild = grandChild.nextSibling();
 				}
 			}
@@ -476,11 +476,11 @@ void NetworkDesignerParser::load(QString fileName){
 					grandChild = grandChild.nextSibling();
 				}
 				for(int j=0; j < Nb_Neighbors; j++){
-					neighborIndex = grandChild.toElement().attribute("NeighborIndex").toInt(okki);
-					weight = grandChild.toElement().attribute("Weight").toDouble(okki);
-					delay = grandChild.toElement().attribute("Delay").toInt(okki);
-					cx = grandChild.toElement().attribute("CX").toDouble(okki);
-					cy = grandChild.toElement().attribute("CY").toDouble(okki);
+					neighborIndex = grandChild.toElement().attribute("NeighborIndex").toInt(&okki);
+					weight = grandChild.toElement().attribute("Weight").toDouble(&okki);
+					delay = grandChild.toElement().attribute("Delay").toInt(&okki);
+					cx = grandChild.toElement().attribute("CX").toDouble(&okki);
+					cy = grandChild.toElement().attribute("CY").toDouble(&okki);
 					network->getNeuron(i)->addSynapse(network->getNeuron(neighborIndex), weight, delay);
 					network->getNeuron(i)->getSynapse(j)->setCX(cx);
 					network->getNeuron(i)->getSynapse(j)->setCY(cy);
@@ -494,7 +494,7 @@ void NetworkDesignerParser::load(QString fileName){
 
 	node = node.nextSiblingElement();
 
-	Nb_UpdateBlocks = node.toElement().attribute("Nb_UpdateBlocks").toInt(okki);
+	Nb_UpdateBlocks = node.toElement().attribute("Nb_UpdateBlocks").toInt(&okki);
 
 	updateSchedulingPlan = new UpdateSchedulingPlan();
 	if(Nb_UpdateBlocks>0){
@@ -502,14 +502,14 @@ void NetworkDesignerParser::load(QString fileName){
 
 		for(int i=0; i < Nb_UpdateBlocks; i++) {
 			block_size = 0;
-			block_size = child.toElement().attribute("Size").toInt(okki);
-			calculus = child.toElement().attribute("Calculus").toInt(okki);
+			block_size = child.toElement().attribute("Size").toInt(&okki);
+			calculus = child.toElement().attribute("Calculus").toInt(&okki);
 			updateBlock = std::make_unique<UpdateBlock>();
 			updateBlock->setUpdateMethods(calculus);
 			if(block_size>0){
 				grandChild = child.firstChild();
 				for(int j=0; j< block_size; j++){
-					updateBlock->addNeuronIndex(grandChild.toElement().attribute("Index").toInt(okki));
+					updateBlock->addNeuronIndex(grandChild.toElement().attribute("Index").toInt(&okki));
 					if(j+1 < block_size) grandChild = grandChild.nextSibling();
 				}
 			}
@@ -519,7 +519,6 @@ void NetworkDesignerParser::load(QString fileName){
 	}
 	//a.setText(node.toElement().tagName());
 	//a.exec();
-	free (okki);
 }
 
 NetworkDesignerParser::~NetworkDesignerParser()

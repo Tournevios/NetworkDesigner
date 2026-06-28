@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 #include "UpdateSchedulingPlan.h"
 #include "ui_mainWindow.h"
 #include "constFile.h"
@@ -107,7 +108,7 @@ private:
 	QString fileName;
 	QMenu * networkLayersMenu;
 
-	Network * aSimpleCopy;
+	std::unique_ptr<Network> aSimpleCopy;
 
 	std::vector<BlockSelector> layers;
 	std::vector<QAction *> layerActions;

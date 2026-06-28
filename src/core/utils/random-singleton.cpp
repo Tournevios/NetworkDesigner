@@ -4,7 +4,6 @@
 
 #include "random-singleton.h"
 #include <cfloat> //DBL_EPSILON
-using namespace std;
 
 inline static double sqr(double x) {return x*x;}
 
