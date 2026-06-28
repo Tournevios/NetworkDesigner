@@ -1,4 +1,5 @@
 #include "NetworkStatesSet.h"
+#include <memory>
 using namespace std;
 
 /*
@@ -14,9 +15,9 @@ NetworkStatesSet::NetworkStatesSet()
 }
 
 NetworkStatesSet::NetworkStatesSet(const NetworkStatesSet& cp){
-	maxCardinal = -1;//cp.getMaxCardinal();
+	maxCardinal = -1;
 	for(int i=0; i<cp.getCardinal(); i++){
-		set.push_back(new NetworkState(*(cp.getNetworkState(i))));
+		set.push_back(std::make_unique<NetworkState>(*(cp.getNetworkState(i))));
 	}
 	cardinal = cp.getCardinal();
 	filled = cp.getFilled();
@@ -31,15 +32,13 @@ NetworkStatesSet::NetworkStatesSet(int maxCardinal){
 }
 
 NetworkStatesSet::~NetworkStatesSet()
-{	
-	while(cardinal > 0)	removeNetworkState(0);
-
+{
+	set.clear();
+	cardinal = 0;
 }
 
 void NetworkStatesSet::deleteOneElement(int index){
-	
 	if(index < cardinal){
-		delete set[index];
 		set.erase(set.begin() + index);
 		cardinal--;
 	}
@@ -60,7 +59,7 @@ void NetworkStatesSet::addNetworkState(const NetworkState& networkState){
 		deleteOneElement(0);
 	}
 
-	set.push_back(new NetworkState(networkState));
+	set.push_back(std::make_unique<NetworkState>(networkState));
 	cardinal++;
 }
 
@@ -73,7 +72,7 @@ void NetworkStatesSet::removeNetworkState(int index){
 
 NetworkState* NetworkStatesSet::getNetworkState(int index) const{
 	if(index < cardinal){
-		return set[index];
+		return set[index].get();
 	}
 	return nullptr;
 }
@@ -441,7 +440,8 @@ void NetworkStatesSet::operator-=(const NetworkStatesSet& rv){
 
 NetworkStatesSet& NetworkStatesSet::operator=(const NetworkStatesSet& rv){
 	if(this != &rv){
-		while(cardinal > 0) this->removeNetworkState(0);
+		set.clear();
+		cardinal = 0;
 		maxCardinal = rv.getMaxCardinal();
 		filled = rv.getFilled();
 		this->addNetworkStatesSet(rv);

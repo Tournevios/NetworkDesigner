@@ -61,7 +61,6 @@ void Network::addNetwork(Network * network){
 
 Network::~Network()
 {
-	for (Neuron* n : neurons) delete n;
 	neurons.clear();
 }
 
@@ -116,10 +115,9 @@ void Network::deselectAll(){
  * Return a neuron base on its x and y and the radius
  */
 Neuron* Network::getNeuron(int x, int y, int radius) const{
-	
 	for(int i=0; i< nb_neurons; i++){
 		if((abs(neurons[i]->getX()-x) <= radius) and (abs(neurons[i]->getY()-y)<= radius)){
-			return neurons[i];			
+			return neurons[i].get();
 		}
 	}
 	return nullptr;
@@ -143,140 +141,16 @@ Synapse * Network::getSynapse(int x, int y) const{
  */
 Neuron* Network::getNeuron(int index) const{
 	if((index>=0) and (index<nb_neurons))
-			return neurons[index];
-	else 
-		return nullptr;
+		return neurons[index].get();
+	return nullptr;
 }
 
-/*
- * This methods calculate the new global stat of the network using a block sequential update
- * (removed: computeBS and computeBP were superseded by Computer::computeBS/computeBP)
- *
-	
-	int nb_blocks = sp->getNb_blocks();
-	double rnd;
-	for(int i=0;i< nb_blocks;i++){
-		
-		UpdateBlock* ub = sp->getUpdateBlock(i);
-		if(ub->getUpdateMethods() == COMPUTE){
-			// All neuron compute their new state using a parallele scheme
-			for(int j=0; j < ub->getSize(); j++){
-				rnd = Random::Uniform();//(double)rand() / ((double)RAND_MAX+1.0);
-				if(rnd <= synchronyRate){
-					if(not uniformalTemperature) getNeuron(ub->getNeuronIndex(j))->compute(getNeuron(ub->getNeuronIndex(j))->getTemperature());
-					else getNeuron(ub->getNeuronIndex(j))->compute(temperature);
-				}
-			} 
-			// When all is done theNewState is set
-			for(int j=0; j < ub->getSize(); j++)
-							getNeuron(ub->getNeuronIndex(j))->substitute();
-		}
-		
-		else if(ub->getUpdateMethods() == FIXE_1){
-			for(int j=0; j < ub->getSize(); j++){
-				rnd = Random::Uniform();
-				if(rnd <= synchronyRate)
-							getNeuron(ub->getNeuronIndex(j))->setState(true);
-			}
-		}
-		
-		else if(ub->getUpdateMethods() == FIXE_0){
-			for(int j=0; j < ub->getSize(); j++){
-				rnd = Random::Uniform();
-				if(rnd <= synchronyRate)
-							getNeuron(ub->getNeuronIndex(j))->setState(false);
-			}
-		}
-		
-		else if(ub->getUpdateMethods() == FIXE_01){
-			for(int j=0; j < ub->getSize(); j++){
-				rnd = Random::Uniform();
-				if(rnd <= synchronyRate)
-							getNeuron(ub->getNeuronIndex(j))->setState((bool)(j%2));
-			}
-		}
-		
-		else if(ub->getUpdateMethods() == FIXE_10){
-			for(int j=0; j < ub->getSize(); j++){
-				rnd = Random::Uniform();
-				if(rnd <= synchronyRate)
-							getNeuron(ub->getNeuronIndex(j))->setState((bool)((j+1)%2));
-			}
-		}
-		
-		else if(ub->getUpdateMethods() == RANDOMLY){
-			for(int j=0; j < ub->getSize(); j++){
-				rnd = Random::Uniform();
-				if(rnd <= synchronyRate){
-					if(Random::Uniform()<0.5)
-							getNeuron(ub->getNeuronIndex(j))->setState(false);
-					else
-							getNeuron(ub->getNeuronIndex(j))->setState(true);
-				}
-			}
-		}	
-	}
-}
-*/
-/*
- * This methods calculate the new global stat of the network using a block parallel update
- 
-void Network::computeBP(UpdateSchedulingPlan* sp, int nb_iterations, double synchronyRate){
-	int nb_blocks = sp->getNb_blocks();
-	UpdateBlock* ub;
-	double rnd;
-	for(int i=0;i< nb_iterations;i++){
-			// All neuron compute their new state using a parallele scheme
-			for(int j=0; j < nb_blocks; j++){
-				ub = sp->getUpdateBlock(j);
-				rnd = (double)rand() / ((double)RAND_MAX+1.0);
-				if(rnd <= synchronyRate){
-					if(ub->getUpdateMethods() == COMPUTE){
-						if(not uniformalTemperature) getNeuron(ub->getNeuronIndex(i%ub->getSize()))->compute(getNeuron(ub->getNeuronIndex(i%ub->getSize()))->getTemperature());
-						else getNeuron(ub->getNeuronIndex(i%ub->getSize()))->compute(temperature);
-					}
-					else if(ub->getUpdateMethods() == FIXE_1){
-							getNeuron(ub->getNeuronIndex(i%ub->getSize()))->setTheNewState(true);
-					}
-					
-					else if(ub->getUpdateMethods() == FIXE_0){
-						getNeuron(ub->getNeuronIndex(i%ub->getSize()))->setTheNewState(false);
-					}
-					
-					else if(ub->getUpdateMethods() == FIXE_01){
-						getNeuron(ub->getNeuronIndex(i%ub->getSize()))->setTheNewState((bool)(i%2));
-					}
-					
-					else if(ub->getUpdateMethods() == FIXE_10){
-						getNeuron(ub->getNeuronIndex(i%ub->getSize()))->setTheNewState((bool)((i+1)%2));
-					}
-					
-					else if(ub->getUpdateMethods() == RANDOMLY){
-						if(Random::Uniform()<0.5)
-							getNeuron(ub->getNeuronIndex(i%ub->getSize()))->setTheNewState(false);
-						else
-							getNeuron(ub->getNeuronIndex(i%ub->getSize()))->setTheNewState(true);
-		
-					}	
-						
-				}
-			} 
-			// When all is done theNewState is set
-			for(int j=0; j < nb_blocks; j++){
-				ub = sp->getUpdateBlock(j);
-				getNeuron(ub->getNeuronIndex(i%ub->getSize()))->substitute();	
-			}
-			
-	}
-}
-
-*/
 /*
  * The neuron is added to the network and indexed by its creation date
  */
 void Network::addNeuron(Neuron* neuron){
-	neurons.push_back(neuron);
 	neuron->setIndex(nb_neurons);
+	neurons.push_back(std::unique_ptr<Neuron>(neuron));
 	nb_neurons++;
 }
 
@@ -284,29 +158,24 @@ void Network::addNeuron(Neuron* neuron){
  * Routine for suppression of a neuron from the network
  */
 void Network::delNeuron(int index){
-	Neuron * neuron = getNeuron(index);
-	if(neuron != nullptr){
+	if(getNeuron(index) == nullptr) return;
 
-		// All synapses conncected to the neuron 'll be deleted
-		for(int i = 0; i<nb_neurons; i++){
-			if(getNeuron(i)->getSynapseByNeighborIndex(index) < getNeuron(i)->getNb_neighbors()){
-				getNeuron(i)->delSynapseBySynapseIndex(getNeuron(i)->getSynapseByNeighborIndex(index));
-				i--;
-			}
+	// Delete all synapses pointing to this neuron
+	for(int i = 0; i<nb_neurons; i++){
+		if(getNeuron(i)->getSynapseByNeighborIndex(index) < getNeuron(i)->getNb_neighbors()){
+			getNeuron(i)->delSynapseBySynapseIndex(getNeuron(i)->getSynapseByNeighborIndex(index));
+			i--;
 		}
+	}
 
-		// All the other neuron decrement their indexs
-		for(int i = index+1; i<nb_neurons; i++){
-			getNeuron(i)->setIndex(i-1);
-		}
-		
-		// Finally the pointer of the neuron is deleted from the vector 
-		neurons.erase((vector<Neuron*>::iterator)&neurons[index]);
-		delete neuron;
-				
-		// Decrement the numberr of a neurons
-		nb_neurons--;
-	}	
+	// Decrement indices of neurons after the deleted one
+	for(int i = index+1; i<nb_neurons; i++){
+		getNeuron(i)->setIndex(i-1);
+	}
+
+	// Erase from vector (unique_ptr destructor frees the Neuron)
+	neurons.erase(neurons.begin() + index);
+	nb_neurons--;
 }
 
 /*

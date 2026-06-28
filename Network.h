@@ -2,6 +2,7 @@
 #define NETWORK_H_
 
 #include "NeuronSynapse.h"
+#include <memory>
 //#include "UpdateSchedulingPlan.h"
 
 class Network
@@ -43,7 +44,7 @@ public:
 
 private:
 	int nb_neurons;
-	std::vector<Neuron*> neurons;
+	std::vector<std::unique_ptr<Neuron>> neurons;
 	double temperature;
 	bool uniformalTemperature;
 	
