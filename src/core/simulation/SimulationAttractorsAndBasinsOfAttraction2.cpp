@@ -319,7 +319,7 @@ NetworkState * SimulationAttractorsAndBasinsOfAttraction2::getNbStates() const{
 }
 
 int * SimulationAttractorsAndBasinsOfAttraction2::getSizeOfBasins() const{
-
+	return nullptr;
 }
 
 double** SimulationAttractorsAndBasinsOfAttraction2::getMTransitions() const{
