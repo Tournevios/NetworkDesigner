@@ -94,7 +94,6 @@ public:
 	void setThreshold(int stateIndex, double threshold);
 
 	int getNb_neighbors() const;
-	void setNb_neighbors(int nb_neighbors);
 
 /*	void setColor(int red, int green, int blue);
 	int* getColor();
@@ -154,7 +153,6 @@ private:
 	std::string nodeID;
 
 	// Synapses
-	int nb_neighbors;
 	std::vector<std::unique_ptr<Synapse>> synapses;
 
 	bool hasANewState;							// Set to true if a computation was done
