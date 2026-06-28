@@ -1,5 +1,7 @@
 #include "NeuronSynapse.h"
 #include <iostream>
+#include <cmath>
+#include <algorithm>
 using namespace std;
 
 Synapse::Synapse(){
@@ -84,69 +86,78 @@ void Synapse::setSelected(bool selected){
  * Build and draw the graphical representation (QPainterPath) of the arrow
  */
 void Synapse::drawMe(QPainter * painter, double scale, double transX, double transY){
-	
-	QPainterPath rectPath;
-	qreal pp;
-	qreal per;
-	QPointF startPoint, endPoint;
-	
-	double x1 = (baseNeuron->getX()*scale) + transX;
-	double y1 = (baseNeuron->getY()*scale) + transY;
-	
-	if(baseNeuron == finalNeuron){
-			rectPath.addEllipse(x1-19*scale, y1-19*scale, 17*scale, 18*scale);
-	} 
-	else {
-		// body building
-		double x2 = (finalNeuron->getX()*scale) + transX;
-		double y2 = (finalNeuron->getY()*scale) + transY;
-		//double cx = (x1 + x2) * (0.5f + gExcentricity);
-		//double cy = (y1 + y2) *(0.5f + gExcentricity);
-		double cx = (this->cx * scale) + transX;
-		double cy = (this->cy * scale) + transY;
-		
-		rectPath.moveTo(x1, y1);
-		rectPath.quadTo(cx, cy, x2, y2);
-		
-		// Arrow Head builing
-		//pp = rectPath.length()-25;
-		double headLength = 2;
-		double alpha;
-		
-		pp = 25;
-		per = rectPath.percentAtLength(pp);
-		startPoint = rectPath.pointAtPercent(per);
-		
-		//pp = rectPath.length()-20;
-		pp = 20;
-		per = rectPath.percentAtLength(pp);
-		endPoint = rectPath.pointAtPercent(per);
-		
-		alpha = atan((endPoint.y()-startPoint.y())/((endPoint.x()-startPoint.x())));
-		QPointF p1(startPoint.x()+headLength*sin(alpha), startPoint.y()-headLength*cos(alpha));
-		QPointF p2(startPoint.x()-headLength*sin(alpha), startPoint.y()+headLength*cos(alpha));
-		//QPointF p1(startPoint.x()+2*sin(alpha), startPoint.x()-2*cos(alpha));
-		
-		//cout << startPoint.x()<<endl;
-		rectPath.moveTo(p1);
-		rectPath.lineTo(endPoint);
-		rectPath.moveTo(p2);
-		rectPath.lineTo(endPoint);		
-	}	
-	// Updating
+    painter->setRenderHint(QPainter::Antialiasing, true);
+
+    QPainterPath rectPath;
+
+    double x1 = (baseNeuron->getX() * scale) + transX;
+    double y1 = (baseNeuron->getY() * scale) + transY;
+
+    if (baseNeuron == finalNeuron) {
+        // Self-synapse: small ellipse above the neuron
+        rectPath.addEllipse(x1 - 19 * scale, y1 - 24 * scale, 18 * scale, 18 * scale);
+    } else {
+        double x2 = (finalNeuron->getX() * scale) + transX;
+        double y2 = (finalNeuron->getY() * scale) + transY;
+        double bcx = (this->cx * scale) + transX;
+        double bcy = (this->cy * scale) + transY;
+
+        rectPath.moveTo(x1, y1);
+        rectPath.quadTo(bcx, bcy, x2, y2);
+
+        // Arrow head — proportional to scale, minimum 5 px
+        const double headLen = std::max(5.0, 7.0 * scale);
+        qreal pp, per;
+        QPointF tip, root;
+
+        pp  = headLen + 4;
+        per = rectPath.percentAtLength(pp);
+        root = rectPath.pointAtPercent(per);
+
+        pp  = headLen;
+        per = rectPath.percentAtLength(pp);
+        tip = rectPath.pointAtPercent(per);
+
+        double alpha = std::atan2(tip.y() - root.y(), tip.x() - root.x());
+        const double wing = headLen * 0.45;
+        QPointF p1(root.x() + wing * std::sin(alpha), root.y() - wing * std::cos(alpha));
+        QPointF p2(root.x() - wing * std::sin(alpha), root.y() + wing * std::cos(alpha));
+
+        rectPath.moveTo(p1);
+        rectPath.lineTo(tip);
+        rectPath.moveTo(p2);
+        rectPath.lineTo(tip);
+    }
+
     gPath = rectPath;
-    
-    if(baseNeuron->getSelected() and finalNeuron->getSelected()) selected = true;
-    
-    Qt::PenStyle myStyle;
-    
-    if(delay==0) myStyle = Qt::SolidLine;
-    else		 myStyle = Qt::DashLine;
-     
-    if(selected)  painter->setPen(QPen(Qt::blue, 2*scale, myStyle, Qt::RoundCap));
-    else if(weight >= 0) painter->setPen(QPen(Qt::black, 2*scale, myStyle, Qt::RoundCap));
-    else painter->setPen(QPen(Qt::red, 2*scale, myStyle, Qt::RoundCap));
-    painter->drawPath(gPath);	
+
+    if (baseNeuron->getSelected() && finalNeuron->getSelected())
+        selected = true;
+
+    // Color palette matching dark theme
+    QColor lineColor;
+    if (selected)        lineColor = QColor(0xcb, 0xa6, 0xf7); // purple accent
+    else if (weight >= 0) lineColor = QColor(0x89, 0xb4, 0xfa); // blue (excitatory)
+    else                  lineColor = QColor(0xf3, 0x8b, 0xa8); // red (inhibitory)
+
+    Qt::PenStyle myStyle = (delay == 0) ? Qt::SolidLine : Qt::DashLine;
+    double lineWidth = selected ? 2.5 * scale : 1.8 * scale;
+
+    painter->setPen(QPen(lineColor, lineWidth, myStyle, Qt::RoundCap, Qt::RoundJoin));
+    painter->setBrush(Qt::NoBrush);
+    painter->drawPath(gPath);
+
+    // Weight label near the midpoint of the path
+    if (gPath.length() > 20) {
+        QPointF mid = gPath.pointAtPercent(0.5);
+        painter->setPen(QColor(0xa6, 0xad, 0xc8));
+        QFont f = painter->font();
+        f.setPixelSize(std::max(7, static_cast<int>(8 * scale)));
+        painter->setFont(f);
+        painter->drawText(QRectF(mid.x() + 3, mid.y() - 8, 40, 14),
+                          Qt::AlignLeft | Qt::AlignVCenter,
+                          QString::number(weight, 'g', 3));
+    }
 }
 
 /*
