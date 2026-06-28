@@ -1,4 +1,5 @@
 #include "Computer.h"
+#include <QThread>
 #ifndef _WIN32
 #include <unistd.h>
 #endif
@@ -99,7 +100,7 @@ void Computer::computeBS(){
 				for(int j=0; j < ub->getSize(); j++){
 					rnd = Random::Uniform();//(double)rand() / ((double)RAND_MAX+1.0);
 					if(rnd <= synchronyRate){
-						if(not network->getUniformalTemperature()) network->getNeuron(ub->getNeuronIndex(j))->compute(network->getNeuron(ub->getNeuronIndex(j))->getTemperature());
+						if(! network->getUniformalTemperature()) network->getNeuron(ub->getNeuronIndex(j))->compute(network->getNeuron(ub->getNeuronIndex(j))->getTemperature());
 						else network->getNeuron(ub->getNeuronIndex(j))->compute(network->getTemperature());
 					}
 				}
@@ -153,11 +154,11 @@ void Computer::computeBS(){
 			}
 			emit tick();
 		}
-		// Mark a little pause and refresh th designPlan widget
+		// Mark a little pause && refresh th designPlan widget
 		if(repaintDesign){
 			if(ui->sbSpeedPercent->value()!=100){
 				ui->frmDesign->repaint();
-				usleep(100000-ui->sbSpeedPercent->value()*1000);
+				QThread::usleep(100000-ui->sbSpeedPercent->value()*1000);
 			}
 		}
 		//emit tick();
@@ -184,7 +185,7 @@ void Computer::computeBP(){
 				rnd = Random::Uniform();
 				if(rnd <= synchronyRate){
 					if(ub->getUpdateMethods() == COMPUTE){
-						if(not network->getUniformalTemperature()) network->getNeuron(ub->getNeuronIndex(i%ub->getSize()))->compute(network->getNeuron(ub->getNeuronIndex(i%ub->getSize()))->getTemperature());
+						if(! network->getUniformalTemperature()) network->getNeuron(ub->getNeuronIndex(i%ub->getSize()))->compute(network->getNeuron(ub->getNeuronIndex(i%ub->getSize()))->getTemperature());
 						else network->getNeuron(ub->getNeuronIndex(i%ub->getSize()))->compute(network->getTemperature());
 					}
 					else if(ub->getUpdateMethods() == FIXE_1){
@@ -220,7 +221,7 @@ void Computer::computeBP(){
 		if(repaintDesign){
 			if(ui->sbSpeedPercent->value()!=100){
 						ui->frmDesign->repaint();
-						usleep(100000-ui->sbSpeedPercent->value()*1000);
+						QThread::usleep(100000-ui->sbSpeedPercent->value()*1000);
 			}
 		}
 			emit tick();
@@ -242,7 +243,7 @@ void Computer::computeP(){
 		for(int j=0; j < network->getNbNeurons(); j++){
 			rnd = Random::Uniform();//(double)rand() / ((double)RAND_MAX+1.0);
 			if(rnd <= synchronyRate){
-				if(not network->getUniformalTemperature()) network->getNeuron(j)->compute(network->getNeuron(j)->getTemperature());
+				if(! network->getUniformalTemperature()) network->getNeuron(j)->compute(network->getNeuron(j)->getTemperature());
 				else network->getNeuron(j)->compute(network->getTemperature());
 			}
 		}
@@ -253,7 +254,7 @@ void Computer::computeP(){
 		if(repaintDesign){
 			if(ui->sbSpeedPercent->value()!=100){
 				ui->frmDesign->repaint();
-				usleep(100000-ui->sbSpeedPercent->value()*1000);
+				QThread::usleep(100000-ui->sbSpeedPercent->value()*1000);
 			}
 		}
 		emit tick();
@@ -274,7 +275,7 @@ void Computer::computeS(){
 		for(int j=0; j < network->getNbNeurons(); j++){
 			rnd = Random::Uniform();//(double)rand() / ((double)RAND_MAX+1.0);
 			if(rnd <= synchronyRate){
-				if(not network->getUniformalTemperature()){
+				if(! network->getUniformalTemperature()){
 					 network->getNeuron(j)->compute(network->getNeuron(j)->getTemperature());
 					 network->getNeuron(j)->substitute();
 				}
@@ -286,7 +287,7 @@ void Computer::computeS(){
 			if(repaintDesign){
 				if(ui->sbSpeedPercent->value()!=100){
 					ui->frmDesign->repaint();
-					usleep(100000-ui->sbSpeedPercent->value()*1000);
+					QThread::usleep(100000-ui->sbSpeedPercent->value()*1000);
 				}
 			}
 		}
