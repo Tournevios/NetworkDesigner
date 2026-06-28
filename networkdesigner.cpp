@@ -7,10 +7,9 @@
 #include <QtGui/QLabel>
 #include <QtGui/QPixmap>
 #include <QtGui/QStatusBar>
+#include <QtGui/QApplication>
 
 // Helper: load an SVG from Qt resources as a fixed-size QIcon.
-// Qt renders SVGs natively if Qt SVG module is available; otherwise
-// QPixmap will load the file and display it at its natural size.
 static QIcon svgIcon(const QString& path, int size = 20) {
     QPixmap pm(size, size);
     pm.load(path);
@@ -48,11 +47,17 @@ NetworkDesigner::NetworkDesigner(QWidget *parent) : QMainWindow(parent)
     setupToolBar();
     setupStatusBar();
 
-    // Update status bar whenever the network changes
+    // Network change → update counters
     connect(ui.frmDesign, SIGNAL(networkIsModified()), this, SLOT(updateStatusBar()));
     connect(ui.frmDesign, SIGNAL(updateCalled()),      this, SLOT(updateStatusBar()));
-    connect(ui.pbStart,   SIGNAL(clicked(bool)),       this, SLOT(updateStatusBar()));
-    connect(ui.pbStop,    SIGNAL(clicked(bool)),       this, SLOT(updateStatusBar()));
+
+    // Canvas mouse position → coordinates label
+    connect(ui.frmDesign, SIGNAL(canvasMouseMoved(int,int)),
+            this, SLOT(onCanvasMouseMoved(int,int)));
+
+    // Simulation state indicator via Start / Stop buttons
+    connect(ui.pbStart, SIGNAL(clicked(bool)), this, SLOT(onSimulationStarted()));
+    connect(ui.pbStop,  SIGNAL(clicked(bool)), this, SLOT(onSimulationFinished()));
 
     updateStatusBar();
 }
@@ -66,41 +71,55 @@ void NetworkDesigner::setupToolBar() {
     toolbar->setIconSize(QSize(20, 20));
     toolbar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
-    // Style the toolbar itself via object name so the QSS can target it
-    toolbar->setStyleSheet(
-        "QToolBar { background:#181825; border-bottom:1px solid #313244; padding:2px 4px; spacing:4px; }"
-        "QToolButton { background:transparent; color:#a6adc8; border:none; border-radius:5px;"
-        "              padding:3px 8px; font-size:10px; }"
-        "QToolButton:hover  { background:#313244; color:#cdd6f4; }"
-        "QToolButton:pressed { background:#45475a; }"
-        "QToolBar::separator { background:#313244; width:1px; margin:4px 6px; }"
-    );
-
     auto addTB = [&](QAction* action, const QString& iconPath, const QString& tip) {
         action->setIcon(svgIcon(iconPath));
         action->setToolTip(tip);
         toolbar->addAction(action);
     };
 
-    addTB(ui.action_New,  ":/resources/icons/new.svg",  "New");
-    addTB(ui.actionO_pen, ":/resources/icons/open.svg", "Open");
-    addTB(ui.action_Save, ":/resources/icons/save.svg", "Save");
+    addTB(ui.action_New,  ":/resources/icons/new.svg",  "New\nCtrl+N");
+    addTB(ui.actionO_pen, ":/resources/icons/open.svg", "Open\nCtrl+O");
+    addTB(ui.action_Save, ":/resources/icons/save.svg", "Save\nCtrl+S");
 
     toolbar->addSeparator();
 
-    addTB(ui.actionDelete, ":/resources/icons/delete.svg", "Delete");
+    addTB(ui.actionDelete, ":/resources/icons/delete.svg", "Delete\nDel");
 
     toolbar->addSeparator();
 
-    // Start / Stop — wire directly to the panel buttons so signals still fire
+    // Start / Stop — proxy signals to the panel buttons
     auto* actStart = toolbar->addAction(svgIcon(":/resources/icons/start.svg"), "Start");
-    actStart->setToolTip("Run simulation (Ctrl+R)");
+    actStart->setToolTip("Run simulation\nCtrl+R");
     actStart->setShortcut(QKeySequence("Ctrl+R"));
     connect(actStart, SIGNAL(triggered(bool)), ui.pbStart, SIGNAL(clicked(bool)));
 
     auto* actStop = toolbar->addAction(svgIcon(":/resources/icons/stop.svg"), "Stop");
     actStop->setToolTip("Stop simulation");
     connect(actStop, SIGNAL(triggered(bool)), ui.pbStop, SIGNAL(clicked(bool)));
+
+    toolbar->addSeparator();
+
+    // Zoom controls
+    auto* actZoomIn = toolbar->addAction("+");
+    actZoomIn->setToolTip("Zoom in\n+");
+    actZoomIn->setShortcut(QKeySequence("+"));
+    connect(actZoomIn, &QAction::triggered, [this] {
+        double s = ui.frmDesign->getScale();
+        if (s + 0.1 <= 2.0) ui.frmDesign->setScale(s + 0.1);
+    });
+
+    auto* actZoomOut = toolbar->addAction("−");
+    actZoomOut->setToolTip("Zoom out\n−");
+    actZoomOut->setShortcut(QKeySequence("-"));
+    connect(actZoomOut, &QAction::triggered, [this] {
+        double s = ui.frmDesign->getScale();
+        if (s - 0.1 > 0.1) ui.frmDesign->setScale(s - 0.1);
+    });
+
+    auto* actReset = toolbar->addAction("1:1");
+    actReset->setToolTip("Reset view\nCtrl+0");
+    actReset->setShortcut(QKeySequence("Ctrl+0"));
+    connect(actReset, SIGNAL(triggered(bool)), ui.frmDesign, SLOT(resetView()));
 }
 
 // ── Status bar ────────────────────────────────────────────────────────────────
@@ -108,52 +127,87 @@ void NetworkDesigner::setupToolBar() {
 void NetworkDesigner::setupStatusBar() {
     QStatusBar* sb = statusBar();
 
-    // Left side: simulation state
-    statusSimState = new QLabel("  Idle  ");
-    statusSimState->setStyleSheet("color:#a6e3a1; font-size:11px; padding:0 8px;");
+    // Left: simulation state pill
+    statusSimState = new QLabel("  ● Idle  ");
+    statusSimState->setStyleSheet(
+        "color:#a6e3a1; font-size:11px; padding:0 8px; background:transparent;");
     sb->addWidget(statusSimState);
 
-    // Spacer to push permanent widgets to the right
+    // Separator
+    QFrame* sep = new QFrame();
+    sep->setFrameShape(QFrame::VLine);
+    sep->setFrameShadow(QFrame::Sunken);
+    sep->setStyleSheet("color:#313244;");
+    sb->addWidget(sep);
+
+    // Canvas coordinates
+    statusCoords = new QLabel("  x: 0  y: 0  ");
+    statusCoords->setStyleSheet(
+        "color:#6c7086; font-size:11px; font-family:monospace; padding:0 4px; background:transparent;");
+    statusCoords->setMinimumWidth(120);
+    sb->addWidget(statusCoords);
+
+    // Spacer
     QLabel* spacer = new QLabel();
     spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     sb->addWidget(spacer);
 
-    // Permanent: neuron count with icon label
+    // Neuron count
     QLabel* iconN = new QLabel();
-    QPixmap pmN(12, 12);
-    pmN.load(":/resources/icons/neuron.svg");
+    QPixmap pmN(12, 12); pmN.load(":/resources/icons/neuron.svg");
     iconN->setPixmap(pmN);
-    iconN->setStyleSheet("padding:0 2px 0 8px;");
+    iconN->setStyleSheet("padding:0 2px 0 8px; background:transparent;");
     sb->addPermanentWidget(iconN);
 
     statusNeurons = new QLabel("0 neurons");
-    statusNeurons->setStyleSheet("color:#89b4fa; font-size:11px; padding:0 6px 0 0;");
+    statusNeurons->setStyleSheet(
+        "color:#89b4fa; font-size:11px; padding:0 6px 0 0; background:transparent;");
     sb->addPermanentWidget(statusNeurons);
 
-    // Permanent: synapse count with icon label
+    // Synapse count
     QLabel* iconS = new QLabel();
-    QPixmap pmS(12, 12);
-    pmS.load(":/resources/icons/synapse.svg");
+    QPixmap pmS(12, 12); pmS.load(":/resources/icons/synapse.svg");
     iconS->setPixmap(pmS);
-    iconS->setStyleSheet("padding:0 2px 0 8px;");
+    iconS->setStyleSheet("padding:0 2px 0 8px; background:transparent;");
     sb->addPermanentWidget(iconS);
 
     statusSynapses = new QLabel("0 synapses");
-    statusSynapses->setStyleSheet("color:#cba6f7; font-size:11px; padding:0 8px 0 0;");
+    statusSynapses->setStyleSheet(
+        "color:#cba6f7; font-size:11px; padding:0 8px 0 0; background:transparent;");
     sb->addPermanentWidget(statusSynapses);
 }
+
+// ── Slots ─────────────────────────────────────────────────────────────────────
 
 void NetworkDesigner::updateStatusBar() {
     if (!network) return;
 
-    // Count total synapses across all neurons
     int totalSynapses = 0;
     for (int i = 0; i < network->getNbNeurons(); ++i)
         totalSynapses += network->getNeuron(i)->getNb_neighbors();
 
     const int n = network->getNbNeurons();
     statusNeurons->setText(QString("%1 neuron%2").arg(n).arg(n != 1 ? "s" : ""));
-    statusSynapses->setText(QString("%1 synapse%2").arg(totalSynapses).arg(totalSynapses != 1 ? "s" : ""));
+    statusSynapses->setText(
+        QString("%1 synapse%2").arg(totalSynapses).arg(totalSynapses != 1 ? "s" : ""));
+}
+
+void NetworkDesigner::onCanvasMouseMoved(int worldX, int worldY) {
+    statusCoords->setText(QString("  x: %1  y: %2  ").arg(worldX).arg(worldY));
+}
+
+void NetworkDesigner::onSimulationStarted() {
+    statusSimState->setText("  ● Simulating…  ");
+    statusSimState->setStyleSheet(
+        "color:#fab387; font-size:11px; padding:0 8px; background:transparent;");
+    QApplication::processEvents(); // flush UI before blocking simulation
+}
+
+void NetworkDesigner::onSimulationFinished() {
+    statusSimState->setText("  ● Idle  ");
+    statusSimState->setStyleSheet(
+        "color:#a6e3a1; font-size:11px; padding:0 8px; background:transparent;");
+    updateStatusBar();
 }
 
 // ── Getters / setters ─────────────────────────────────────────────────────────

@@ -68,7 +68,9 @@
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="cmbSimulationType"/>
+              <widget class="QComboBox" name="cmbSimulationType">
+               <property name="toolTip"><string>Choose the simulation algorithm to run</string></property>
+              </widget>
              </item>
             </layout>
            </item>
@@ -83,6 +85,7 @@
              </item>
              <item>
               <widget class="QDoubleSpinBox" name="dsbTemperature">
+               <property name="toolTip"><string>Global temperature (0 = deterministic, &gt;0 = stochastic Boltzmann)</string></property>
                <property name="accelerated">
                 <bool>true</bool>
                </property>
@@ -107,6 +110,7 @@
            </item>
            <item>
             <widget class="QCheckBox" name="chkUniformalTemperature">
+             <property name="toolTip"><string>When checked, all neurons use the global temperature</string></property>
              <property name="text">
               <string>Uniformal Temperature</string>
              </property>
@@ -126,6 +130,7 @@
              </item>
              <item>
               <widget class="QSpinBox" name="sbUpdatesNumber">
+               <property name="toolTip"><string>Number of update iterations per simulation run</string></property>
                <property name="accelerated">
                 <bool>true</bool>
                </property>
@@ -153,6 +158,7 @@
              </item>
              <item>
               <widget class="QDoubleSpinBox" name="dsbSynchronyRate">
+               <property name="toolTip"><string>Probability that each neuron updates per iteration (1.0 = always)</string></property>
                <property name="accelerated">
                 <bool>true</bool>
                </property>
@@ -404,6 +410,7 @@
              </item>
              <item>
               <widget class="QDoubleSpinBox" name="dsbWeight">
+               <property name="toolTip"><string>Synaptic weight: positive = excitatory, negative = inhibitory</string></property>
                <property name="accelerated">
                 <bool>true</bool>
                </property>
@@ -434,6 +441,7 @@
              </item>
              <item>
               <widget class="QSpinBox" name="sbDelay">
+               <property name="toolTip"><string>Synaptic delay in time steps (0 = immediate, dashed line if &gt; 0)</string></property>
                <property name="maximum">
                 <number>10000</number>
                </property>

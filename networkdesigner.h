@@ -28,6 +28,9 @@ public:
 
 public slots:
     void updateStatusBar();
+    void onCanvasMouseMoved(int worldX, int worldY);
+    void onSimulationStarted();
+    void onSimulationFinished();
 
 private:
     void setupToolBar();
@@ -44,6 +47,7 @@ private:
     QLabel * statusNeurons;
     QLabel * statusSynapses;
     QLabel * statusSimState;
+    QLabel * statusCoords;
 };
 
 #endif // NETWORKDESIGNER_H

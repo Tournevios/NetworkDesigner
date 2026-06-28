@@ -1,6 +1,7 @@
 #include "designplan.h"
 #include <QtGui/QPainter>
 #include <QtGui/QLinearGradient>
+#include <QtGui/QCursor>
 #include "networkdesigner.h"
 #include <iostream>
 using namespace std;
@@ -181,6 +182,7 @@ void DesignPlan::mouseReleaseEvent(QMouseEvent * event){
 	synapseBaseNeuron = nullptr;
 	currentNeuron = nullptr;
 	currentSynapse = nullptr;
+	setCursor(Qt::ArrowCursor);
 
 	this->repaint();
 }
@@ -241,34 +243,51 @@ void DesignPlan::keyPressEvent( QKeyEvent * event ){
 void DesignPlan::mouseMoveEvent(QMouseEvent * event){
 	mouseX = event->x();
 	mouseY = event->y();
+
+	// Emit canvas world coordinates for the status bar
+	const int worldX = static_cast<int>((mouseX - transX) / scale);
+	const int worldY = static_cast<int>((mouseY - transY) / scale);
+	emit canvasMouseMoved(worldX, worldY);
+
 	double dX, dY;
-	if(currentNeuron!=nullptr){
-		dX = currentNeuron->getX() - (event->x()- transX)/scale;
-		dY = currentNeuron->getY() - (event->y()- transY)/scale;
-		currentNeuron->setXY((event->x()- transX)/scale, (event->y() - transY)/scale);
-		for(int i=0; i<network->getNbNeurons(); i++){
-			if((network->getNeuron(i)->getIndex()!=currentNeuron->getIndex()) and (network->getNeuron(i)->getSelected()))
-				network->getNeuron(i)->setXY(network->getNeuron(i)->getX()-dX ,network->getNeuron(i)->getY()-dY);
+	if (currentNeuron != nullptr) {
+		dX = currentNeuron->getX() - (event->x() - transX) / scale;
+		dY = currentNeuron->getY() - (event->y() - transY) / scale;
+		currentNeuron->setXY((event->x() - transX) / scale, (event->y() - transY) / scale);
+		for (int i = 0; i < network->getNbNeurons(); ++i) {
+			if (network->getNeuron(i)->getIndex() != currentNeuron->getIndex()
+			        && network->getNeuron(i)->getSelected())
+				network->getNeuron(i)->setXY(network->getNeuron(i)->getX() - dX,
+				                             network->getNeuron(i)->getY() - dY);
 		}
+		setCursor(Qt::ClosedHandCursor);
 		emit networkIsModified();
 		this->repaint();
-	} else if(currentSynapse != nullptr){
-		//dX = currentSynapse->getBaseNeuron()->getX() - (event->x()- transX)/scale;
-		//currentSynapse->setGExcentricity(currentSynapse->getGExcentricity() - ((float)dX/50000));
-		currentSynapse->setCX((event->x() - transX)/scale);
-		currentSynapse->setCY((event->y() - transY)/scale);
+	} else if (currentSynapse != nullptr) {
+		currentSynapse->setCX((event->x() - transX) / scale);
+		currentSynapse->setCY((event->y() - transY) / scale);
+		setCursor(Qt::SizeAllCursor);
 		emit networkIsModified();
 		this->repaint();
-	}
-	if(synapseBaseNeuron != nullptr){
-		this->repaint();
-	}
-	if((midX != -1)){
+	} else if (midX != -1) {
+		// Panning
 		transX += mouseX - midX;
 		transY += mouseY - midY;
 		midX = mouseX;
 		midY = mouseY;
+		setCursor(Qt::ClosedHandCursor);
 		this->repaint();
+	} else if (synapseBaseNeuron != nullptr) {
+		// Drawing synapse
+		setCursor(Qt::CrossCursor);
+		this->repaint();
+	} else {
+		// Hover: show pointer over neurons, crosshair over empty space
+		Neuron* hovered = network->getNeuron(
+		    static_cast<int>((event->x() - transX) / scale),
+		    static_cast<int>((event->y() - transY) / scale),
+		    static_cast<int>(12 / scale));
+		setCursor(hovered ? Qt::PointingHandCursor : Qt::ArrowCursor);
 	}
 }
 
