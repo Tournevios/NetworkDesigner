@@ -29,13 +29,6 @@ if(NOT ANDROID)
     add_subdirectory(tests)
 endif()
 
-# Android: point androiddeployqt at our custom manifest
-if(ANDROID)
-    set_target_properties(NetworkDesigner PROPERTIES
-        QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_SOURCE_DIR}/android"
-    )
-endif()
-
 # CPack installer (Windows only)
 if(WIN32)
     set(CPACK_GENERATOR "NSIS")

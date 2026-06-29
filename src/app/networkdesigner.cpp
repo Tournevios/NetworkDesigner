@@ -10,6 +10,13 @@
 #include <QStatusBar>
 #include <QApplication>
 
+#ifdef Q_OS_ANDROID
+#include <android/log.h>
+#define ND_LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, "NetworkDesigner", __VA_ARGS__)
+#else
+#define ND_LOGD(...) qDebug(__VA_ARGS__)
+#endif
+
 // Helper: load an SVG from Qt resources as a fixed-size QIcon.
 static QIcon svgIcon(const QString& path, int size = 20) {
     QPixmap pm(size, size);
@@ -19,8 +26,10 @@ static QIcon svgIcon(const QString& path, int size = 20) {
 
 NetworkDesigner::NetworkDesigner(QWidget *parent) : QMainWindow(parent)
 {
+    ND_LOGD("NetworkDesigner: setupUi");
     ui.setupUi(this);
 
+    ND_LOGD("NetworkDesigner: populating combo boxes");
     QStringList qslScheduleTypes;
     qslScheduleTypes << "Parallel" << "Block Parallel" << "Block Sequential" << "Sequential";
     ui.cmbScheduleType->insertItems(-1, qslScheduleTypes);
@@ -41,11 +50,16 @@ NetworkDesigner::NetworkDesigner(QWidget *parent) : QMainWindow(parent)
     network = ui.frmDesign->getNetwork();
     updateSchedulingPlan = ui.frmDesign->getUpdateSchedulingPlan();
 
+    ND_LOGD("NetworkDesigner: creating EvenementHandler");
     evenementHandler = std::make_unique<EvenementHandler>(&ui, network, updateSchedulingPlan);
+    ND_LOGD("NetworkDesigner: creating SignalsSlotsConnector");
     ssc = std::make_unique<SignalsSlotsConnector>(evenementHandler.get(), &ui, this);
+    ND_LOGD("NetworkDesigner: calling updateMe");
     evenementHandler->updateMe();
 
+    ND_LOGD("NetworkDesigner: setupToolBar");
     setupToolBar();
+    ND_LOGD("NetworkDesigner: setupStatusBar");
     setupStatusBar();
 
     // Network change → update counters
