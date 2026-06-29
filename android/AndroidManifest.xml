@@ -23,7 +23,7 @@
         <activity
             android:name="org.qtproject.qt.android.bindings.QtActivity"
             android:label="NetworkDesigner"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:theme="@android:style/Theme.Material.Light.NoActionBar"
             android:screenOrientation="unspecified"
             android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|layoutDirection|locale|fontScale|keyboard|keyboardHidden|navigation|mcc|mnc|density"
             android:exported="true">
