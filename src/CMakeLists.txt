@@ -62,6 +62,10 @@ target_include_directories(NetworkDesigner PRIVATE
 
 target_link_libraries(NetworkDesigner PRIVATE ${QT_LIBS})
 
+if(ANDROID)
+    target_link_libraries(NetworkDesigner PRIVATE log)
+endif()
+
 target_compile_options(NetworkDesigner PRIVATE
     $<$<CXX_COMPILER_ID:GNU,Clang>:-Wall -Wextra -Wpedantic>
 )
@@ -74,4 +78,13 @@ set_target_properties(NetworkDesigner PROPERTIES
 
 if(NOT ANDROID)
     install(TARGETS NetworkDesigner RUNTIME DESTINATION bin)
+endif()
+
+# Android: point androiddeployqt at our custom manifest.
+# Must be set in the same directory scope as qt_add_executable so that
+# qt_finalize_executable (deferred to end of this scope) picks it up.
+if(ANDROID)
+    set_target_properties(NetworkDesigner PROPERTIES
+        QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_SOURCE_DIR}/android"
+    )
 endif()
