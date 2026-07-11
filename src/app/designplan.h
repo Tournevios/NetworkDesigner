@@ -48,6 +48,10 @@ public:
 
 	void setCurrentUpdateBlock(int currentUpdateBlock);
 
+public slots:
+	// Reset zoom and pan to the default view (toolbar "1:1")
+	void resetView();
+
 signals:
 	void neuronSelectedChanged(Neuron* neuron);
 	void synapseSelectedChanged(Synapse* synapse);

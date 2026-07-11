@@ -66,6 +66,10 @@ NetworkDesigner::NetworkDesigner(QWidget *parent) : QMainWindow(parent)
     connect(ui.frmDesign, &DesignPlan::networkIsModified, this, &NetworkDesigner::updateStatusBar);
     connect(ui.frmDesign, &DesignPlan::updateCalled,      this, &NetworkDesigner::updateStatusBar);
 
+    // Open/New/programmatic load replace the network — refresh our pointers
+    connect(evenementHandler.get(), &EvenementHandler::documentLoaded,
+            this, &NetworkDesigner::onDocumentLoaded);
+
     // Simulation state indicator via Start / Stop buttons
     connect(ui.pbStart, &QPushButton::clicked, this, &NetworkDesigner::onSimulationStarted);
     connect(ui.pbStop,  &QPushButton::clicked, this, &NetworkDesigner::onSimulationFinished);
@@ -190,6 +194,16 @@ void NetworkDesigner::setupStatusBar() {
 
 // ── Slots ─────────────────────────────────────────────────────────────────────
 
+void NetworkDesigner::loadFile(const QString & path) {
+    evenementHandler->loadDocument(path);
+}
+
+void NetworkDesigner::onDocumentLoaded() {
+    network = ui.frmDesign->getNetwork();
+    updateSchedulingPlan = ui.frmDesign->getUpdateSchedulingPlan();
+    updateStatusBar();
+}
+
 void NetworkDesigner::updateStatusBar() {
     if (!network) return;
 
@@ -241,6 +255,8 @@ void NetworkDesigner::setUpdateSchedulingPlan(UpdateSchedulingPlan* usp) {
 }
 
 NetworkDesigner::~NetworkDesigner() {
-    for (int i = 0; i < network->getNbNeurons(); ++i)
-        network->delNeuron(i);
+    // delNeuron shrinks the vector — always delete index 0 until empty
+    // (indexing 0..n-1 while shrinking skips every other neuron)
+    while (network && network->getNbNeurons() > 0)
+        network->delNeuron(0);
 }

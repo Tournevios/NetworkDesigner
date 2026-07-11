@@ -2,7 +2,6 @@
 
 #include <QtGui>
 #include <QApplication>
-#include <QStyleFactory>
 #include "Network.h"
 #include "UpdateSchedulingPlan.h"
 
@@ -16,27 +15,25 @@
 int main(int argc, char *argv[])
 {
     LOGD("main: starting");
-
-#ifdef Q_OS_ANDROID
-    // Force the cross-platform Fusion style; the Android style can be
-    // unreliable with Qt Widgets and has been known to trigger crashes.
-    QApplication::setStyle(QStyleFactory::create("Fusion"));
-#endif
-
     QApplication a(argc, argv);
     LOGD("main: QApplication created");
 
+#ifdef Q_OS_ANDROID
+    // The Activity can momentarily close and recreate the Qt window during
+    // startup (splash teardown, IME/system focus changes). Because
+    // quitOnLastWindowClosed defaults to true, that flicker becomes a silent
+    // clean exit — the "window appears then closes" symptom. The Activity owns
+    // the process lifetime on Android, so opt out entirely.
+    a.setQuitOnLastWindowClosed(false);
+    // The platform style on Android is unreliable for Qt Widgets; Fusion is
+    // the supported cross-platform choice. Must be set after QApplication so
+    // the style plugin paths are initialized.
+    QApplication::setStyle("Fusion");
+#endif
+
     NetworkDesigner w;
     LOGD("main: NetworkDesigner constructed");
-
     w.show();
-    LOGD("main: window shown");
-
-#ifndef Q_OS_ANDROID
-    // On Android the Activity manages the lifecycle; connecting lastWindowClosed
-    // to quit() causes the app to exit immediately when the system briefly
-    // takes focus during startup.
-    a.connect(&a, &QApplication::lastWindowClosed, &a, &QApplication::quit);
-#endif
+    LOGD("main: window shown, entering event loop");
     return a.exec();
 }

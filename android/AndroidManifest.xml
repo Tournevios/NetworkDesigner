@@ -1,31 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Kept as close as possible to Qt 6.7's own template
+     (qtbase/src/android/templates/AndroidManifest.xml); only the package
+     name, label, permissions and hardcoded lib_name differ. -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.networkdesigner.app"
-    android:versionCode="1"
+    android:installLocation="auto"
+    android:versionCode="2"
     android:versionName="1.0">
 
-    <uses-sdk
-        android:minSdkVersion="26"
-        android:targetSdkVersion="34" />
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true" />
 
-    <!-- Storage access for saving/loading .nml files -->
+    <!-- Storage access for saving/loading .nml files on older Android -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="29"/>
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
 
     <application
+        android:name="org.qtproject.qt.android.bindings.QtApplication"
         android:label="NetworkDesigner"
         android:hardwareAccelerated="true"
+        android:requestLegacyExternalStorage="true"
+        android:allowBackup="true"
+        android:fullBackupOnly="false"
         android:largeHeap="true">
 
         <activity
             android:name="org.qtproject.qt.android.bindings.QtActivity"
             android:label="NetworkDesigner"
-            android:theme="@android:style/Theme.Material.Light.NoActionBar"
-            android:screenOrientation="unspecified"
             android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|layoutDirection|locale|fontScale|keyboard|keyboardHidden|navigation|mcc|mnc|density"
+            android:launchMode="singleTop"
+            android:screenOrientation="unspecified"
             android:exported="true">
 
             <intent-filter>
@@ -33,15 +42,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <!-- Open .nml files directly from file manager -->
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:scheme="file" android:mimeType="*/*" android:pathPattern=".*\\.nml" />
-            </intent-filter>
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="NetworkDesigner" />
 
-            <meta-data android:name="android.app.lib_name" android:value="NetworkDesigner" />
-            <meta-data android:name="android.app.extract_android_style" android:value="minimal" />
+            <meta-data
+                android:name="android.app.arguments"
+                android:value="" />
         </activity>
     </application>
 </manifest>

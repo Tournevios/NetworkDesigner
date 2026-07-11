@@ -14,6 +14,10 @@ private:
 	UpdateSchedulingPlan * updateSchedulingPlan;
 	Ui::MainWindow * ui;
 	bool stop;
+	// Unlike `stop` (reset by every compute*), this survives across the
+	// repeated compute* calls that long simulations make, so an entire
+	// simulation run can be cancelled from the UI.
+	bool abortRequested = false;
 	bool repaintDesign;
 	int nb_iterations;
 
@@ -30,6 +34,8 @@ public:
 	void setNetwork(Network * network);
 
 	void stopComputing();
+	bool isAbortRequested() const;
+	void resetAbort();
 
 	/*
 	Simulation * getSimulation() const;

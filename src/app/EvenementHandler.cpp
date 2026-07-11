@@ -96,13 +96,29 @@ void EvenementHandler::actionO_pen_Clicked(bool checked){
 		fileName = QFileDialog::getOpenFileName(this,
 	     tr("Open Network Designer File"), "./", tr("Network Designer File (*.nml)"));
 	     if(fileName.size()!=0){
-	     	parent->frmDesign->load(fileName);
-	     	network = parent->frmDesign->getNetwork();
-	     	updateSchedulingPlan = parent->frmDesign->getUpdateSchedulingPlan();
-	     	parent->frmDesign->repaint();
+	     	loadDocument(fileName);
 	     }
-	     updateMe();
-	     fileUpdated();
+	     else{
+	     	updateMe();
+	     	fileUpdated();
+	     }
+}
+
+/*
+ * Load a document without any dialog. Used by the Open flow, tests, and
+ * file-open requests coming from the platform (e.g. Android intents).
+ */
+bool EvenementHandler::loadDocument(const QString & path){
+	if(path.isEmpty()) return false;
+	fileName = path;
+	parent->frmDesign->load(fileName);
+	network = parent->frmDesign->getNetwork();
+	updateSchedulingPlan = parent->frmDesign->getUpdateSchedulingPlan();
+	parent->frmDesign->update();
+	updateMe();
+	fileUpdated();
+	emit documentLoaded();
+	return true;
 }
 
 /*
@@ -174,9 +190,10 @@ void EvenementHandler::action_New_Clicked(bool checked){
 	     network = parent->frmDesign->getNetwork();
 	     updateSchedulingPlan = parent->frmDesign->getUpdateSchedulingPlan();
 	     parent->chkUniformalTemperature->setCheckState(Qt::Checked);
-	     parent->frmDesign->repaint();
+	     parent->frmDesign->update();
 
 	     updateMe();
+	     emit documentLoaded();
 }
 
 /*
@@ -268,7 +285,13 @@ void EvenementHandler::dsbWeight_Changed(double weight){
  * Executed when the start button is pushed
  */
 void EvenementHandler::pbStart_click(bool checked){
+	// Long simulations pump the event loop (to stay responsive), so a second
+	// Start click could re-enter here — ignore it while one is running.
+	if(runningComputer != nullptr) return;
+
 	auto computer = std::make_unique<Computer>(network, updateSchedulingPlan, parent);
+	computer->resetAbort();
+	runningComputer = computer.get();
 
 	if(parent->cmbSimulationType->currentText() == "No simulation"){
 		if(parent->cmbScheduleType->currentText() == "Parallel"){
@@ -336,7 +359,7 @@ void EvenementHandler::pbStart_click(bool checked){
 		}
 	}
 
-	else if(parent->cmbSimulationType->currentText() == "Attractor && basins"){
+	else if(parent->cmbSimulationType->currentText() == "Attractor and basins"){
 		auto sim = std::make_unique<SimulationAttractorsAndBasinsOfAttraction>(computer.get());
 		auto myView = std::make_unique<UpdateBlock>();
 		for(int i=0; i < network->getNbNeurons();i++)
@@ -347,7 +370,7 @@ void EvenementHandler::pbStart_click(bool checked){
 		else if(parent->cmbScheduleType->currentText() == "Block Sequential"){ sim->setUpdateType(UpdateType::BS); sim->run(); }
 		else if(parent->cmbScheduleType->currentText() == "Sequential")      { sim->setUpdateType(UpdateType::S);  sim->run(); }
 	}
-	else if(parent->cmbSimulationType->currentText() == "Attractor && basins V2"){
+	else if(parent->cmbSimulationType->currentText() == "Attractor and basins V2"){
 		auto sim = std::make_unique<SimulationAttractorsAndBasinsOfAttraction2>(computer.get());
 		auto myView = std::make_unique<UpdateBlock>();
 		for(int i=0; i < network->getNbNeurons();i++)
@@ -367,12 +390,16 @@ void EvenementHandler::pbStart_click(bool checked){
 		simulationDiffusion->setUpdateType(UpdateType::P);
 		simulationDiffusion->run();
 	}
+
+	runningComputer = nullptr;
 }
 
 /*
  * Stop the simulation && referesh the synapses
  */
 void EvenementHandler::pbStop_click(bool checked){
+	// Cancel the simulation currently running inside pbStart_click (if any)
+	if(runningComputer != nullptr) runningComputer->stopComputing();
 	for(int i=0; i < network->getNbNeurons(); i++){
 		network->getNeuron(i)->refreshSynapses();
 	}

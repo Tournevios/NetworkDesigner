@@ -8,6 +8,8 @@
 #include "BlockSelector.h"
 
 
+class Computer;
+
 class EvenementHandler : public QWidget
 {
 	Q_OBJECT
@@ -15,6 +17,9 @@ public:
 	EvenementHandler(Ui::MainWindow *parent, Network *network, UpdateSchedulingPlan * updateSchedulingPlan);
 	virtual ~EvenementHandler();
 	void updateMe();
+
+	// Load a document without dialogs; returns false on empty path.
+	bool loadDocument(const QString & path);
 
 	void setFileName(QString filename);
 	QString getFileName() const;
@@ -38,6 +43,10 @@ signals:
 	void nbStatesChanged(int);
 	void quitApplication();
 	void updateTitle(QString str);
+	// Emitted whenever the current document (network + scheduling plan) is
+	// replaced: Open, New, or programmatic load. Lets the main window refresh
+	// its own pointers, which would otherwise go stale.
+	void documentLoaded();
 
 
 public slots:
@@ -107,6 +116,11 @@ private:
 	bool saved;
 	QString fileName;
 	QMenu * networkLayersMenu;
+
+	// Non-owning pointer to the Computer of the simulation currently running
+	// inside pbStart_click. Lets pbStop_click cancel it, and guards against
+	// re-entrant Start clicks (long simulations pump the event loop).
+	Computer * runningComputer = nullptr;
 
 	std::unique_ptr<Network> aSimpleCopy;
 

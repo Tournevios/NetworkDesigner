@@ -1,6 +1,7 @@
 #include "SimulationAttractorsAndBasinsOfAttraction.h"
 #include "random-singleton.h"
 #include <vector>
+#include <QtCore/QCoreApplication>
 
 SimulationAttractorsAndBasinsOfAttraction::SimulationAttractorsAndBasinsOfAttraction(Computer * computer):Simulation(computer)
 {
@@ -69,57 +70,6 @@ void SimulationAttractorsAndBasinsOfAttraction::run(){
 	computer->setProgressBarValue(0);
 	printf("=============================================================================\n");
 
-	NetworkState test1(3, nbStates);
-	NetworkState test2(3, nbStates);
-	NetworkState test3(3, nbStates);
-	NetworkState test4(3, nbStates);
-
-	NetworkStatesSet test5(-1);
-	NetworkStatesSet test6(-1);
-	NetworkStatesSet test7(-1);
-
-	test1.setState(0 ,-3);
-	test1.setState(1 ,0);
-	test1.setState(2 ,1);
-
-	test2.setState(0 ,-3);
-	test2.setState(1 ,1);
-	test2.setState(2 ,-3);
-
-	test5.addNetworkState(test1);
-	test5.addNetworkState(test2);
-
-	/*
-	printf("hey\n");
-	test5.printMe();
-	printf("sans dup\n");
-	test5.removeDuplications();
-	printf("you never get herer\n");
-	test5.printMe();
-	*/
-
-	test3.setState(0 ,1);
-	test3.setState(1 ,0);
-	test3.setState(2 ,1);
-
-	test4.setState(0 ,0);
-	test4.setState(1 ,1);
-	test4.setState(2 ,0);
-
-	test6.addNetworkState(test3);
-	test6.addNetworkState(test4);
-
-	if(test3 < test4) printf("test false!!!\n");
-	test7= test5 - test6;
-	test5.printMe();
-	printf("-\n");
-	test6.printMe();
-	printf("shouf\n");
-	test7.printMe();
-	printf("end result\n");
-	int dfg;
-	scanf("haha %d\n", &dfg);
-
 	/*if(test3 < test1) printf("test3 < test1\n");
 	else if(test1 < test3) printf("test3 > test1\n");
 	else printf("NO Relation between test3 && test1\n");
@@ -158,7 +108,16 @@ void SimulationAttractorsAndBasinsOfAttraction::run(){
 	else if(updateType == UpdateType::BP) computer->computeBP();
 
 	bool exist;
-	while(numberOfVisitedStates != totalNumberOfStates){
+	// The random exploration only makes progress when a draw lands outside
+	// every known basin. The state accounting is approximate (basins may
+	// overlap), so an exact != test can spin forever: bound the loop by the
+	// number of consecutive draws that produce no progress.
+	int drawsWithoutProgress = 0;
+	const int maxDrawsWithoutProgress = 5000;
+	while(numberOfVisitedStates < totalNumberOfStates){
+		QCoreApplication::processEvents();
+		if(computer->isAbortRequested()) break;
+		const int visitedBefore = numberOfVisitedStates;
 		NetworkState * rndNetworkState = getRandomNetworkState();
 		//NetworkState * rndNetworkState = getANonVisitedNetworkState();
 		if(numberOfVisitedStates < totalNumberOfStates)
@@ -195,7 +154,15 @@ void SimulationAttractorsAndBasinsOfAttraction::run(){
 		}
 		delete rndNetworkState;
 
-		//printf("condition %d < %d\n", numberOfVisitedStates, totalNumberOfStates);
+		if(numberOfVisitedStates > visitedBefore){
+			drawsWithoutProgress = 0;
+		}
+		else if(++drawsWithoutProgress >= maxDrawsWithoutProgress){
+			printf("attractor search stalled after %d draws without progress "
+			       "(visited %d of %d states) — stopping\n",
+			       drawsWithoutProgress, numberOfVisitedStates, totalNumberOfStates);
+			break;
+		}
 	}
 	/*for(int i=0; i<static_cast<int>(basinsOfAttraction.size()); i++){
 		printf("----------------attractor of cycle %d------------------------------------\n", attractors[i]->getCardinal());

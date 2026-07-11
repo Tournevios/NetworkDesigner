@@ -6,6 +6,7 @@
  */
 
 #include "SimulationAttractorsAndBasinsOfAttraction2.h"
+#include <QtCore/QCoreApplication>
 #include "random-singleton.h"
 #include <cmath>
 
@@ -136,6 +137,10 @@ void SimulationAttractorsAndBasinsOfAttraction2::run(){
 	numberOfVisitedStates = 0;
 	printf("looking for attractors\n");
 	for(int i = 0; i < allCombinations->getCardinal();i++){
+		if((i & 0x7F) == 0){
+			QCoreApplication::processEvents();
+			if(computer->isAbortRequested()) break;
+		}
 		if(!(allCombinations->getNetworkState(i)->isVisited())) linkThem(i);
 	}
 	calculateSizeOfBasins();

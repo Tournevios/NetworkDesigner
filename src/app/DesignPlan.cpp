@@ -322,12 +322,17 @@ void DesignPlan::setUpdateSchedulingPlan(UpdateSchedulingPlan* updateSchedulingP
 double DesignPlan::getScale() const { return scale; }
 void DesignPlan::setScale(double s) { scale = s; update(); }
 
+void DesignPlan::resetView() {
+	scale = 1.0;
+	transX = transY = 0;
+	update();
+}
+
 DesignPlan::~DesignPlan(){
-
-	for(int i=0; i<network->getNbNeurons();i++){
-		network->delNeuron(i);
+	// delNeuron shrinks the vector — always delete index 0 until empty
+	while(network && network->getNbNeurons() > 0){
+		network->delNeuron(0);
 	}
-
 }
 
 /*

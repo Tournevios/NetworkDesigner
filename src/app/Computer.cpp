@@ -313,6 +313,15 @@ void Computer::setProgressBarValue(int value){
 
 void Computer::stopComputing(){
 	stop = true;
+	abortRequested = true;
+}
+
+bool Computer::isAbortRequested() const{
+	return abortRequested;
+}
+
+void Computer::resetAbort(){
+	abortRequested = false;
 }
 
 void Computer::setStateOfTheNetwork(NetworkState* networkState){

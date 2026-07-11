@@ -40,3 +40,11 @@ jobs:
           sleep 1
           DISPLAY=:99 EXAMPLES_DIR=${{ github.workspace }}/examples \
             ctest --test-dir build -R "integration" --output-on-failure
+
+      - name: Run GUI acceptance tests (offscreen)
+        run: |
+          if [ -f build/tests/NetworkDesigner_uat ]; then
+            ctest --test-dir build -R "UatGuiSmoke" --output-on-failure
+          else
+            echo "UAT target not built (Qt Test module missing) — skipped"
+          fi

@@ -1,4 +1,5 @@
 #include "SimulationDiffusion.h"
+#include <QtCore/QCoreApplication>
 
 SimulationDiffusion::SimulationDiffusion(Computer * computer):Simulation(computer)
 {
@@ -28,6 +29,10 @@ void SimulationDiffusion::run(){
 	std::ofstream out("simulation.dat");
 	int tmpRt;
 	for(int j=1; j < 1000; j++){
+		// This sweep runs ~10^6 network updates synchronously: keep the UI
+		// alive and honor the Stop button between temperature steps.
+		QCoreApplication::processEvents();
+		if(computer->isAbortRequested()) break;
 		if(j!=1000-1) temperature -= static_cast<double>(initialNetwork->getTemperature()/1000);
 		else temperature = 0;
 		computer->setNetwork(new Network(*initialNetwork));

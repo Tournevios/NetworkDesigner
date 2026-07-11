@@ -140,3 +140,61 @@ jobs:
           files: NetworkDesigner.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  emulator-smoke-test:
+    name: Emulator smoke test (launch APK, capture logcat)
+    needs: build-android
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download APK
+        uses: actions/download-artifact@v4
+        with:
+          name: NetworkDesigner-Android-APK
+
+      - name: Inspect APK contents
+        run: |
+          echo "== native libs and key files in the APK =="
+          unzip -l NetworkDesigner.apk | grep -E "\.so$|AndroidManifest" || true
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Boot emulator and launch the app
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          # x86_64 google_apis image ≥ API 30 ships ARM translation, so the
+          # arm64-v8a APK runs on the x86_64 emulator.
+          api-level: 30
+          target: google_apis
+          arch: x86_64
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: |
+            adb install -r NetworkDesigner.apk
+            adb logcat -c || true
+            adb shell am start -W -n org.networkdesigner.app/org.qtproject.qt.android.bindings.QtActivity
+            sleep 30
+            adb exec-out screencap -p > emulator-screenshot.png || true
+            adb logcat -d > emulator-logcat.txt || true
+            echo "== NetworkDesigner breadcrumbs =="
+            grep -a "NetworkDesigner" emulator-logcat.txt | tail -40 || true
+            echo "== crash signatures (if any) =="
+            grep -a -E "FATAL EXCEPTION|Fatal signal|beginning of crash" emulator-logcat.txt || echo "none found"
+            PID=$(adb shell pidof org.networkdesigner.app || true)
+            echo "app pid after 30s: [$PID]"
+            test -n "$PID" && echo "APP_ALIVE" || { echo "APP_DEAD"; exit 1; }
+
+      - name: Upload emulator evidence (logcat + screenshot)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: emulator-evidence
+          path: |
+            emulator-logcat.txt
+            emulator-screenshot.png
+          retention-days: 30

@@ -82,3 +82,70 @@ add_test(
 set_tests_properties(IntegrationTests_NmlLoading PROPERTIES
     ENVIRONMENT "DISPLAY=:99;EXAMPLES_DIR=${CMAKE_SOURCE_DIR}/examples"
 )
+
+# ── GUI acceptance tests (real widgets, offscreen platform) ──────────────────
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Test QUIET)
+
+if(TARGET Qt${QT_VERSION_MAJOR}::Test)
+    set(UAT_SOURCES
+        uat/test_gui_smoke.cpp
+        ${CMAKE_SOURCE_DIR}/src/app/networkdesigner.cpp
+        ${CMAKE_SOURCE_DIR}/src/app/designplan.h
+        ${CMAKE_SOURCE_DIR}/src/app/DesignPlan.cpp
+        ${CMAKE_SOURCE_DIR}/src/app/EvenementHandler.cpp
+        ${CMAKE_SOURCE_DIR}/src/app/SignalsSlotsConnector.cpp
+        ${CMAKE_SOURCE_DIR}/src/app/Computer.cpp
+        ${CMAKE_SOURCE_DIR}/src/app/NetworkDesignerParser.cpp
+        ${CMAKE_SOURCE_DIR}/src/app/mainWindow.ui
+        ${CMAKE_SOURCE_DIR}/src/core/network/Network.cpp
+        ${CMAKE_SOURCE_DIR}/src/core/network/Neuron.cpp
+        ${CMAKE_SOURCE_DIR}/src/core/network/Synapse.cpp
+        ${CMAKE_SOURCE_DIR}/src/core/simulation/Simulation.cpp
+        ${CMAKE_SOURCE_DIR}/src/core/simulation/SimulationActivity.cpp
+        ${CMAKE_SOURCE_DIR}/src/core/simulation/SimulationAttractorsAndBasinsOfAttraction.cpp
+        ${CMAKE_SOURCE_DIR}/src/core/simulation/SimulationAttractorsAndBasinsOfAttraction2.cpp
+        ${CMAKE_SOURCE_DIR}/src/core/simulation/SimulationChangement.cpp
+        ${CMAKE_SOURCE_DIR}/src/core/simulation/SimulationDiffusion.cpp
+        ${CMAKE_SOURCE_DIR}/src/core/state/NetworkState.cpp
+        ${CMAKE_SOURCE_DIR}/src/core/state/NetworkState2.cpp
+        ${CMAKE_SOURCE_DIR}/src/core/state/NetworkStatesSet.cpp
+        ${CMAKE_SOURCE_DIR}/src/core/state/SetOfNetworkStatesSet.cpp
+        ${CMAKE_SOURCE_DIR}/src/core/scheduling/UpdateBlock.cpp
+        ${CMAKE_SOURCE_DIR}/src/core/scheduling/UpdateSchedulingPlan.cpp
+        ${CMAKE_SOURCE_DIR}/src/core/scheduling/BlockSelector.cpp
+        ${CMAKE_SOURCE_DIR}/src/core/utils/pCalculateTransitions.cpp
+        ${CMAKE_SOURCE_DIR}/src/core/utils/random-singleton.cpp
+        ${CMAKE_SOURCE_DIR}/resources/resources.qrc
+    )
+
+    add_executable(NetworkDesigner_uat ${UAT_SOURCES})
+
+    set_target_properties(NetworkDesigner_uat PROPERTIES
+        AUTOUIC_SEARCH_PATHS "${CMAKE_SOURCE_DIR}/src/app"
+    )
+
+    target_compile_definitions(NetworkDesigner_uat PRIVATE
+        EXAMPLES_DIR_DEFAULT="${CMAKE_SOURCE_DIR}/examples"
+    )
+
+    target_include_directories(NetworkDesigner_uat PRIVATE
+        ${CMAKE_SOURCE_DIR}/src/core/network
+        ${CMAKE_SOURCE_DIR}/src/core/simulation
+        ${CMAKE_SOURCE_DIR}/src/core/state
+        ${CMAKE_SOURCE_DIR}/src/core/scheduling
+        ${CMAKE_SOURCE_DIR}/src/core/utils
+        ${CMAKE_SOURCE_DIR}/src/app
+    )
+
+    target_link_libraries(NetworkDesigner_uat PRIVATE
+        GTest::GTest ${QT_LIBS} Qt${QT_VERSION_MAJOR}::Test
+    )
+
+    add_test(NAME UatGuiSmoke COMMAND NetworkDesigner_uat)
+    set_tests_properties(UatGuiSmoke PROPERTIES
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;EXAMPLES_DIR=${CMAKE_SOURCE_DIR}/examples"
+        TIMEOUT 300
+    )
+else()
+    message(STATUS "Qt Test module not found — skipping GUI acceptance tests.")
+endif()

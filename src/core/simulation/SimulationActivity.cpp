@@ -107,6 +107,11 @@ void SimulationActivity::tick(){
 	totalNumberOfZero += numberOfZero;
 	oneRating += ((double)numberOfOne / view->getSize());
 	zeroRating += ((double)numberOfZero / view->getSize());*/
-	*out << countIter << " " << static_cast<int>(computer->getNetwork()->getNeuron(0)->getState() * 2) << " " << computer->getNetwork()->getNeuron(2)->getState()<< "\n";
+	// Guard the hardcoded probe indices: networks with fewer than 3 neurons
+	// crashed here (out-of-bounds getNeuron).
+	Network * net = computer->getNetwork();
+	const int s0 = (net->getNbNeurons() > 0) ? net->getNeuron(0)->getState() * 2 : 0;
+	const int s2 = (net->getNbNeurons() > 2) ? net->getNeuron(2)->getState()     : 0;
+	*out << countIter << " " << s0 << " " << s2 << "\n";
 	countIter++;
 }

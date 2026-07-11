@@ -22,10 +22,12 @@ public:
     UpdateSchedulingPlan * getUpdateSchedulingplan() const;
     void setUpdateSchedulingPlan(UpdateSchedulingPlan * updateSchedulingPlan);
 
-    void load(const char * path);
+    // Load a .nml document without any dialog (startup files, tests, intents)
+    void loadFile(const QString & path);
 
 private slots:
     void updateStatusBar();
+    void onDocumentLoaded();
     void onCanvasMouseMoved(int worldX, int worldY);
     void onSimulationStarted();
     void onSimulationFinished();
