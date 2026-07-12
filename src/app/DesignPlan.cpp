@@ -275,6 +275,15 @@ void DesignPlan::mouseMoveEvent(QMouseEvent * event){
  */
 void DesignPlan::paintEvent(QPaintEvent * event){
 	QPainter painter(this);
+	// Fill the canvas with the app's dark theme colour and draw a subtle grid,
+	// so the drawing area matches the surrounding UI instead of staying white.
+	painter.fillRect(rect(), QColor(0x11, 0x11, 0x1b));
+	painter.setPen(QColor(0x28, 0x28, 0x38));
+	const int step = static_cast<int>(24 * scale);
+	if(step > 4){
+		for(int x = static_cast<int>(transX) % step; x < width();  x += step) painter.drawLine(x, 0, x, height());
+		for(int y = static_cast<int>(transY) % step; y < height(); y += step) painter.drawLine(0, y, width(), y);
+	}
 	if(loaded){
 		if(synapseBaseNeuron != nullptr){
 			painter.setPen(QPen(Qt::black, 2*scale, Qt::SolidLine, Qt::RoundCap));

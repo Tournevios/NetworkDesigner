@@ -55,7 +55,25 @@ int totalSynapses(Network* net) {
 
 // ── 1. The startup path (the one that crashes on Android) ───────────────────
 
+TEST(UatSmoke, BundledResourcesResolve) {
+    // The toolbar icons and theme are addressed as :/resources/... in the
+    // code; the .qrc prefix must match or they silently fail to load.
+    EXPECT_TRUE(QFile(":/resources/style.qss").exists());
+    EXPECT_TRUE(QFile(":/resources/icons/new.svg").exists());
+    EXPECT_TRUE(QFile(":/resources/icons/start.svg").exists());
+    EXPECT_TRUE(QFile(":/resources/icons/neuron.svg").exists());
+
+    QPixmap pm(":/resources/icons/new.svg");
+    EXPECT_FALSE(pm.isNull()) << "toolbar icon failed to load";
+}
+
 TEST(UatSmoke, MainWindowStartsShowsAndRenders) {
+    // Load the same theme main() applies, so the captured screenshot shows
+    // the real look of the app.
+    QFile qss(":/resources/style.qss");
+    if (qss.open(QIODevice::ReadOnly | QIODevice::Text))
+        qApp->setStyleSheet(QString::fromUtf8(qss.readAll()));
+
     NetworkDesigner w;
     w.resize(1280, 800);
     w.show();
@@ -68,6 +86,8 @@ TEST(UatSmoke, MainWindowStartsShowsAndRenders) {
     EXPECT_GT(shot.width(), 100);
     EXPECT_GT(shot.height(), 100);
     shot.save(artifactsDir() + "/01-startup.png");
+
+    qApp->setStyleSheet(QString()); // don't leak the theme into other tests
 }
 
 // ── 2. Every shipped example must load and render ───────────────────────────

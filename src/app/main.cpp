@@ -2,6 +2,7 @@
 
 #include <QtGui>
 #include <QApplication>
+#include <QFile>
 #include "Network.h"
 #include "UpdateSchedulingPlan.h"
 
@@ -30,6 +31,14 @@ int main(int argc, char *argv[])
     // the style plugin paths are initialized.
     QApplication::setStyle("Fusion");
 #endif
+
+    // Apply the bundled modern dark theme. It was shipped in resources but
+    // never loaded, so the app fell back to the default platform palette.
+    QFile qss(":/resources/style.qss");
+    if (qss.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        a.setStyleSheet(QString::fromUtf8(qss.readAll()));
+        qss.close();
+    }
 
     NetworkDesigner w;
     LOGD("main: NetworkDesigner constructed");
