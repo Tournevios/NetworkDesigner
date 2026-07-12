@@ -170,9 +170,10 @@ jobs:
       - name: Boot emulator and launch the app
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          # x86_64 google_apis image ≥ API 30 ships ARM translation, so the
-          # arm64-v8a APK runs on the x86_64 emulator.
-          api-level: 30
+          # x86_64 google_apis images ship ARM translation, so the arm64-v8a
+          # APK runs on the x86_64 emulator. API 34's translator supports the
+          # newer SIMD instructions emitted by NDK r26 (API 30's SIGILLs).
+          api-level: 34
           target: google_apis
           arch: x86_64
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
