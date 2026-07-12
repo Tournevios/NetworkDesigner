@@ -150,6 +150,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v4   # needed for the example .nml used to reproduce loads
+
       - name: Download APK
         uses: actions/download-artifact@v4
         with:
@@ -180,15 +182,30 @@ jobs:
           disable-animations: true
           script: |
             adb install -r NetworkDesigner.apk
+            # Seed the autoload marker so the app loads a real network on its own
+            # and reproduces the "load then freeze" report deterministically.
+            adb shell 'run-as org.networkdesigner.app mkdir -p files' || true
+            adb push examples/Arabiodopsis_thalina.nml /data/local/tmp/autoload.nml
+            adb shell 'run-as org.networkdesigner.app cp /data/local/tmp/autoload.nml files/autoload.nml' \
+              || adb shell 'mkdir -p /sdcard/Android/data/org.networkdesigner.app/files && cp /data/local/tmp/autoload.nml /sdcard/Android/data/org.networkdesigner.app/files/autoload.nml' || true
             adb logcat -c || true
             adb shell am start -W -n org.networkdesigner.app/org.qtproject.qt.android.bindings.QtActivity
-            sleep 3; echo "pid after +3s: [$(adb shell pidof org.networkdesigner.app || true)]"
-            sleep 5; echo "pid after +8s: [$(adb shell pidof org.networkdesigner.app || true)]"; adb exec-out screencap -p > emulator-screenshot-early.png || true
-            sleep 7; echo "pid after +15s: [$(adb shell pidof org.networkdesigner.app || true)]"
-            sleep 7; echo "pid after +22s: [$(adb shell pidof org.networkdesigner.app || true)]"
-            sleep 8; echo "pid after +30s: [$(adb shell pidof org.networkdesigner.app || true)]"
+            # Autoload fires at ~1.5s, heartbeats every 0.5s. Watch them across
+            # the load; then send taps to trigger interaction paths.
+            sleep 6
+            adb shell input tap 500 400 || true
+            sleep 2
+            adb shell input tap 540 300 || true
+            adb shell input swipe 300 300 600 500 400 || true
+            sleep 6
             adb exec-out screencap -p > emulator-screenshot.png || true
             adb logcat -d > emulator-logcat.txt || true
+            echo "== heartbeats (if these stop, the main thread froze) =="
+            grep -a "diag: heartbeat" emulator-logcat.txt | tail -30 || echo "NO HEARTBEATS"
+            echo "== diag + paint breadcrumbs (last is where it froze) =="
+            grep -a -E "diag:|paint: drawMe" emulator-logcat.txt | tail -40 || true
+            echo "== ANR / not responding =="
+            grep -a -E "ANR in|Input dispatching timed out|Application Not Responding|not responding" emulator-logcat.txt || echo "no ANR line"
             echo "== NetworkDesigner breadcrumbs =="
             grep -a "NetworkDesigner" emulator-logcat.txt | grep -a -v ActivityTaskManager | tail -40 || true
             echo "== crash signatures (if any) =="
@@ -201,7 +218,22 @@ jobs:
             echo "== last 40 log lines from the app process =="
             grep -a -E "^[0-9-]+ [0-9:.]+ +$(grep -a 'D NetworkDesigner: main: starting' emulator-logcat.txt | head -1 | awk '{print $3}') " emulator-logcat.txt | tail -40 || true
             echo "app pid at end: [$(adb shell pidof org.networkdesigner.app || true)]"
-            test -n "$(adb shell pidof org.networkdesigner.app)" && echo "APP_ALIVE" || { echo "APP_DEAD"; exit 1; }
+            test -n "$(adb shell pidof org.networkdesigner.app)" || { echo "APP_DEAD"; exit 1; }
+            echo "APP_ALIVE"
+            # Freeze detection: the process stays alive when frozen, so the real
+            # signal is whether heartbeats kept ticking through load+interaction.
+            # We tapped at ~6s (heartbeat ~12) and read logs at ~14s (~26). If the
+            # last heartbeat is well past the autoload+tap window, the main thread
+            # never froze.
+            LAST_HB=$(grep -a -o "diag: heartbeat [0-9]*" emulator-logcat.txt | awk '{print $3}' | sort -n | tail -1)
+            echo "last heartbeat: [${LAST_HB:-none}]"
+            if [ -z "$LAST_HB" ]; then
+              echo "WARN: no heartbeats — autoload marker may not have been seeded"; exit 0
+            elif [ "$LAST_HB" -ge 20 ]; then
+              echo "MAIN_THREAD_RESPONSIVE (heartbeats continued through interaction)"
+            else
+              echo "MAIN_THREAD_FROZEN (heartbeats stopped at $LAST_HB — see last breadcrumb above)"; exit 1
+            fi
 
       - name: Upload emulator evidence (logcat + screenshot)
         if: always()

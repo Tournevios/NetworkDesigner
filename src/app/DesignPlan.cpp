@@ -2,6 +2,13 @@
 #include <QtGui/QPainter>
 #include "networkdesigner.h"
 #include <iostream>
+
+#ifdef Q_OS_ANDROID
+#include <android/log.h>
+#define DP_LOG(...) __android_log_print(ANDROID_LOG_DEBUG, "NetworkDesigner", __VA_ARGS__)
+#else
+#define DP_LOG(...) ((void)0)
+#endif
 /*
  * Initiat all the atributes
  */
@@ -289,8 +296,11 @@ void DesignPlan::paintEvent(QPaintEvent * event){
 			painter.setPen(QPen(Qt::black, 2*scale, Qt::SolidLine, Qt::RoundCap));
 			painter.drawLine(static_cast<int>(synapseBaseNeuron->getX()*scale + transX),static_cast<int>(synapseBaseNeuron->getY() * scale + transY), mouseX, mouseY);
 		}
-		if (network != nullptr)
+		if (network != nullptr){
+			DP_LOG("paint: drawMe begin (neurons=%d)", network->getNbNeurons());
 			network->drawMe(&painter, scale, transX, transY);
+			DP_LOG("paint: drawMe end");
+		}
 	}
 
 }
