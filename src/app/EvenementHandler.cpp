@@ -627,8 +627,11 @@ void EvenementHandler::networkLayersMenu_aboutToShow(){
 	Neuron* tmpNeuron;
 	int tmpDistance;
 	//int center_l1_distance = network->getNbNeurons();
-	minimals.reserve(network->getNbNeurons());
-	l1_distances.reserve(network->getNbNeurons());
+	// resize (NOT reserve): these are filled by index — with reserve the
+	// vectors stayed size 0 and every access was out of bounds, corrupting
+	// the BFS bookkeeping below and spinning it forever (UI freeze).
+	minimals.resize(network->getNbNeurons());
+	l1_distances.assign(network->getNbNeurons(), -1);
 
 	network->deselectAll();
 
@@ -642,9 +645,8 @@ void EvenementHandler::networkLayersMenu_aboutToShow(){
 	layerActions.clear();
 	networkLayersMenu->clear();
 
-	for(int i=0; i<network->getNbNeurons(); i++){
-		l1_distances[i]= -1;
-	}
+	// Nothing to classify on an empty network (layers[0] below would crash)
+	if(network->getNbNeurons() == 0) return;
 
 	for(int i=0; i< network->getNbNeurons(); i++){
 		// Initialization

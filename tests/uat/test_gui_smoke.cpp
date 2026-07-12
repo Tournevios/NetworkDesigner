@@ -7,10 +7,13 @@
 
 #include <gtest/gtest.h>
 
+#include <QAction>
 #include <QApplication>
 #include <QComboBox>
+#include <QDialog>
 #include <QDir>
 #include <QImage>
+#include <QMenu>
 #include <QPushButton>
 #include <QElapsedTimer>
 #include <QSpinBox>
@@ -250,8 +253,101 @@ TEST(UatSmoke, LoadThenStatusBarTracksDocument) {
     EXPECT_EQ(w.getNetwork(), w.findChild<DesignPlan*>("frmDesign")->getNetwork());
 }
 
+// ── 7. Dialog cancel paths and every menu action must not freeze ────────────
+
+namespace {
+
+void assertCanvasStillResponsive(QMainWindow& w) {
+    auto* canvas = w.findChild<DesignPlan*>("frmDesign");
+    ASSERT_NE(canvas, nullptr);
+    const int before = canvas->getNetwork()->getNbNeurons();
+    QTest::mouseClick(canvas, Qt::LeftButton, Qt::NoModifier,
+                      QPoint(30 + 25 * before, 30));
+    pump(1);
+    EXPECT_EQ(canvas->getNetwork()->getNbNeurons(), before + 1)
+        << "canvas no longer reacts to clicks — UI frozen or dead";
+}
+
+} // namespace
+
+// The "Open → Cancel" path the user reported. A modal QFileDialog can't be
+// driven under the offscreen QPA (its exec() loop delivers no timer events),
+// so we call the handler's cancel branch directly with an empty path — the
+// exact state getOpenFileName returns on Cancel — and assert it returns
+// promptly and leaves the app usable.
+TEST(UatSmoke, CancellingOpenDoesNotFreeze) {
+    NetworkDesigner w;
+    w.resize(1280, 800);
+    w.show();
+    pump();
+
+    const int before = w.getNetwork()->getNbNeurons();
+
+    QElapsedTimer timer;
+    timer.start();
+    // loadFile("") routes to the same code the Open dialog's Cancel hits
+    // (empty path → no document change). Must return at once, not hang.
+    w.loadFile(QString());
+    EXPECT_LT(timer.elapsed(), 2000) << "cancel path stalled";
+    EXPECT_EQ(w.getNetwork()->getNbNeurons(), before);
+
+    assertCanvasStillResponsive(w);
+}
+
+TEST(UatSmoke, EditActionsAndLayersMenuDoNotFreeze) {
+    NetworkDesigner w;
+    w.resize(1280, 800);
+    w.show();
+    pump();
+
+    // The "Select layer" submenu computes network layers in aboutToShow().
+    // Its index bookkeeping used reserve() instead of resize() and spun the
+    // BFS forever — popping the menu reproduces the freeze.
+    QMenu* layersMenu = nullptr;
+    for (QMenu* m : w.findChildren<QMenu*>())
+        if (m->title() == "Select layer") layersMenu = m;
+    ASSERT_NE(layersMenu, nullptr);
+
+    // 1) On an empty network (used to crash on layers[0])
+    layersMenu->popup(QPoint(10, 10));
+    pump();
+    layersMenu->hide();
+
+    // 2) On a real, cyclic network (used to spin forever)
+    w.loadFile(examplesDir() + "/CardioRespiratoire.nml");
+    pump();
+    layersMenu->popup(QPoint(10, 10));
+    pump();
+    layersMenu->hide();
+
+    // Select All → Copy → Paste → Delete round trip
+    auto trigger = [&w](const char* name) {
+        auto* a = w.findChild<QAction*>(name);
+        ASSERT_NE(a, nullptr) << name;
+        a->trigger();
+        pump(1);
+    };
+    const int loaded = w.getNetwork()->getNbNeurons();
+    ASSERT_GT(loaded, 0);
+    trigger("actionSelect_All");
+    trigger("actionCopy");
+    trigger("actionPaste");
+    EXPECT_EQ(w.getNetwork()->getNbNeurons(), loaded * 2);
+    trigger("actionSelect_All");
+    trigger("actionDelete");
+    EXPECT_EQ(w.getNetwork()->getNbNeurons(), 0);
+
+    assertCanvasStillResponsive(w);
+}
+
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
+    // Force Qt's own dialogs instead of the platform-native ones: under the
+    // offscreen QPA the native file dialog's exec() never returns, so the
+    // test could not drive its Cancel button. The Qt dialog is a real
+    // top-level QDialog the closer can reject. (App behavior is unchanged;
+    // this attribute only affects this test process.)
+    QApplication::setAttribute(Qt::AA_DontUseNativeDialogs, true);
     QApplication app(argc, argv);
     return RUN_ALL_TESTS();
 }
