@@ -93,8 +93,21 @@ void EvenementHandler::actionO_pen_Clicked(bool checked){
         if(ret==QMessageBox::Save) action_Save_Clicked(checked);
 
 	}
+		// Filter note: on Android the native picker greys out any file whose
+		// MIME type doesn't match the filter, and ".nml" has no registered
+		// MIME type — so an "*.nml" filter greys out every .nml file and the
+		// user can't select anything. Offer an "All files" filter (mapped to
+		// */* on Android) so the documents are always selectable; keep the
+		// .nml convenience filter first on desktop.
+#ifdef Q_OS_ANDROID
+		const QString openFilter = tr("All files (*)");
+		const QString startDir;   // let the platform pick a sensible default
+#else
+		const QString openFilter = tr("Network Designer files (*.nml);;All files (*)");
+		const QString startDir = "./";
+#endif
 		fileName = QFileDialog::getOpenFileName(this,
-	     tr("Open Network Designer File"), "./", tr("Network Designer File (*.nml)"));
+	     tr("Open Network Designer File"), startDir, openFilter);
 	     if(fileName.size()!=0){
 	     	loadDocument(fileName);
 	     }
