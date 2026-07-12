@@ -185,6 +185,11 @@ jobs:
             grep -a "NetworkDesigner" emulator-logcat.txt | tail -40 || true
             echo "== crash signatures (if any) =="
             grep -a -E "FATAL EXCEPTION|Fatal signal|beginning of crash" emulator-logcat.txt || echo "none found"
+            echo "== full crash context (java stack + tombstone) =="
+            grep -a -B5 -A80 "FATAL EXCEPTION" emulator-logcat.txt || true
+            grep -a -A60 "Fatal signal" emulator-logcat.txt || true
+            echo "== AndroidRuntime / Qt lines =="
+            grep -a -E "AndroidRuntime|QtNative|Qt JAVA|qt.core" emulator-logcat.txt | tail -60 || true
             PID=$(adb shell pidof org.networkdesigner.app || true)
             echo "app pid after 30s: [$PID]"
             test -n "$PID" && echo "APP_ALIVE" || { echo "APP_DEAD"; exit 1; }
