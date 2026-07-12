@@ -39,7 +39,10 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      ANDROID_NDK_VERSION: '25.1.8937393'
+      # Qt 6.7 requires NDK r26: its libs reference C++17 PMR symbols that
+      # only exist in r26's libc++_shared.so. Building with r25 produced an
+      # APK whose libc++ lacked them → UnsatisfiedLinkError on every launch.
+      ANDROID_NDK_VERSION: '26.1.10909125'
       QT_VERSION: '6.7.3'
       QT_DIR: '${{ github.workspace }}/Qt'
 
