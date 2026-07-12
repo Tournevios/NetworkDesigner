@@ -109,14 +109,27 @@ void EvenementHandler::actionO_pen_Clicked(bool checked){
 		// */* on Android) so the documents are always selectable; keep the
 		// .nml convenience filter first on desktop.
 #ifdef Q_OS_ANDROID
-		const QString openFilter = tr("All files (*)");
-		const QString startDir;   // let the platform pick a sensible default
+	// IMPORTANT (Android): use a NON-blocking dialog. The static
+	// getOpenFileName spins a nested event loop; on Android that nested loop
+	// fights the Activity resume when the system file-picker returns, which
+	// froze the app right after the picked network was displayed. open() +
+	// fileSelected returns immediately and lets the normal event loop drive
+	// the resume, then loads the document from the callback.
+	QFileDialog * dlg = new QFileDialog(this, tr("Open Network Designer File"));
+	dlg->setAcceptMode(QFileDialog::AcceptOpen);
+	dlg->setFileMode(QFileDialog::ExistingFile);
+	dlg->setNameFilter(tr("All files (*)"));
+	dlg->setAttribute(Qt::WA_DeleteOnClose, true);
+	connect(dlg, &QFileDialog::fileSelected, this, [this](const QString & selected){
+		if(!selected.isEmpty()) loadDocument(selected);
+	});
+	connect(dlg, &QFileDialog::rejected, this, [this]{ updateMe(); fileUpdated(); });
+	dlg->open();
+	return;
 #else
 		const QString openFilter = tr("Network Designer files (*.nml);;All files (*)");
-		const QString startDir = "./";
-#endif
 		fileName = QFileDialog::getOpenFileName(this,
-	     tr("Open Network Designer File"), startDir, openFilter);
+	     tr("Open Network Designer File"), "./", openFilter);
 	     if(fileName.size()!=0){
 	     	loadDocument(fileName);
 	     }
@@ -124,6 +137,7 @@ void EvenementHandler::actionO_pen_Clicked(bool checked){
 	     	updateMe();
 	     	fileUpdated();
 	     }
+#endif
 }
 
 /*

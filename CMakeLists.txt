@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(NetworkDesigner VERSION 1.2 LANGUAGES CXX)
+project(NetworkDesigner VERSION 1.3 LANGUAGES CXX)
 
 # Exposed to the app so the running build's version is visible in the title
 add_compile_definitions(NETWORKDESIGNER_VERSION="${PROJECT_VERSION}")
