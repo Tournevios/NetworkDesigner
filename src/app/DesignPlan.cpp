@@ -148,7 +148,7 @@ void DesignPlan::mousePressEvent(QMouseEvent * event){
 		midY = event->y();
 	}
 
-	this->repaint();
+	this->update();
 }
 
 /*
@@ -180,7 +180,7 @@ void DesignPlan::mouseReleaseEvent(QMouseEvent * event){
 	currentNeuron = nullptr;
 	currentSynapse = nullptr;
 
-	this->repaint();
+	this->update();
 }
 
 /*
@@ -193,7 +193,7 @@ void DesignPlan::wheelEvent(QWheelEvent * event){
 	else{
 		if(scale - 0.05f > 0) scale -= 0.05f;
 	}
-	this->repaint();
+	this->update();
 }
 
 void DesignPlan::keyPressEvent( QKeyEvent * event ){
@@ -249,24 +249,24 @@ void DesignPlan::mouseMoveEvent(QMouseEvent * event){
 				network->getNeuron(i)->setXY(network->getNeuron(i)->getX()-dX ,network->getNeuron(i)->getY()-dY);
 		}
 		emit networkIsModified();
-		this->repaint();
+		this->update();
 	} else if(currentSynapse != nullptr){
 		//dX = currentSynapse->getBaseNeuron()->getX() - (event->x()- transX)/scale;
 		//currentSynapse->setGExcentricity(currentSynapse->getGExcentricity() - ((float)dX/50000));
 		currentSynapse->setCX((event->x() - transX)/scale);
 		currentSynapse->setCY((event->y() - transY)/scale);
 		emit networkIsModified();
-		this->repaint();
+		this->update();
 	}
 	if(synapseBaseNeuron != nullptr){
-		this->repaint();
+		this->update();
 	}
 	if((midX != -1)){
 		transX += mouseX - midX;
 		transY += mouseY - midY;
 		midX = mouseX;
 		midY = mouseY;
-		this->repaint();
+		this->update();
 	}
 }
 
@@ -459,5 +459,5 @@ void DesignPlan::setCurrentUpdateBlock(int currentUpdateBlock){
 //			printf("Yellowed %d with neuron: %d\n", currentUpdateBlock, updateBlock->getNeuronIndex(i));
 		}
 	}
-	this->repaint();
+	this->update();
 }

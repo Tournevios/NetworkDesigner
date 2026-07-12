@@ -157,13 +157,13 @@ void Computer::computeBS(){
 		// Mark a little pause && refresh th designPlan widget
 		if(repaintDesign){
 			if(ui->sbSpeedPercent->value()!=100){
-				ui->frmDesign->repaint();
+				ui->frmDesign->update();
 				QThread::usleep(100000-ui->sbSpeedPercent->value()*1000);
 			}
 		}
 		//emit tick();
 	}
-	if(repaintDesign)	ui->frmDesign->repaint();
+	if(repaintDesign)	ui->frmDesign->update();
 }
 
 /*
@@ -220,13 +220,13 @@ void Computer::computeBP(){
 			}
 		if(repaintDesign){
 			if(ui->sbSpeedPercent->value()!=100){
-						ui->frmDesign->repaint();
+						ui->frmDesign->update();
 						QThread::usleep(100000-ui->sbSpeedPercent->value()*1000);
 			}
 		}
 			emit tick();
 	}
-	if(repaintDesign) ui->frmDesign->repaint();
+	if(repaintDesign) ui->frmDesign->update();
 }
 
 /*
@@ -253,13 +253,13 @@ void Computer::computeP(){
 		}
 		if(repaintDesign){
 			if(ui->sbSpeedPercent->value()!=100){
-				ui->frmDesign->repaint();
+				ui->frmDesign->update();
 				QThread::usleep(100000-ui->sbSpeedPercent->value()*1000);
 			}
 		}
 		emit tick();
 	}
-	if(repaintDesign) ui->frmDesign->repaint();
+	if(repaintDesign) ui->frmDesign->update();
 }
 
 /*
@@ -286,14 +286,14 @@ void Computer::computeS(){
 			}
 			if(repaintDesign){
 				if(ui->sbSpeedPercent->value()!=100){
-					ui->frmDesign->repaint();
+					ui->frmDesign->update();
 					QThread::usleep(100000-ui->sbSpeedPercent->value()*1000);
 				}
 			}
 		}
 		emit tick();
 	}
-	if(repaintDesign) ui->frmDesign->repaint();
+	if(repaintDesign) ui->frmDesign->update();
 }
 
 int Computer::getNbIterations() const{

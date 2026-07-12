@@ -151,7 +151,7 @@ void EvenementHandler::actionSave_As_Clicked(bool checked){
 			     tr("Save Network Designer File"), "./", tr("Network Designer File (*.nml)"));
 	     if(fileName.size()!=0) {
 	     	parent->frmDesign->save(fileName);
-	     	parent->frmDesign->repaint();
+	     	parent->frmDesign->update();
 	    	updateMe();
 	     	fileUpdated();
 	     }
@@ -168,7 +168,7 @@ void EvenementHandler::action_Save_Clicked(bool checked){
 	if(fileName.size()==0) actionSave_As_Clicked(checked);
 	else{
 		parent->frmDesign->save(fileName);
-		parent->frmDesign->repaint();
+		parent->frmDesign->update();
 		updateMe();
 		fileUpdated();
 	}
@@ -184,7 +184,7 @@ void EvenementHandler::action_Export_Premodel(bool checked){
 	     if(exportFileName.size()!=0) {
 	     	parent->frmDesign->exportToGNBoxPremodel(exportFileName);
 	     	//premodelfileUpdated();
-	     	parent->frmDesign->repaint();
+	     	parent->frmDesign->update();
 	     }
 	     //else premodelfileWasModified();
 	updateMe();
@@ -329,7 +329,7 @@ void EvenementHandler::pbStart_click(bool checked){
 		else if(parent->cmbScheduleType->currentText() == "Sequential"){
 			computer->computeS();
 		}
-		//parent->frmDesign->repaint();
+		//parent->frmDesign->update();
 	}
 	else if(parent->cmbSimulationType->currentText() == "Activity analysis"){
 		auto simulationActivity = std::make_unique<SimulationActivity>(computer.get());
@@ -525,7 +525,7 @@ void EvenementHandler::toolBox_currentChanged(int index){
 	else{
 		for(int i = 0; i < network->getNbNeurons(); i++) network->getNeuron(i)->setYellowMe(false);
 	}
-	parent->frmDesign->repaint();
+	parent->frmDesign->update();
 }
 
 /*
@@ -553,7 +553,7 @@ void EvenementHandler::sbDelay_Changed(int delay){
 		}
 		fileWasModified();
 	}
-	parent->frmDesign->repaint();
+	parent->frmDesign->update();
 }
 
 void EvenementHandler::actionCut_Clicked(bool checked){
@@ -629,7 +629,7 @@ void EvenementHandler::actionDelete_Clicked(bool checked){
 			}
 		}
 	fileWasModified();
-	parent->frmDesign->repaint();
+	parent->frmDesign->update();
 
 }
 
@@ -637,7 +637,7 @@ void EvenementHandler::actionSelect_all_Clicked(bool checked){
 	for(int i=0; i < network->getNbNeurons(); i++){
 		network->getNeuron(i)->setSelected(true);
 	}
-	parent->frmDesign->repaint();
+	parent->frmDesign->update();
 }
 
 void EvenementHandler::networkLayersMenu_aboutToShow(){
@@ -792,7 +792,7 @@ void EvenementHandler::networkLayersMenu_aboutToShow(){
  * A slot for repainting
  */
 void EvenementHandler::repaintPlease(){
-	parent->frmDesign->repaint();
+	parent->frmDesign->update();
 }
 
 /*
@@ -816,7 +816,7 @@ void EvenementHandler::cmbState_Changed(int index){
 			}
 			fileWasModified();
 		}
-		parent->frmDesign->repaint();
+		parent->frmDesign->update();
 	}
 }
 
@@ -844,7 +844,7 @@ void EvenementHandler::sbNbStates_Changed(int nbStates){
 			}
 			fileWasModified();
 		}
-		parent->frmDesign->repaint();
+		parent->frmDesign->update();
 	}
 }
 
@@ -900,6 +900,6 @@ void EvenementHandler::txtNodeID_Changed(QString nodeID){
 				network->getNeuron(i)->setNodeID(nodeID.toStdString().c_str());
 			}
 		}
-		parent->frmDesign->repaint();
+		parent->frmDesign->update();
 	}
 }

@@ -360,6 +360,45 @@ TEST(UatSmoke, EditActionsAndLayersMenuDoNotFreeze) {
     assertCanvasStillResponsive(w);
 }
 
+// A loaded network must stay interactive: pan, tap-select, drag a neuron —
+// none of it should hang or storm repaints. (Guards the desktop path; the
+// Android-specific synchronous-repaint freeze is addressed by using update()
+// instead of repaint() in the interactive handlers.)
+TEST(UatSmoke, LoadedNetworkStaysInteractive) {
+    NetworkDesigner w;
+    w.resize(1000, 700);
+    w.show();
+    pump();
+
+    w.loadFile(examplesDir() + "/Arabiodopsis_thalina.nml");
+    pump();
+    auto* canvas = w.findChild<DesignPlan*>("frmDesign");
+    ASSERT_NE(canvas, nullptr);
+    const int neurons = canvas->getNetwork()->getNbNeurons();
+    ASSERT_GT(neurons, 0);
+
+    QElapsedTimer timer;
+    timer.start();
+
+    // Middle-button pan across the canvas
+    QTest::mousePress(canvas, Qt::MiddleButton, Qt::NoModifier, QPoint(120, 120));
+    for (int i = 0; i < 30; ++i) {
+        QMouseEvent mv(QEvent::MouseMove, QPointF(120 + i * 4, 120 + i * 2),
+                       Qt::NoButton, Qt::MiddleButton, Qt::NoModifier);
+        QCoreApplication::sendEvent(canvas, &mv);
+        pump(1);
+    }
+    QTest::mouseRelease(canvas, Qt::MiddleButton, Qt::NoModifier, QPoint(240, 180));
+    pump();
+
+    // Tap empty space to create a neuron, then repaint a few times
+    QTest::mouseClick(canvas, Qt::LeftButton, Qt::NoModifier, QPoint(600, 400));
+    for (int i = 0; i < 5; ++i) { canvas->update(); pump(1); }
+
+    EXPECT_LT(timer.elapsed(), 10000) << "interaction on a loaded network stalled";
+    EXPECT_GE(canvas->getNetwork()->getNbNeurons(), neurons);
+}
+
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     // Force Qt's own dialogs instead of the platform-native ones: under the
