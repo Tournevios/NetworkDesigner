@@ -182,13 +182,11 @@ jobs:
             adb install -r NetworkDesigner.apk
             adb logcat -c || true
             adb shell am start -W -n org.networkdesigner.app/org.qtproject.qt.android.bindings.QtActivity
-            for t in 3 5 8 12 18 25 30; do
-              sleep $t
-              echo "pid after +${t}s: [$(adb shell pidof org.networkdesigner.app || true)]"
-              if [ "$t" = "8" ]; then
-                adb exec-out screencap -p > emulator-screenshot-early.png || true
-              fi
-            done
+            sleep 3; echo "pid after +3s: [$(adb shell pidof org.networkdesigner.app || true)]"
+            sleep 5; echo "pid after +8s: [$(adb shell pidof org.networkdesigner.app || true)]"; adb exec-out screencap -p > emulator-screenshot-early.png || true
+            sleep 7; echo "pid after +15s: [$(adb shell pidof org.networkdesigner.app || true)]"
+            sleep 7; echo "pid after +22s: [$(adb shell pidof org.networkdesigner.app || true)]"
+            sleep 8; echo "pid after +30s: [$(adb shell pidof org.networkdesigner.app || true)]"
             adb exec-out screencap -p > emulator-screenshot.png || true
             adb logcat -d > emulator-logcat.txt || true
             echo "== NetworkDesigner breadcrumbs =="
@@ -199,15 +197,11 @@ jobs:
             grep -a -B5 -A80 "FATAL EXCEPTION" emulator-logcat.txt || true
             grep -a -A60 "Fatal signal" emulator-logcat.txt || true
             echo "== app process lifecycle (who killed it and why) =="
-            grep -a -E "ActivityManager|ActivityTaskManager|Zygote|lowmemorykiller|libprocessgroup|lmkd" emulator-logcat.txt \
-              | grep -a -i -E "networkdesigner|died|Killing|kill|Force" | tail -40 || true
-            echo "== last 60 log lines from the app process =="
-            APP_PID=$(grep -a "D NetworkDesigner: main: starting" emulator-logcat.txt | head -1 | awk '{print $3}')
-            echo "app pid was: [$APP_PID]"
-            test -n "$APP_PID" && grep -a -E "^[0-9-]+ [0-9:.]+ +$APP_PID " emulator-logcat.txt | tail -60 || true
-            PID=$(adb shell pidof org.networkdesigner.app || true)
-            echo "app pid at end: [$PID]"
-            test -n "$PID" && echo "APP_ALIVE" || { echo "APP_DEAD"; exit 1; }
+            grep -a -E "ActivityManager|ActivityTaskManager|Zygote|lowmemorykiller|libprocessgroup|lmkd" emulator-logcat.txt | grep -a -i -E "networkdesigner|died|Killing|kill|Force" | tail -40 || true
+            echo "== last 40 log lines from the app process =="
+            grep -a -E "^[0-9-]+ [0-9:.]+ +$(grep -a 'D NetworkDesigner: main: starting' emulator-logcat.txt | head -1 | awk '{print $3}') " emulator-logcat.txt | tail -40 || true
+            echo "app pid at end: [$(adb shell pidof org.networkdesigner.app || true)]"
+            test -n "$(adb shell pidof org.networkdesigner.app)" && echo "APP_ALIVE" || { echo "APP_DEAD"; exit 1; }
 
       - name: Upload emulator evidence (logcat + screenshot)
         if: always()
