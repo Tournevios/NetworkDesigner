@@ -18,6 +18,15 @@
 //#include <QtGui/QAction>
 
 
+// App name shown in the window title, with the build version appended so the
+// running build is identifiable at a glance (e.g. after an Android update).
+#ifndef NETWORKDESIGNER_VERSION
+#define NETWORKDESIGNER_VERSION "dev"
+#endif
+static QString appTitle() {
+	return QStringLiteral("NetworkDesigner %1").arg(NETWORKDESIGNER_VERSION);
+}
+
 EvenementHandler::EvenementHandler(Ui::MainWindow *parent, Network *network, UpdateSchedulingPlan * updateSchedulingPlan)
 {
 	this->parent = parent;
@@ -862,9 +871,9 @@ void EvenementHandler::fileWasModified(){
 	QString justFileName = fileName.section("/",-1,-1);
 
 	if(fileName.size()==0)
-		emit updateTitle(tr("%1 - %2 *").arg(tr("NetworkDesigner")).arg(tr("Untitled.nml")));
+		emit updateTitle(tr("%1 - %2 *").arg(appTitle()).arg(tr("Untitled.nml")));
 	else
-		emit updateTitle(tr("%1 - %2 *").arg(tr("NetworkDesigner")).arg(justFileName));
+		emit updateTitle(tr("%1 - %2 *").arg(appTitle()).arg(justFileName));
 }
 
 /*
@@ -875,9 +884,9 @@ void EvenementHandler::fileUpdated(){
 	QString justFileName = fileName.section("/",-1,-1);
 
 	if(fileName.size()==0)
-		emit updateTitle(tr("%1 - %2").arg(tr("NetworkDesigner")).arg(tr("Untitled.nml")));
+		emit updateTitle(tr("%1 - %2").arg(appTitle()).arg(tr("Untitled.nml")));
 	else
-		emit updateTitle(tr("%1 - %2").arg(tr("NetworkDesigner")).arg(justFileName));
+		emit updateTitle(tr("%1 - %2").arg(appTitle()).arg(justFileName));
 }
 
 void EvenementHandler::txtIndex_Changed(QString index){
