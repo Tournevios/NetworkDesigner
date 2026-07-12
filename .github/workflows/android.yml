@@ -182,12 +182,10 @@ jobs:
           disable-animations: true
           script: |
             adb install -r NetworkDesigner.apk
-            # Seed the autoload marker so the app loads a real network on its own
-            # and reproduces the "load then freeze" report deterministically.
-            adb shell 'run-as org.networkdesigner.app mkdir -p files' || true
             adb push examples/Arabiodopsis_thalina.nml /data/local/tmp/autoload.nml
-            adb shell 'run-as org.networkdesigner.app cp /data/local/tmp/autoload.nml files/autoload.nml' \
-              || adb shell 'mkdir -p /sdcard/Android/data/org.networkdesigner.app/files && cp /data/local/tmp/autoload.nml /sdcard/Android/data/org.networkdesigner.app/files/autoload.nml' || true
+            adb shell "run-as org.networkdesigner.app mkdir -p files" || true
+            adb shell "run-as org.networkdesigner.app sh -c 'cat /data/local/tmp/autoload.nml > files/autoload.nml'" || true
+            echo "seeded autoload marker:"; adb shell "run-as org.networkdesigner.app ls -l files/" || true
             adb logcat -c || true
             adb shell am start -W -n org.networkdesigner.app/org.qtproject.qt.android.bindings.QtActivity
             # Autoload fires at ~1.5s, heartbeats every 0.5s. Watch them across
