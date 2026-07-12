@@ -218,20 +218,13 @@ jobs:
             echo "app pid at end: [$(adb shell pidof org.networkdesigner.app || true)]"
             test -n "$(adb shell pidof org.networkdesigner.app)" || { echo "APP_DEAD"; exit 1; }
             echo "APP_ALIVE"
-            # Freeze detection: the process stays alive when frozen, so the real
-            # signal is whether heartbeats kept ticking through load+interaction.
-            # We tapped at ~6s (heartbeat ~12) and read logs at ~14s (~26). If the
-            # last heartbeat is well past the autoload+tap window, the main thread
-            # never froze.
-            LAST_HB=$(grep -a -o "diag: heartbeat [0-9]*" emulator-logcat.txt | awk '{print $3}' | sort -n | tail -1)
-            echo "last heartbeat: [${LAST_HB:-none}]"
-            if [ -z "$LAST_HB" ]; then
-              echo "WARN: no heartbeats — autoload marker may not have been seeded"; exit 0
-            elif [ "$LAST_HB" -ge 20 ]; then
-              echo "MAIN_THREAD_RESPONSIVE (heartbeats continued through interaction)"
-            else
-              echo "MAIN_THREAD_FROZEN (heartbeats stopped at $LAST_HB — see last breadcrumb above)"; exit 1
-            fi
+            # Freeze detection in one line (the runner executes each line in its
+            # own shell, so no multi-line if/for). The app autoloads a network and
+            # emits a heartbeat every 0.5s; if the last heartbeat is past the
+            # load+tap window the main thread never froze. Note: autoload bypasses
+            # the file picker, so this validates the render/interaction path, not
+            # the Open-dialog path (only a real device exercises that).
+            LAST_HB=$(grep -a -o "diag: heartbeat [0-9]*" emulator-logcat.txt | awk '{print $3}' | sort -n | tail -1); echo "last heartbeat: [${LAST_HB:-none}]"; awk -v hb="${LAST_HB:-0}" 'BEGIN{ if(hb+0>=20){print "MAIN_THREAD_RESPONSIVE"; exit 0} else {print "MAIN_THREAD_FROZEN (last heartbeat "hb")"; exit 1} }'
 
       - name: Upload emulator evidence (logcat + screenshot)
         if: always()
